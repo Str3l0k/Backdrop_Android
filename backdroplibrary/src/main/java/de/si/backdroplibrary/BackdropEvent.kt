@@ -1,0 +1,9 @@
+package de.si.backdroplibrary
+
+enum class BackdropEvent {
+    PREFETCH_BACKDROP_CONTENT_VIEW,
+    SHOW_BACKDROP_CONTENT,
+    HIDE_BACKDROP_CONTENT,
+    BACKDROP_CONTENT_VISIBLE,
+    BACKDROP_CONTENT_INVISIBLE
+}
