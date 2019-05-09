@@ -28,20 +28,21 @@
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="match_parent"
                 android:tint="@android:color/white"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:src="@android:drawable/btn_dialog"
                 android:scaleType="center"
-                android:background="?attr/selectableItemBackgroundBorderless"/>
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:alpha="0"/>
 
         <ImageButton
                 android:id="@+id/button_backdrop_toolbar_menu_show"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="match_parent"
                 android:tint="@android:color/white"
-                android:visibility="invisible"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
