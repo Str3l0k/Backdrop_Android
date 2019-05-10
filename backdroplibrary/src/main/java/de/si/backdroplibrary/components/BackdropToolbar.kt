@@ -4,19 +4,17 @@ import android.animation.AnimatorSet
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
-import de.si.backdroplibrary.BackdropActivity
+import de.si.backdroplibrary.Backdrop
+import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.BackdropViewModel
-import de.si.kotlinx.fadeInAnimator
-import de.si.kotlinx.fadeOutAnimator
+import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.kotlinx.*
 import kotlinx.android.synthetic.main.backdrop_base.*
 
 class BackdropToolbar(activity: BackdropActivity) {
-    // TODO menu button
-    // TODO titles
-    // TODO action items
-
     /* view elements */
     private val buttonCloseBackdrop: ImageButton = activity.button_backdrop_toolbar_hide
     private val buttonOpenMenu: ImageButton = activity.button_backdrop_toolbar_menu_show
@@ -39,7 +37,7 @@ class BackdropToolbar(activity: BackdropActivity) {
     }
     private val buttonCloseShowAnimator = buttonCloseBackdrop.fadeInAnimator
     private val buttonCloseHideAnimator = buttonCloseBackdrop.fadeOutAnimator.apply {
-        duration = BackdropActivity.halfBackdropAnimationDuration
+        duration = Backdrop.BACKDROP_ANIMATION_HALF_DURATION
 
         doOnEnd {
             buttonCloseBackdrop.alpha = 0f
@@ -48,18 +46,30 @@ class BackdropToolbar(activity: BackdropActivity) {
     }
 
     private val showCloseButtonAnimatorSet = AnimatorSet().apply {
-        duration = BackdropActivity.halfBackdropAnimationDuration
+        duration = Backdrop.BACKDROP_ANIMATION_HALF_DURATION
         playSequentially(buttonMenuHideAnimator, buttonCloseShowAnimator)
     }
     private val showMenuButtonAnimatorSet = AnimatorSet().apply {
-        duration = BackdropActivity.halfBackdropAnimationDuration
+        duration = Backdrop.BACKDROP_ANIMATION_HALF_DURATION
         playSequentially(buttonCloseHideAnimator, buttonMenuShowAnimator)
+    }
+
+    // additional constructor init
+    init {
+        buttonMoreAction.setOnClickListener {
+            viewModel.emit(BackdropEvent.MORE_ACTION_TRIGGERED)
+        }
+
+        buttonPrimaryAction.setOnClickListener {
+            viewModel.emit(BackdropEvent.PRIMARY_ACTION_TRIGGERED)
+        }
     }
 
     /* callbacks */
     internal var openMenuClickCallback: (() -> Unit)? = null
         set(value) {
             field = value
+            buttonOpenMenu.isVisible = value != null
             buttonOpenMenu.setOnClickListener { value?.invoke() }
         }
 
@@ -69,48 +79,55 @@ class BackdropToolbar(activity: BackdropActivity) {
             buttonCloseBackdrop.setOnClickListener { value?.invoke() }
         }
 
+    internal var openMenuLongClickCallback: (() -> Boolean)? = null
+        set(value) {
+            field = value
+            buttonOpenMenu.setOnLongClickListener { value?.invoke() ?: false }
+        }
+
     /* API */
-    var title: String?
+    internal var title: String?
         get() = textTitle.text.toString()
         set(value) {
-            textTitle.isVisible = value.isNullOrBlank()
-            textTitle.text = value
+            textTitle.isVisible = value.isNullOrBlank().not()
+            textTitle.fadeTextChange(value)
         }
 
-    var subTitle: String?
+    internal var subTitle: String?
         get() = textSubTitle.text.toString()
         set(value) {
-            textSubTitle.isVisible = value.isNullOrBlank()
-            textSubTitle.text = value
+            textSubTitle.isVisible = value.isNullOrBlank().not()
+            textSubTitle.fadeTextChange(value)
         }
 
-    fun activatePrimaryAction(drawableResId: Int, callback: () -> Unit) {
+    internal fun activatePrimaryAction(@DrawableRes drawableResId: Int) {
         buttonPrimaryAction.isVisible = true
+        buttonPrimaryAction.fadeIn()
         buttonPrimaryAction.setImageResource(drawableResId)
-        buttonPrimaryAction.setOnClickListener {
-            callback()
-        }
     }
 
-    fun deactivatePrimaryAction() {
+    internal fun deactivatePrimaryAction() {
         buttonPrimaryAction.isVisible = false
         buttonPrimaryAction.setOnClickListener(null)
     }
 
-    fun activateMoreAction() {
-
+    internal fun activateMoreAction() {
+        buttonMoreAction.isVisible = true
+        buttonMoreAction.fadeIn()
     }
 
-    fun deactivateMoreAction() {
-
+    internal fun deactivateMoreAction() {
+        buttonMoreAction.fadeOut {
+            buttonMoreAction.isVisible = false
+        }
     }
 
-    fun showMenuButton() {
+    internal fun showMenuButton() {
         buttonOpenMenu.isVisible = true
         showMenuButtonAnimatorSet.start()
     }
 
-    fun showBackdropCloseButton() {
+    internal fun showBackdropCloseButton() {
         buttonCloseBackdrop.isVisible = true
         showCloseButtonAnimatorSet.start()
     }

@@ -1,14 +1,16 @@
-package de.si.backdroplibrary
+package de.si.backdroplibrary.activity
 
-import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.animation.doOnEnd
 import androidx.core.view.doOnNextLayout
-import androidx.core.view.isVisible
+import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
+import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
+import de.si.backdroplibrary.BackdropEvent
+import de.si.backdroplibrary.BackdropViewModel
+import de.si.backdroplibrary.R
 import de.si.backdroplibrary.components.BackdropCardStack
 import de.si.backdroplibrary.components.BackdropContent
 import de.si.backdroplibrary.components.BackdropToolbar
@@ -17,23 +19,15 @@ import kotlinx.android.synthetic.main.backdrop_base.*
 
 abstract class BackdropActivity : AppCompatActivity() {
 
-    internal companion object {
-        const val BACKDROP_CLOSED_TRANSLATION_Y = 0f
-        const val BACKDROP_ANIMATION_DURATION = 275L
-
-        val halfBackdropAnimationDuration
-            get() = BACKDROP_ANIMATION_DURATION / 2
-    }
-
     // viewmodel
     protected val viewModel by lazy {
         BackdropViewModel.registeredInstance(this)
     }
 
     /* backdrop components */
-    private lateinit var toolbar: BackdropToolbar
-    private lateinit var content: BackdropContent
-    private lateinit var cardStack: BackdropCardStack
+    internal lateinit var toolbar: BackdropToolbar
+    internal lateinit var content: BackdropContent
+    internal lateinit var cardStack: BackdropCardStack
 
     /* backdrop state information */
     protected val backdropContentInvisible: Boolean
@@ -46,15 +40,15 @@ abstract class BackdropActivity : AppCompatActivity() {
     private val backdropOpenCloseAnimator by lazy {
         ObjectAnimator.ofFloat(layout_backdrop_cardstack, View.TRANSLATION_Y, 0f).apply {
             duration = BACKDROP_ANIMATION_DURATION
-            doOnEnd {
-                val event = if (backdropContentInvisible) {
-                    BackdropEvent.BACKDROP_CONTENT_INVISIBLE
-                } else {
-                    BackdropEvent.BACKDROP_CONTENT_VISIBLE
-                }
-
-                viewModel.emit(event)
-            }
+//            doOnEnd {
+//                val (event, payload) = if (backdropContentInvisible) {
+//                    Pair(BackdropEvent.BACKDROP_CONTENT_INVISIBLE, null)
+//                } else {
+//                    Pair(BackdropEvent.BACKDROP_CONTENT_VISIBLE, null)
+//                }
+//
+//                viewModel.emit(event)
+//            }
         }
     }
 
@@ -67,7 +61,7 @@ abstract class BackdropActivity : AppCompatActivity() {
     }
 
     private fun initializeViewModel() {
-        viewModel.registerEventCallback(this, this::onEventCallback)
+        viewModel.registerEventCallback(this::onEvent)
     }
 
     private fun initializeComponents() {
@@ -76,38 +70,15 @@ abstract class BackdropActivity : AppCompatActivity() {
 
     private fun initializeToolbar() {
         toolbar = BackdropToolbar(this)
-        toolbar.openMenuClickCallback = {
-
-        }
         toolbar.closeBackdropClickCallback = {
             hideBackdropContent()
         }
     }
     /* endregion lifecycle */
 
-    /* region backdrop specific event handling */
-    private fun onEventCallback(event: BackdropEvent, payload: Any?): Boolean {
-        return when (event) {
-            BackdropEvent.PREFETCH_BACKDROP_CONTENT_VIEW -> {
-                val layoutResId = payload as? Int
-                layoutResId?.let {
-                    prefetchBackdropContent(layoutResId)
-                }
-                true
-            }
-            BackdropEvent.SHOW_BACKDROP_CONTENT -> {
-                val layoutResId = payload as? Int
-                layoutResId?.let {
-                    showBackdropContent(layoutResId)
-                }
-                true
-            }
-            BackdropEvent.HIDE_BACKDROP_CONTENT -> {
-                hideBackdropContent()
-                true
-            }
-            else -> false
-        }
+    /* user related event handling */
+    open fun onEventReceived(event: BackdropEvent, payload: Any?): Boolean {
+        return false
     }
     /* endregion */
 
@@ -130,47 +101,47 @@ abstract class BackdropActivity : AppCompatActivity() {
     /* endregion internal */
 
     /* region backdrop content control */
-    private fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
+    internal fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
         inflateView(layoutResId)?.let { contentView ->
             backdropViews[layoutResId] = contentView
         }
     }
 
-    private fun showBackdropContent(@LayoutRes layoutResId: Int) {
+    internal fun showBackdropContent(@LayoutRes layoutResId: Int) {
         if (backdropViews.containsKey(layoutResId).not()) {
             prefetchBackdropContent(layoutResId)
         }
 
         val contentView = backdropViews[layoutResId]
-        contentView?.doOnNextLayout {
-            animateBackdropOpening(contentView.height.toFloat())
+        contentView?.doOnNextLayout { contentViewAfterLayout ->
+            animateBackdropOpening(contentViewAfterLayout.height.toFloat())
+            viewModel.emit(BackdropEvent.BACKDROP_CONTENT_VISIBLE, contentViewAfterLayout)
         }
 
         layout_backdrop_content.removeAllViews()
         layout_backdrop_content.addView(contentView)
     }
 
-    private fun hideBackdropContent() {
+    internal fun hideBackdropContent() {
         animateBackdropClosing()
+        viewModel.emit(BackdropEvent.BACKDROP_CONTENT_INVISIBLE)
     }
     /* endregion backdrop content control */
 
     /* region main menu */
-    fun setMenuButtonClickListener(onClickListener: View.OnClickListener) {
-        button_backdrop_toolbar_menu_show.setOnClickListener(onClickListener)
-        button_backdrop_toolbar_menu_show.isVisible = true
+    fun setMenuButtonClickCallback(clickCallback: () -> Unit) {
+        toolbar.openMenuClickCallback = clickCallback
     }
 
-    fun setMenuButtonLongClickListener(onLongClickListener: View.OnLongClickListener) {
-        button_backdrop_toolbar_menu_show.setOnLongClickListener(onLongClickListener)
+    fun setMenuButtonLongClickCallback(longClickCallback: () -> Boolean) {
+        toolbar.openMenuLongClickCallback = longClickCallback
     }
 
     fun setMenuLayout(@LayoutRes layoutResId: Int) {
-        // TODO
-    }
-
-    fun setMenuView(view: View) {
-        // TODO
+        prefetchBackdropContent(layoutResId)
+        toolbar.openMenuClickCallback = {
+            showBackdropContent(layoutResId)
+        }
     }
     /* endregion */
 }
