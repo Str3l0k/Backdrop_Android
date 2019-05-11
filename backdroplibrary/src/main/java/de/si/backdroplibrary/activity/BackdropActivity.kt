@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.doOnNextLayout
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
 import de.si.backdroplibrary.BackdropEvent
@@ -14,7 +13,6 @@ import de.si.backdroplibrary.R
 import de.si.backdroplibrary.components.BackdropCardStack
 import de.si.backdroplibrary.components.BackdropContent
 import de.si.backdroplibrary.components.BackdropToolbar
-import de.si.kotlinx.layoutInflater
 import kotlinx.android.synthetic.main.backdrop_base.*
 
 abstract class BackdropActivity : AppCompatActivity() {
@@ -33,22 +31,10 @@ abstract class BackdropActivity : AppCompatActivity() {
     protected val backdropContentInvisible: Boolean
         get() = layout_backdrop_cardstack.translationY.toInt() == BACKDROP_CLOSED_TRANSLATION_Y.toInt()
 
-    /* cached backdrop views */
-    private val backdropViews: MutableMap<Int, View> = mutableMapOf() // TODO move to content
-
     /* animation properties */
     private val backdropOpenCloseAnimator by lazy {
         ObjectAnimator.ofFloat(layout_backdrop_cardstack, View.TRANSLATION_Y, 0f).apply {
             duration = BACKDROP_ANIMATION_DURATION
-//            doOnEnd {
-//                val (event, payload) = if (backdropContentInvisible) {
-//                    Pair(BackdropEvent.BACKDROP_CONTENT_INVISIBLE, null)
-//                } else {
-//                    Pair(BackdropEvent.BACKDROP_CONTENT_VISIBLE, null)
-//                }
-//
-//                viewModel.emit(event)
-//            }
         }
     }
 
@@ -66,6 +52,7 @@ abstract class BackdropActivity : AppCompatActivity() {
 
     private fun initializeComponents() {
         initializeToolbar()
+        initializeContent()
     }
 
     private fun initializeToolbar() {
@@ -73,6 +60,10 @@ abstract class BackdropActivity : AppCompatActivity() {
         toolbar.closeBackdropClickCallback = {
             hideBackdropContent()
         }
+    }
+
+    private fun initializeContent() {
+        content = BackdropContent(this)
     }
     /* endregion lifecycle */
 
@@ -83,10 +74,6 @@ abstract class BackdropActivity : AppCompatActivity() {
     /* endregion */
 
     /* region internal */
-    private fun inflateView(@LayoutRes layoutResId: Int): View? {
-        return applicationContext?.layoutInflater?.inflate(layoutResId, layout_backdrop_content, false)
-    }
-
     private fun animateBackdropOpening(translationY: Float) {
         backdropOpenCloseAnimator.setFloatValues(translationY)
         backdropOpenCloseAnimator.start()
@@ -102,28 +89,18 @@ abstract class BackdropActivity : AppCompatActivity() {
 
     /* region backdrop content control */
     internal fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
-        inflateView(layoutResId)?.let { contentView ->
-            backdropViews[layoutResId] = contentView
-        }
+        content.preCacheContentView(layoutResId)
     }
 
     internal fun showBackdropContent(@LayoutRes layoutResId: Int) {
-        if (backdropViews.containsKey(layoutResId).not()) {
-            prefetchBackdropContent(layoutResId)
+        content.setContentView(layoutResId) { contentView ->
+            animateBackdropOpening(contentView.height.toFloat())
         }
-
-        val contentView = backdropViews[layoutResId]
-        contentView?.doOnNextLayout { contentViewAfterLayout ->
-            animateBackdropOpening(contentViewAfterLayout.height.toFloat())
-            viewModel.emit(BackdropEvent.BACKDROP_CONTENT_VISIBLE, contentViewAfterLayout)
-        }
-
-        layout_backdrop_content.removeAllViews()
-        layout_backdrop_content.addView(contentView)
     }
 
     internal fun hideBackdropContent() {
         animateBackdropClosing()
+        content.hide()
         viewModel.emit(BackdropEvent.BACKDROP_CONTENT_INVISIBLE)
     }
     /* endregion backdrop content control */
