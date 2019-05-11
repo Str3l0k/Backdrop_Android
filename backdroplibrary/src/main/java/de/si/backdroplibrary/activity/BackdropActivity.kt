@@ -18,7 +18,7 @@ import kotlinx.android.synthetic.main.backdrop_base.*
 abstract class BackdropActivity : AppCompatActivity() {
 
     // viewmodel
-    protected val viewModel by lazy {
+    val viewModel by lazy {
         BackdropViewModel.registeredInstance(this)
     }
 
@@ -58,7 +58,7 @@ abstract class BackdropActivity : AppCompatActivity() {
     private fun initializeToolbar() {
         toolbar = BackdropToolbar(this)
         toolbar.closeBackdropClickCallback = {
-            hideBackdropContent()
+            viewModel.emit(BackdropEvent.HIDE_BACKDROP_CONTENT)
         }
     }
 
@@ -73,37 +73,19 @@ abstract class BackdropActivity : AppCompatActivity() {
     }
     /* endregion */
 
-    /* region internal */
-    private fun animateBackdropOpening(translationY: Float) {
+    /* region animation functions*/
+    internal fun animateBackdropOpening(translationY: Float) {
         backdropOpenCloseAnimator.setFloatValues(translationY)
         backdropOpenCloseAnimator.start()
         toolbar.showBackdropCloseButton()
     }
 
-    private fun animateBackdropClosing() {
+    internal fun animateBackdropClosing() {
         backdropOpenCloseAnimator.setFloatValues(BACKDROP_CLOSED_TRANSLATION_Y)
         backdropOpenCloseAnimator.start()
         toolbar.showMenuButton()
     }
-    /* endregion internal */
-
-    /* region backdrop content control */
-    internal fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
-        content.preCacheContentView(layoutResId)
-    }
-
-    internal fun showBackdropContent(@LayoutRes layoutResId: Int) {
-        content.setContentView(layoutResId) { contentView ->
-            animateBackdropOpening(contentView.height.toFloat())
-        }
-    }
-
-    internal fun hideBackdropContent() {
-        animateBackdropClosing()
-        content.hide()
-        viewModel.emit(BackdropEvent.BACKDROP_CONTENT_INVISIBLE)
-    }
-    /* endregion backdrop content control */
+    /* endregion animation functions */
 
     /* region main menu */
     fun setMenuButtonClickCallback(clickCallback: () -> Unit) {
@@ -115,9 +97,9 @@ abstract class BackdropActivity : AppCompatActivity() {
     }
 
     fun setMenuLayout(@LayoutRes layoutResId: Int) {
-        prefetchBackdropContent(layoutResId)
+        viewModel.emit(BackdropEvent.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
         toolbar.openMenuClickCallback = {
-            showBackdropContent(layoutResId)
+            viewModel.emit(BackdropEvent.SHOW_BACKDROP_CONTENT, layoutResId)
         }
     }
     /* endregion */

@@ -2,7 +2,6 @@ package de.si.backdrop
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
 import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.backdroplibrary.changeTitle
@@ -12,7 +11,7 @@ import kotlin.random.Random
 class MainActivity : BackdropActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setMenuLayout(R.layout.backdrop_test_content)
+        setMenuLayout(R.layout.test_menu)
 
         viewModel.emit(BackdropEvent.ACTIVATE_MORE_ACTION)
         viewModel.emit(BackdropEvent.ACTIVATE_PRIMARY_ACTION, R.drawable.abc_ic_commit_search_api_mtrl_alpha)
@@ -44,14 +43,13 @@ class MainActivity : BackdropActivity() {
     }
 
     private fun configureTestMenuView(menuView: View) {
-        if (menuView.id != R.id.layout_test_content) {
+        if (menuView.id != R.id.backdrop_main_menu_layout) {
             return
         }
 
-        val buttonTest = menuView.findViewById<Button>(R.id.button_backdrop_content_test)
+        val buttonTest = menuView.findViewById<View>(R.id.backdrop_main_menu_feedback)
         buttonTest.setOnClickListener {
-            viewModel.changeTitle("Title ${Random.nextInt(42)}")
-//            Toast.makeText(applicationContext, "Backdrop content click", Toast.LENGTH_SHORT).show()
+            viewModel.emit(BackdropEvent.SHOW_BACKDROP_CONTENT, R.layout.backdrop_test_content)
         }
     }
 }

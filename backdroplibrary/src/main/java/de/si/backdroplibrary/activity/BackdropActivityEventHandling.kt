@@ -37,20 +37,26 @@ private fun checkPayloadForString(payload: Any?): String? {
 /* region backdrop content event handling functions */
 private fun BackdropActivity.handlePrefetchBackdropContentEvent(payload: Any?): Boolean {
     return checkPayloadForResourceId(payload)?.let { layoutResId ->
-        prefetchBackdropContent(layoutResId)
+        content.preCacheContentView(layoutResId)
         true
     } ?: false
 }
 
 private fun BackdropActivity.handleShowBackdropContentEvent(payload: Any?): Boolean {
     return checkPayloadForResourceId(payload)?.let { layoutResId ->
-        showBackdropContent(layoutResId)
+        content.setContentView(layoutResId) { contentView ->
+            toolbar.disableActions()
+            animateBackdropOpening(contentView.height.toFloat())
+        }
         true
     } ?: false
 }
 
 private fun BackdropActivity.handleHideBackdropContentEvent(): Boolean {
-    hideBackdropContent()
+    animateBackdropClosing()
+    content.hide()
+    toolbar.enableActions()
+    viewModel.emit(BackdropEvent.BACKDROP_CONTENT_INVISIBLE)
     return true
 }
 /* endregion */

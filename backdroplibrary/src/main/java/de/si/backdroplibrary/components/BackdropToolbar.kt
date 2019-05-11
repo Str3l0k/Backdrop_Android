@@ -100,6 +100,22 @@ class BackdropToolbar(activity: BackdropActivity) {
             textSubTitle.fadeTextChange(value)
         }
 
+    internal fun disableActions() { // TODO
+        buttonPrimaryAction.isClickable = false
+        buttonPrimaryAction.animate().alpha(0.5f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
+
+        buttonMoreAction.isClickable = false
+        buttonMoreAction.animate().alpha(0.5f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
+    }
+
+    internal fun enableActions() { // TODO
+        buttonPrimaryAction.isClickable = true
+        buttonPrimaryAction.animate().alpha(1f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
+
+        buttonMoreAction.isClickable = true
+        buttonMoreAction.animate().alpha(1f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
+    }
+
     internal fun activatePrimaryAction(@DrawableRes drawableResId: Int) {
         buttonPrimaryAction.isVisible = true
         buttonPrimaryAction.fadeIn()

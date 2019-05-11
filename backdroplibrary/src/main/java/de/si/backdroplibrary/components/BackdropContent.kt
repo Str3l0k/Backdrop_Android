@@ -32,7 +32,7 @@ class BackdropContent(private val activity: BackdropActivity) {
         }?.let { view ->
             backdropViewCache[layoutResId] = view
         } ?: run {
-            Log.w(
+            Log.e(
                 "BackdropContent",
                 "The root view of the inflated layout with id $layoutResId does not have a proper id itself."
             )

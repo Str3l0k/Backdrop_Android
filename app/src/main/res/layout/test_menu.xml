@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Created by Sebastian Barz on 7/24/18 5:31 PM.
+  ~ Copyright (c) 2018 - All rights reserved
+  ~
+  ~ Unauthorized copying of this file, via any medium is strictly prohibited
+  ~ Proprietary and confidential.
+  ~
+  ~ Last modified 7/24/18 5:31 PM
+  -->
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:id="@+id/backdrop_main_menu_layout"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:paddingTop="8dp"
+                                                   android:paddingBottom="8dp">
+
+    <LinearLayout
+            android:id="@+id/backdrop_main_menu_feedback"
+            style="@style/BrandButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/backdrop_main_menu_settings"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:clickable="true">
+
+        <ImageView
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:tint="@color/textColorLight"
+                app:srcCompat="@drawable/ic_launcher_foreground"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="Feedback"
+                android:textColor="@color/textColorLight"
+                android:textSize="12sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/backdrop_main_menu_settings"
+            style="@style/BrandButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:clickable="true"
+            android:focusable="false"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/backdrop_main_menu_about"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_main_menu_feedback">
+
+        <ImageView
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:tint="@color/textColorLight"
+                app:srcCompat="@drawable/ic_launcher_foreground"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="Settings"
+                android:textColor="@color/textColorLight"
+                android:textSize="12sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+            android:id="@+id/backdrop_main_menu_about"
+            style="@style/BrandButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/backdrop_main_menu_settings"
+            android:clickable="true">
+
+        <ImageView
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:tint="@color/textColorLight"
+                app:srcCompat="@drawable/ic_launcher_foreground"/>
+
+        <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:paddingLeft="8dp"
+                android:text="About"
+                android:textColor="@color/textColorLight"
+                android:textSize="12sp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
