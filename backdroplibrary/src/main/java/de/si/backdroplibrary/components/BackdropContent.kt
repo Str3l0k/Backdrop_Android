@@ -26,11 +26,9 @@ class BackdropContent(private val activity: BackdropActivity) {
 
     /* API */
     internal fun preCacheContentView(@LayoutRes layoutResId: Int) {
-        val inflatedView = activity.inflateView(layoutResId, layoutContentContainer)
-        inflatedView?.takeIf { view ->
-            view.id > 0
-        }?.let { view ->
-            backdropViewCache[layoutResId] = view
+        val contentView = inflateViewAndCheckForId(layoutResId)
+        contentView?.let { view ->
+            putViewInCache(view, layoutResId)
         } ?: run {
             Log.e(
                 "BackdropContent",
@@ -40,25 +38,56 @@ class BackdropContent(private val activity: BackdropActivity) {
     }
 
     internal fun setContentView(@LayoutRes layoutResId: Int, nextLayoutCallback: (View) -> Unit) {
-        if (backdropViewCache.containsKey(layoutResId).not()) {
-            preCacheContentView(layoutResId)
+        checkCacheAndInflateIfNecessary(layoutResId)
+        getContentViewAndSetLayoutCallback(layoutResId, nextLayoutCallback)?.let { contentView ->
+            prepareLayoutContainerAndAddContent(contentView)
         }
-
-        val newContentView = backdropViewCache[layoutResId]
-        newContentView?.doOnNextLayout { newContentViewAfterLayout ->
-            nextLayoutCallback(newContentViewAfterLayout)
-            viewModel.emit(BackdropEvent.BACKDROP_CONTENT_VISIBLE, newContentViewAfterLayout)
-        }
-
-        layoutContentContainer.alpha = 1f
-        layoutContentContainer.isVisible = true
-        layoutContentContainer.removeAllViews()
-        layoutContentContainer.addView(newContentView)
     }
 
     internal fun hide() {
         layoutContentContainer.fadeOut {
             layoutContentContainer.isVisible = false
         }
+    }
+
+    /* internal functions */
+    private fun inflateViewAndCheckForId(@LayoutRes layoutResId: Int): View? {
+        val inflatedView = activity.inflateView(layoutResId, layoutContentContainer)
+
+        return inflatedView?.takeIf { view ->
+            view.id > 0
+        }
+    }
+
+    private fun putViewInCache(view: View, layoutResId: Int) {
+        backdropViewCache[layoutResId] = view
+    }
+
+    private fun isViewAlreadyCached(@LayoutRes layoutResId: Int): Boolean {
+        return backdropViewCache.containsKey(layoutResId).not()
+    }
+
+    private fun checkCacheAndInflateIfNecessary(@LayoutRes layoutResId: Int) {
+        if (isViewAlreadyCached(layoutResId)) {
+            preCacheContentView(layoutResId)
+        }
+    }
+
+    private fun getContentViewAndSetLayoutCallback(@LayoutRes layoutResId: Int, nextLayoutCallback: (View) -> Unit): View? {
+        val newContentView = backdropViewCache[layoutResId]
+
+        newContentView?.doOnNextLayout { newContentViewAfterLayout ->
+            nextLayoutCallback(newContentViewAfterLayout)
+            viewModel.emit(BackdropEvent.BACKDROP_CONTENT_VISIBLE, newContentViewAfterLayout)
+        }
+
+        return newContentView
+    }
+
+    private fun prepareLayoutContainerAndAddContent(contentView: View) {
+        layoutContentContainer.alpha = 1f
+        layoutContentContainer.isVisible = true
+        layoutContentContainer.removeAllViews()
+        layoutContentContainer.addView(contentView)
     }
 }

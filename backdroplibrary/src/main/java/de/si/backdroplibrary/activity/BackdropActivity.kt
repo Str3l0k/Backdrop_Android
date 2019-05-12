@@ -53,6 +53,7 @@ abstract class BackdropActivity : AppCompatActivity() {
     private fun initializeComponents() {
         initializeToolbar()
         initializeContent()
+        initializeCardStack()
     }
 
     private fun initializeToolbar() {
@@ -64,6 +65,10 @@ abstract class BackdropActivity : AppCompatActivity() {
 
     private fun initializeContent() {
         content = BackdropContent(this)
+    }
+
+    private fun initializeCardStack() {
+        // TODO
     }
     /* endregion lifecycle */
 
@@ -77,13 +82,11 @@ abstract class BackdropActivity : AppCompatActivity() {
     internal fun animateBackdropOpening(translationY: Float) {
         backdropOpenCloseAnimator.setFloatValues(translationY)
         backdropOpenCloseAnimator.start()
-        toolbar.showBackdropCloseButton()
     }
 
     internal fun animateBackdropClosing() {
         backdropOpenCloseAnimator.setFloatValues(BACKDROP_CLOSED_TRANSLATION_Y)
         backdropOpenCloseAnimator.start()
-        toolbar.showMenuButton()
     }
     /* endregion animation functions */
 

@@ -20,32 +20,47 @@ internal fun BackdropActivity.onEvent(event: BackdropEvent, payload: Any?): Bool
         BackdropEvent.DEACTIVATE_PRIMARY_ACTION -> handleDeactivatePrimaryActionEvent()
         BackdropEvent.DEACTIVATE_MORE_ACTION -> handleDeactivateMoreActionEvent()
 
+        // card stack events
+        BackdropEvent.ENABLE_CARDSTACK -> {
+            true
+        }
+        BackdropEvent.DISABLE_CARDSTACK -> {
+            true
+        }
+        BackdropEvent.ADD_TOP_CARD -> {
+            true
+        }
+        BackdropEvent.REMOVE_TOP_CARD -> {
+            true
+        }
+
         // send everything not consumed to open function for custom implementation
         else -> onEventReceived(event, payload)
     }
 }
 
 /* helper functions */
-private fun checkPayloadForResourceId(payload: Any?): Int? {
+private fun isResourceId(payload: Any?): Int? {
     return payload as? Int
 }
 
-private fun checkPayloadForString(payload: Any?): String? {
+private fun isPayloadAString(payload: Any?): String? {
     return payload as? String
 }
 
 /* region backdrop content event handling functions */
 private fun BackdropActivity.handlePrefetchBackdropContentEvent(payload: Any?): Boolean {
-    return checkPayloadForResourceId(payload)?.let { layoutResId ->
+    return isResourceId(payload)?.let { layoutResId ->
         content.preCacheContentView(layoutResId)
         true
     } ?: false
 }
 
 private fun BackdropActivity.handleShowBackdropContentEvent(payload: Any?): Boolean {
-    return checkPayloadForResourceId(payload)?.let { layoutResId ->
+    return isResourceId(payload)?.let { layoutResId ->
         content.setContentView(layoutResId) { contentView ->
             toolbar.disableActions()
+            toolbar.showBackdropCloseButton()
             animateBackdropOpening(contentView.height.toFloat())
         }
         true
@@ -56,6 +71,7 @@ private fun BackdropActivity.handleHideBackdropContentEvent(): Boolean {
     animateBackdropClosing()
     content.hide()
     toolbar.enableActions()
+    toolbar.showMenuButton()
     viewModel.emit(BackdropEvent.BACKDROP_CONTENT_INVISIBLE)
     return true
 }
@@ -63,7 +79,7 @@ private fun BackdropActivity.handleHideBackdropContentEvent(): Boolean {
 
 /* region toolbar title event handling functions */
 private fun BackdropActivity.handleTitleChangeEvent(payload: Any?): Boolean {
-    checkPayloadForString(payload)?.let { newTitle ->
+    isPayloadAString(payload)?.let { newTitle ->
         toolbar.title = newTitle
     }
 
@@ -84,7 +100,7 @@ private fun BackdropActivity.handleSubTitleClearEvent(): Boolean {
 
 /* region action event handling functions */
 private fun BackdropActivity.handleActivatePrimaryActionEvent(payload: Any?): Boolean {
-    checkPayloadForResourceId(payload)?.let { drawableResId ->
+    isResourceId(payload)?.let { drawableResId ->
         toolbar.activatePrimaryAction(drawableResId)
     }
 

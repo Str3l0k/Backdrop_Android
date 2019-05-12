@@ -23,4 +23,8 @@ enum class BackdropEvent {
     MORE_ACTION_TRIGGERED,
 
     // card stack
+    ADD_TOP_CARD,
+    REMOVE_TOP_CARD,
+    ENABLE_CARDSTACK,
+    DISABLE_CARDSTACK
 }
