@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
-import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.activity.BackdropActivity
@@ -23,9 +22,6 @@ class BackdropContent(activity: BackdropActivity) : BackdropComponent(activity) 
     private val backdropViewCache: MutableMap<Int, View> = mutableMapOf()
 
     /* API */
-    internal val open: Boolean
-        get() = layoutContentContainer.translationY.toInt() == Backdrop.BACKDROP_CLOSED_TRANSLATION_Y.toInt()
-
     internal fun preCacheContentView(@LayoutRes layoutResId: Int) {
         val contentView = inflateViewAndCheckForId(layoutResId)
         contentView?.let { view ->

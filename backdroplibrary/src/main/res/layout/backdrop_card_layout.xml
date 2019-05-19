@@ -24,6 +24,12 @@
                 android:orientation="vertical"
                 android:paddingBottom="16dp">
 
+            <TextView
+                    android:text="Card fragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView"
+                    android:background="@color/cardview_shadow_start_color"/>
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>

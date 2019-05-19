@@ -6,6 +6,7 @@ import android.os.Handler
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
 import de.si.backdroplibrary.BackdropEvent
@@ -29,6 +30,9 @@ abstract class BackdropActivity : AppCompatActivity() {
     internal lateinit var content: BackdropContent
     internal lateinit var cardStack: BackdropCardStack
 
+    internal val open: Boolean
+        get() = layout_backdrop_cardstack.translationY.toInt() > Backdrop.BACKDROP_CLOSED_TRANSLATION_Y.toInt()
+
     /* animation properties */
     private val backdropOpenCloseAnimator by lazy {
         ObjectAnimator.ofFloat(layout_backdrop_cardstack, View.TRANSLATION_Y, 0f).apply {
@@ -40,22 +44,42 @@ abstract class BackdropActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.backdrop_base)
-        initializeViewModel()
+//        initializeViewModel()
         initializeComponents()
 
         // TODO move to abstract intialization
-        cardStack.add(BackdropCardFragment())
+        cardStack.push(BackdropCardFragment())
 
-        for (i in 0..5) {
+        for (i in 0..3) {
             Handler(mainLooper).postDelayed({
-                cardStack.add(BackdropCardFragment())
+                cardStack.push(BackdropCardFragment())
             }, 1500 * i.toLong())
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initializeViewModel()
     }
 
     override fun onPause() {
         super.onPause()
         viewModel.unregisterEventCallbacks(this::onEvent)
+    }
+
+    override fun onBackPressed() {
+        when {
+            // TODO fullscreen -> hide
+            open -> {
+                viewModel.emit(BackdropEvent.HIDE_BACKDROP_CONTENT)
+            }
+            cardStack.hasMoreThanOneEntry -> {
+                cardStack.pop()
+            }
+            else -> {
+                super.onBackPressed()
+            }
+        }
     }
 
     private fun initializeViewModel() {

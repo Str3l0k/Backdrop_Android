@@ -2,7 +2,8 @@ package de.si.kotlinx
 
 import android.animation.ObjectAnimator
 import android.view.View
-import androidx.core.view.isVisible
+import android.view.ViewGroup
+import androidx.core.view.updateLayoutParams
 
 val View.fadeInAnimator: ObjectAnimator
     get() = ObjectAnimator.ofFloat(this, View.ALPHA, 0f, 1f)
@@ -28,5 +29,12 @@ fun View.fade(fadeCallback: (() -> Unit)?) {
     fadeOut {
         fadeCallback?.invoke()
         fadeIn()
+    }
+}
+
+
+fun View.setTopMargin(margin: Int) {
+    updateLayoutParams<ViewGroup.MarginLayoutParams> {
+        topMargin = margin
     }
 }

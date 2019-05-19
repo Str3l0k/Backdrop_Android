@@ -36,7 +36,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
                 android:tint="@color/textColorLight"
-                app:srcCompat="@drawable/ic_launcher_foreground"/>
+                app:srcCompat="@android:drawable/ic_lock_power_off"/>
 
         <TextView
                 android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
                 android:tint="@color/textColorLight"
-                app:srcCompat="@drawable/ic_launcher_foreground"/>
+                app:srcCompat="?attr/actionModeCloseDrawable"/>
 
         <TextView
                 android:layout_width="match_parent"
@@ -101,7 +101,7 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
                 android:tint="@color/textColorLight"
-                app:srcCompat="@drawable/ic_launcher_foreground"/>
+                app:srcCompat="?attr/actionModeShareDrawable"/>
 
         <TextView
                 android:layout_width="match_parent"
