@@ -46,6 +46,11 @@ abstract class BackdropActivity : AppCompatActivity() {
         initializeComponents()
     }
 
+    override fun onPause() {
+        super.onPause()
+        viewModel.unregisterEventCallbacks(this::onEvent)
+    }
+
     private fun initializeViewModel() {
         viewModel.registerEventCallback(this::onEvent)
     }

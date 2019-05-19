@@ -21,7 +21,7 @@ class BackdropContent(private val activity: BackdropActivity) {
     // view cache
     private val backdropViewCache: MutableMap<Int, View> = mutableMapOf()
 
-    // viewmodel
+    // view model
     private val viewModel: BackdropViewModel = BackdropViewModel.registeredInstance(activity)
 
     /* API */
@@ -64,11 +64,11 @@ class BackdropContent(private val activity: BackdropActivity) {
     }
 
     private fun isViewAlreadyCached(@LayoutRes layoutResId: Int): Boolean {
-        return backdropViewCache.containsKey(layoutResId).not()
+        return backdropViewCache.containsKey(layoutResId)
     }
 
     private fun checkCacheAndInflateIfNecessary(@LayoutRes layoutResId: Int) {
-        if (isViewAlreadyCached(layoutResId)) {
+        if (isViewAlreadyCached(layoutResId).not()) {
             preCacheContentView(layoutResId)
         }
     }

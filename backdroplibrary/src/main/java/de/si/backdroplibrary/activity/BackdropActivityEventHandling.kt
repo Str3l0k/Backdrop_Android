@@ -40,8 +40,14 @@ internal fun BackdropActivity.onEvent(event: BackdropEvent, payload: Any?): Bool
 }
 
 /* helper functions */
-private fun isResourceId(payload: Any?): Int? {
-    return payload as? Int
+private fun isPayloadResourceId(payload: Any?): Int? {
+    val payloadInt = payload as? Int ?: -1
+
+    return if (payloadInt > 0) {
+        payloadInt
+    } else {
+        null
+    }
 }
 
 private fun isPayloadAString(payload: Any?): String? {
@@ -50,14 +56,14 @@ private fun isPayloadAString(payload: Any?): String? {
 
 /* region backdrop content event handling functions */
 private fun BackdropActivity.handlePrefetchBackdropContentEvent(payload: Any?): Boolean {
-    return isResourceId(payload)?.let { layoutResId ->
+    return isPayloadResourceId(payload)?.let { layoutResId ->
         content.preCacheContentView(layoutResId)
         true
     } ?: false
 }
 
 private fun BackdropActivity.handleShowBackdropContentEvent(payload: Any?): Boolean {
-    return isResourceId(payload)?.let { layoutResId ->
+    return isPayloadResourceId(payload)?.let { layoutResId ->
         content.setContentView(layoutResId) { contentView ->
             toolbar.disableActions()
             toolbar.showBackdropCloseButton()
@@ -100,7 +106,7 @@ private fun BackdropActivity.handleSubTitleClearEvent(): Boolean {
 
 /* region action event handling functions */
 private fun BackdropActivity.handleActivatePrimaryActionEvent(payload: Any?): Boolean {
-    isResourceId(payload)?.let { drawableResId ->
+    isPayloadResourceId(payload)?.let { drawableResId ->
         toolbar.activatePrimaryAction(drawableResId)
     }
 
