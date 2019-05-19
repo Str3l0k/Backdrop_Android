@@ -2,6 +2,7 @@ package de.si.backdroplibrary.activity
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -10,6 +11,7 @@ import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
 import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.BackdropViewModel
 import de.si.backdroplibrary.R
+import de.si.backdroplibrary.children.BackdropCardFragment
 import de.si.backdroplibrary.components.BackdropCardStack
 import de.si.backdroplibrary.components.BackdropContent
 import de.si.backdroplibrary.components.BackdropToolbar
@@ -27,10 +29,6 @@ abstract class BackdropActivity : AppCompatActivity() {
     internal lateinit var content: BackdropContent
     internal lateinit var cardStack: BackdropCardStack
 
-    /* backdrop state information */
-    protected val backdropContentInvisible: Boolean
-        get() = layout_backdrop_cardstack.translationY.toInt() == BACKDROP_CLOSED_TRANSLATION_Y.toInt()
-
     /* animation properties */
     private val backdropOpenCloseAnimator by lazy {
         ObjectAnimator.ofFloat(layout_backdrop_cardstack, View.TRANSLATION_Y, 0f).apply {
@@ -44,6 +42,15 @@ abstract class BackdropActivity : AppCompatActivity() {
         setContentView(R.layout.backdrop_base)
         initializeViewModel()
         initializeComponents()
+
+        // TODO move to abstract intialization
+        cardStack.add(BackdropCardFragment())
+
+        for (i in 0..5) {
+            Handler(mainLooper).postDelayed({
+                cardStack.add(BackdropCardFragment())
+            }, 1500 * i.toLong())
+        }
     }
 
     override fun onPause() {
@@ -73,7 +80,7 @@ abstract class BackdropActivity : AppCompatActivity() {
     }
 
     private fun initializeCardStack() {
-        // TODO
+        cardStack = BackdropCardStack(this)
     }
     /* endregion lifecycle */
 

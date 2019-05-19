@@ -6,14 +6,15 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
+import de.si.backdroplibrary.Backdrop
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.BackdropEvent
-import de.si.backdroplibrary.BackdropViewModel
 import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.fadeOut
 import de.si.kotlinx.inflateView
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-class BackdropContent(private val activity: BackdropActivity) {
+class BackdropContent(activity: BackdropActivity) : BackdropComponent(activity) {
 
     // view container
     private val layoutContentContainer: ViewGroup = activity.layout_backdrop_content
@@ -21,10 +22,10 @@ class BackdropContent(private val activity: BackdropActivity) {
     // view cache
     private val backdropViewCache: MutableMap<Int, View> = mutableMapOf()
 
-    // view model
-    private val viewModel: BackdropViewModel = BackdropViewModel.registeredInstance(activity)
-
     /* API */
+    internal val open: Boolean
+        get() = layoutContentContainer.translationY.toInt() == Backdrop.BACKDROP_CLOSED_TRANSLATION_Y.toInt()
+
     internal fun preCacheContentView(@LayoutRes layoutResId: Int) {
         val contentView = inflateViewAndCheckForId(layoutResId)
         contentView?.let { view ->

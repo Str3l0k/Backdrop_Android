@@ -8,13 +8,14 @@ import androidx.annotation.DrawableRes
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.BackdropEvent
-import de.si.backdroplibrary.BackdropViewModel
 import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.*
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-class BackdropToolbar(activity: BackdropActivity) {
+class BackdropToolbar(activity: BackdropActivity) : BackdropComponent(activity) {
+
     /* view elements */
     private val buttonCloseBackdrop: ImageButton = activity.button_backdrop_toolbar_hide
     private val buttonOpenMenu: ImageButton = activity.button_backdrop_toolbar_menu_show
@@ -23,9 +24,6 @@ class BackdropToolbar(activity: BackdropActivity) {
 
     private val textTitle: TextView = activity.text_backdrop_toolbar_title
     private val textSubTitle: TextView = activity.text_backdrop_toolbar_subtitle
-
-    /* view model */
-    private val viewModel = BackdropViewModel.registeredInstance(activity)
 
     /* animations */
     private val buttonMenuShowAnimator = buttonOpenMenu.fadeInAnimator
@@ -100,7 +98,7 @@ class BackdropToolbar(activity: BackdropActivity) {
             textSubTitle.fadeTextChange(value)
         }
 
-    internal fun disableActions() { // TODO
+    internal fun disableActions() { // TODO refactor
         buttonPrimaryAction.isClickable = false
         buttonPrimaryAction.animate().alpha(0.5f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
 
@@ -108,7 +106,7 @@ class BackdropToolbar(activity: BackdropActivity) {
         buttonMoreAction.animate().alpha(0.5f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
     }
 
-    internal fun enableActions() { // TODO
+    internal fun enableActions() { // TODO refactor
         buttonPrimaryAction.isClickable = true
         buttonPrimaryAction.animate().alpha(1f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
 

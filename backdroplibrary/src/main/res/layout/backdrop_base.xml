@@ -146,7 +146,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/layout_backdrop_toolbar">
 
-        <include layout="@layout/backdrop_card_layout"/>
+        <include
+                layout="@layout/backdrop_card_layout"
+                android:visibility="gone"/>
 
         <LinearLayout
                 android:id="@+id/layout_cardstack_touchblock"
