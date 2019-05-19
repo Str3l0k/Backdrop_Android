@@ -32,7 +32,6 @@ fun View.fade(fadeCallback: (() -> Unit)?) {
     }
 }
 
-
 fun View.setTopMargin(margin: Int) {
     updateLayoutParams<ViewGroup.MarginLayoutParams> {
         topMargin = margin

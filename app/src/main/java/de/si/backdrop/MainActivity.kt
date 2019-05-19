@@ -12,6 +12,7 @@ class MainActivity : BackdropActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setMenuLayout(R.layout.test_menu)
+        setBaseCardFragment(NavigationFragment())
 
         viewModel.emit(BackdropEvent.ACTIVATE_MORE_ACTION)
         viewModel.emit(BackdropEvent.ACTIVATE_PRIMARY_ACTION, R.drawable.abc_ic_commit_search_api_mtrl_alpha)

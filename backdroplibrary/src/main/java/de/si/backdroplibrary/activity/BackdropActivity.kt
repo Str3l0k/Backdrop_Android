@@ -2,7 +2,6 @@ package de.si.backdroplibrary.activity
 
 import android.animation.ObjectAnimator
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
@@ -44,17 +43,8 @@ abstract class BackdropActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.backdrop_base)
-//        initializeViewModel()
+        initializeViewModel()
         initializeComponents()
-
-        // TODO move to abstract intialization
-        cardStack.push(BackdropCardFragment())
-
-        for (i in 0..3) {
-            Handler(mainLooper).postDelayed({
-                cardStack.push(BackdropCardFragment())
-            }, 1500 * i.toLong())
-        }
     }
 
     override fun onResume() {
@@ -142,4 +132,8 @@ abstract class BackdropActivity : AppCompatActivity() {
         }
     }
     /* endregion */
+
+    fun setBaseCardFragment(fragment: BackdropCardFragment) {
+        cardStack.baseCardFragment = fragment
+    }
 }

@@ -22,7 +22,16 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
     internal val hasMoreThanOneEntry
         get() = fragmentStack.count() > 1
 
-    fun push(fragment: BackdropCardFragment) {
+    internal var baseCardFragment
+        get() = fragmentStack[0]
+        set(value) {
+            fragmentStack.add(0, value)
+            val fragmentTransaction = fragmentManager.beginTransaction()
+            fragmentTransaction.add(layoutContainer.id, value)
+            fragmentTransaction.commit()
+        }
+
+    internal fun push(fragment: BackdropCardFragment) {
         fragment.cardTopMargin = fragmentStack.count() * 8 // TODO calculation in DP instead of pixels
 
         fragmentStack.push(fragment)
@@ -32,7 +41,7 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
         fragmentTransaction.commit()
     }
 
-    fun pop() {
+    internal fun pop() {
         val topFragment = fragmentStack.pop()
 
         val fragmentTransaction = fragmentManager.beginTransaction()

@@ -1,6 +1,7 @@
 package de.si.backdroplibrary.activity
 
 import de.si.backdroplibrary.BackdropEvent
+import de.si.backdroplibrary.children.BackdropCardFragment
 
 internal fun BackdropActivity.onEvent(event: BackdropEvent, payload: Any?): Boolean {
     return when (event) {
@@ -52,6 +53,10 @@ private fun isPayloadResourceId(payload: Any?): Int? {
 
 private fun isPayloadAString(payload: Any?): String? {
     return payload as? String
+}
+
+private fun isPayloadCardFragment(payload: Any?): BackdropCardFragment? {
+    return payload as? BackdropCardFragment
 }
 
 /* region backdrop content event handling functions */
@@ -128,3 +133,15 @@ private fun BackdropActivity.handleDeactivateMoreActionEvent(): Boolean {
     return true
 }
 /* endregion */
+
+/* region card stack event handling functions */
+private fun BackdropActivity.handleAddTopCardEvent(payload: Any?) {
+    isPayloadCardFragment(payload)?.let { backdropCardFragment ->
+        cardStack.push(backdropCardFragment)
+    }
+}
+
+private fun BackdropActivity.handleRemoveTopCardEvent() {
+    cardStack.pop()
+}
+/* endregion card stack event handling functions */
