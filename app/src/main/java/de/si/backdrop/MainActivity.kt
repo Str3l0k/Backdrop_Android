@@ -1,55 +1,33 @@
 package de.si.backdrop
 
 import android.os.Bundle
-import android.os.Handler
 import android.view.View
-import de.si.backdroplibrary.BackdropEvent
-import de.si.backdroplibrary.activity.BackdropActivity
-import de.si.backdroplibrary.children.BackdropCardFragment
-import kotlin.random.Random
+import android.widget.Button
+import com.google.android.material.snackbar.Snackbar
+import de.si.backdroplibrary.activity.Activity
+import de.si.backdroplibrary.children.CardFragment
 
-class MainActivity : BackdropActivity() {
-    override val baseCardFragment: BackdropCardFragment = NavigationFragment()
+class MainActivity : Activity() {
+    override val baseCardFragment: CardFragment = BaseCardFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setMenuLayout(R.layout.test_menu)
-        viewModel.emit(BackdropEvent.ACTIVATE_MORE_ACTION)
-        viewModel.emit(BackdropEvent.ACTIVATE_PRIMARY_ACTION, R.drawable.abc_ic_commit_search_api_mtrl_alpha)
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        for (i in 0..2) {
-            Handler(mainLooper).postDelayed({
-                viewModel.emit(BackdropEvent.ADD_TOP_CARD, NavigationFragment())
-            }, 1500 * i.toLong())
-        }
-    }
-
-    override fun onEventReceived(event: BackdropEvent, payload: Any?): Boolean {
-        return when (event) {
-            BackdropEvent.BACKDROP_CONTENT_VISIBLE -> {
-                val view = payload as? View
-                view?.let {
-                    configureTestMenuView(view)
-                    true
-                } ?: false
-            }
-            BackdropEvent.PRIMARY_ACTION_TRIGGERED -> {
-                viewModel.emit(BackdropEvent.CHANGE_TITLE, "Title ${Random.nextInt(42)}")
-                viewModel.emit(BackdropEvent.DEACTIVATE_PRIMARY_ACTION)
+    override fun onBackdropContentVisible(view: View): Boolean {
+        return when (view.id) {
+            R.id.backdrop_main_menu_layout -> {
+                configureTestMenuView(view)
                 true
             }
-            BackdropEvent.MORE_ACTION_TRIGGERED -> {
-                viewModel.emit(BackdropEvent.CLEAR_SUBTITLE)
-                viewModel.emit(BackdropEvent.DEACTIVATE_MORE_ACTION)
+            R.id.layout_test_content -> {
+                view.findViewById<Button>(R.id.button_backdrop_content_test).setOnClickListener {
+                    Snackbar.make(view, "Test", Snackbar.LENGTH_SHORT).show()
+                }
                 true
             }
-            else -> {
-                super.onEventReceived(event, payload)
-            }
+            else -> false
         }
     }
 
@@ -60,7 +38,7 @@ class MainActivity : BackdropActivity() {
 
         val buttonTest = menuView.findViewById<View>(R.id.backdrop_main_menu_feedback)
         buttonTest.setOnClickListener {
-            viewModel.emit(BackdropEvent.SHOW_BACKDROP_CONTENT, R.layout.backdrop_test_content)
+            showBackdropContent(R.layout.backdrop_test_content)
         }
     }
 }

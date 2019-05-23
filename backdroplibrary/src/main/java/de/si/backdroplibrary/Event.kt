@@ -1,6 +1,6 @@
 package de.si.backdroplibrary
 
-enum class BackdropEvent {
+enum class Event {
     // Backdrop content
     PREFETCH_BACKDROP_CONTENT_VIEW,
     SHOW_BACKDROP_CONTENT,
@@ -15,16 +15,10 @@ enum class BackdropEvent {
     CLEAR_SUBTITLE,
 
     // actions
-    ACTIVATE_PRIMARY_ACTION,
-    DEACTIVATE_PRIMARY_ACTION,
-    ACTIVATE_MORE_ACTION,
-    DEACTIVATE_MORE_ACTION,
     PRIMARY_ACTION_TRIGGERED,
     MORE_ACTION_TRIGGERED,
 
     // card stack
     ADD_TOP_CARD,
-    REMOVE_TOP_CARD,
-    ENABLE_CARDSTACK,
-    DISABLE_CARDSTACK
+    REMOVE_TOP_CARD
 }

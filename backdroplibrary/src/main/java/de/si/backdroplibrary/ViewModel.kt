@@ -5,9 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 
-typealias BackdropEventCallback = ((BackdropEvent, Any?) -> Boolean)
+typealias BackdropEventCallback = ((Event, Any?) -> Boolean)
 
 class BackdropViewModel : ViewModel() {
+
     @get:Synchronized
     private val callbackReceivers: MutableSet<BackdropEventCallback> = mutableSetOf()
 
@@ -19,16 +20,16 @@ class BackdropViewModel : ViewModel() {
         callbackReceivers.remove(callback)
     }
 
-    fun emit(event: BackdropEvent, payload: Any? = null) {
-//        Log.d("Backdrop event system", "Emitting event $event with payload $payload.")
+    internal fun emit(event: Event, payload: Any? = null) {
+        val callbackResult = callbackReceivers.reversed().firstOrNull { it.invoke(event, payload) }
 
-        if (callbackReceivers.reversed().firstOrNull { it.invoke(event, payload) } == null) {
+        if (callbackResult == null) {
             Log.w("Backdrop Event System", "Nobody consumed event = [$event], payload = [$payload]")
         }
     }
 
     companion object {
-        fun registeredInstance(activity: AppCompatActivity): BackdropViewModel {
+        internal fun registeredInstance(activity: AppCompatActivity): BackdropViewModel {
             return ViewModelProviders.of(activity)[BackdropViewModel::class.java]
         }
     }

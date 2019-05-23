@@ -6,14 +6,14 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
-import de.si.backdroplibrary.BackdropComponent
-import de.si.backdroplibrary.BackdropEvent
-import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.backdroplibrary.Component
+import de.si.backdroplibrary.Event
+import de.si.backdroplibrary.activity.Activity
 import de.si.kotlinx.fadeOut
 import de.si.kotlinx.inflateView
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-class BackdropContent(override val activity: BackdropActivity) : BackdropComponent {
+class Content(override val activity: Activity) : Component {
 
     // view container
     private val layoutContentContainer: ViewGroup = activity.layout_backdrop_content
@@ -75,7 +75,7 @@ class BackdropContent(override val activity: BackdropActivity) : BackdropCompone
 
         newContentView?.doOnNextLayout { newContentViewAfterLayout ->
             nextLayoutCallback(newContentViewAfterLayout)
-            viewModel.emit(BackdropEvent.BACKDROP_CONTENT_VISIBLE, newContentViewAfterLayout)
+            viewModel.emit(Event.BACKDROP_CONTENT_VISIBLE, newContentViewAfterLayout)
         }
 
         return newContentView

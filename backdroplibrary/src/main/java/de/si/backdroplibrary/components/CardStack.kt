@@ -2,16 +2,16 @@ package de.si.backdroplibrary.components
 
 import android.util.Log
 import androidx.fragment.app.FragmentManager
-import de.si.backdroplibrary.BackdropComponent
-import de.si.backdroplibrary.activity.BackdropActivity
-import de.si.backdroplibrary.children.BackdropCardFragment
+import de.si.backdroplibrary.Component
+import de.si.backdroplibrary.activity.Activity
+import de.si.backdroplibrary.children.CardFragment
 import de.si.kotlinx.add
 import de.si.kotlinx.realPixelsFromDensityPixels
 import de.si.kotlinx.remove
 import kotlinx.android.synthetic.main.backdrop_base.*
 import java.util.*
 
-class BackdropCardStack(override val activity: BackdropActivity) : BackdropComponent {
+class CardStack(override val activity: Activity) : Component {
 
     // view elements
     private val layoutContainer = activity.layout_backdrop_cardstack
@@ -20,7 +20,7 @@ class BackdropCardStack(override val activity: BackdropActivity) : BackdropCompo
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
 
     // stack
-    private val fragmentStack: Stack<BackdropCardFragment> = Stack()
+    private val fragmentStack: Stack<CardFragment> = Stack()
 
     internal val isTranslatedByY: Boolean
         get() = layoutContainer.translationY > 0
@@ -43,7 +43,7 @@ class BackdropCardStack(override val activity: BackdropActivity) : BackdropCompo
     internal val newTopCardMargin
         get() = fragmentStack.size * 8.realPixelsFromDensityPixels(activity.applicationContext)
 
-    internal fun push(fragment: BackdropCardFragment) {
+    internal fun push(fragment: CardFragment) {
         printCountWarningIfNecessary()
         fragment.cardTopMargin = newTopCardMargin
         topFragment.hideContent()
@@ -51,7 +51,7 @@ class BackdropCardStack(override val activity: BackdropActivity) : BackdropCompo
         addNewFragment(fragment)
     }
 
-    private fun addNewFragment(fragment: BackdropCardFragment) {
+    private fun addNewFragment(fragment: CardFragment) {
         fragmentManager.add(fragment, layoutContainer.id)
     }
 

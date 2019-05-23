@@ -7,31 +7,31 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
-import de.si.backdroplibrary.BackdropComponent
-import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.BackdropViewModel
+import de.si.backdroplibrary.Component
+import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.R
-import de.si.backdroplibrary.children.BackdropCardFragment
-import de.si.backdroplibrary.components.BackdropCardStack
-import de.si.backdroplibrary.components.BackdropContent
-import de.si.backdroplibrary.components.BackdropToolbar
+import de.si.backdroplibrary.children.CardFragment
+import de.si.backdroplibrary.components.CardStack
+import de.si.backdroplibrary.components.Content
+import de.si.backdroplibrary.components.Toolbar
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
+abstract class Activity : AppCompatActivity(), Component {
 
     // viewModel
     override val viewModel by lazy {
         BackdropViewModel.registeredInstance(this)
     }
 
-    override val activity: BackdropActivity = this
+    override val activity: Activity = this
 
     /* backdrop components */
-    internal lateinit var toolbar: BackdropToolbar
-    internal lateinit var content: BackdropContent
-    internal lateinit var cardStack: BackdropCardStack
+    internal lateinit var toolbar: Toolbar
+    internal lateinit var content: Content
+    internal lateinit var cardStack: CardStack
 
-    abstract val baseCardFragment: BackdropCardFragment
+    abstract val baseCardFragment: CardFragment
 
     internal val open: Boolean
         get() = cardStack.isTranslatedByY
@@ -49,7 +49,8 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         setContentView(R.layout.backdrop_base)
         initializeViewModel()
         initializeComponents()
-        initalizeBaseCardFragment()
+        initializeBaseCardFragment()
+        initializeBaseToolbarItem()
     }
 
     override fun onResume() {
@@ -66,10 +67,10 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         when {
             // TODO fullscreen -> hide
             open -> {
-                viewModel.emit(BackdropEvent.HIDE_BACKDROP_CONTENT)
+                hideBackdropContent()
             }
             cardStack.hasMoreThanOneEntry -> {
-                viewModel.emit(BackdropEvent.REMOVE_TOP_CARD)
+                removeTopCardFragment()
             }
             else -> {
                 super.onBackPressed()
@@ -82,36 +83,34 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     }
 
     private fun initializeComponents() {
-        initializeToolbar()
         initializeContent()
         initializeCardStack()
+        initializeToolbar()
     }
 
     private fun initializeToolbar() {
-        toolbar = BackdropToolbar(this)
+        toolbar = Toolbar(this)
         toolbar.closeBackdropClickCallback = {
-            viewModel.emit(BackdropEvent.HIDE_BACKDROP_CONTENT)
+            hideBackdropContent()
         }
     }
 
     private fun initializeContent() {
-        content = BackdropContent(this)
+        content = Content(this)
     }
 
     private fun initializeCardStack() {
-        cardStack = BackdropCardStack(this)
+        cardStack = CardStack(this)
     }
 
-    private fun initalizeBaseCardFragment() {
+    private fun initializeBaseCardFragment() {
         cardStack.baseFragment = baseCardFragment
     }
-    /* endregion lifecycle */
 
-    /* user related event handling */
-    open fun onEventReceived(event: BackdropEvent, payload: Any?): Boolean {
-        return false
+    private fun initializeBaseToolbarItem() {
+        toolbar.configure(cardStack.baseFragment.toolbarItem)
     }
-    /* endregion */
+    /* endregion lifecycle */
 
     /* region animation functions*/
     internal fun animateBackdropOpening(translationY: Float) {
@@ -135,9 +134,9 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     }
 
     fun setMenuLayout(@LayoutRes layoutResId: Int) {
-        viewModel.emit(BackdropEvent.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
+        viewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
         toolbar.openMenuClickCallback = {
-            viewModel.emit(BackdropEvent.SHOW_BACKDROP_CONTENT, layoutResId)
+            showBackdropContent(layoutResId)
         }
     }
     /* endregion */

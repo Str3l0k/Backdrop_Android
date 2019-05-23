@@ -8,13 +8,13 @@ import androidx.annotation.DrawableRes
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
-import de.si.backdroplibrary.BackdropComponent
-import de.si.backdroplibrary.BackdropEvent
-import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.backdroplibrary.Component
+import de.si.backdroplibrary.Event
+import de.si.backdroplibrary.activity.Activity
 import de.si.kotlinx.*
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-class BackdropToolbar(override val activity: BackdropActivity) : BackdropComponent {
+class Toolbar(override val activity: Activity) : Component {
 
     /* view elements */
     private val buttonCloseBackdrop: ImageButton = activity.button_backdrop_toolbar_hide
@@ -55,11 +55,11 @@ class BackdropToolbar(override val activity: BackdropActivity) : BackdropCompone
     // additional constructor init
     init {
         buttonMoreAction.setOnClickListener {
-            viewModel.emit(BackdropEvent.MORE_ACTION_TRIGGERED)
+            viewModel.emit(Event.MORE_ACTION_TRIGGERED)
         }
 
         buttonPrimaryAction.setOnClickListener {
-            viewModel.emit(BackdropEvent.PRIMARY_ACTION_TRIGGERED)
+            viewModel.emit(Event.PRIMARY_ACTION_TRIGGERED)
         }
     }
 
@@ -84,6 +84,23 @@ class BackdropToolbar(override val activity: BackdropActivity) : BackdropCompone
         }
 
     /* API */
+    internal fun configure(item: ToolbarItem) {
+        title = item.title
+        subTitle = item.subtitle
+
+        if (item.moreActionEnabled) {
+            showMoreAction()
+        } else {
+            hideMoreAction()
+        }
+
+        if (item.primaryAction != null) {
+            showPrimaryAction(item.primaryAction)
+        } else {
+            hidePrimaryAction()
+        }
+    }
+
     internal var title: String?
         get() = textTitle.text.toString()
         set(value) {
@@ -114,23 +131,23 @@ class BackdropToolbar(override val activity: BackdropActivity) : BackdropCompone
         buttonMoreAction.animate().alpha(1f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
     }
 
-    internal fun activatePrimaryAction(@DrawableRes drawableResId: Int) {
+    internal fun showPrimaryAction(@DrawableRes drawableResId: Int) {
         buttonPrimaryAction.isVisible = true
         buttonPrimaryAction.fadeIn()
         buttonPrimaryAction.setImageResource(drawableResId)
     }
 
-    internal fun deactivatePrimaryAction() {
+    internal fun hidePrimaryAction() {
         buttonPrimaryAction.isVisible = false
         buttonPrimaryAction.setOnClickListener(null)
     }
 
-    internal fun activateMoreAction() {
+    internal fun showMoreAction() {
         buttonMoreAction.isVisible = true
         buttonMoreAction.fadeIn()
     }
 
-    internal fun deactivateMoreAction() {
+    internal fun hideMoreAction() {
         buttonMoreAction.fadeOut {
             buttonMoreAction.isVisible = false
         }
