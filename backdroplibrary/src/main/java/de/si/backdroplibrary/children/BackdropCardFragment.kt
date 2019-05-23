@@ -6,12 +6,11 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import de.si.backdroplibrary.R
 import de.si.kotlinx.setTopMargin
 import kotlinx.android.synthetic.main.backdrop_card_layout.view.*
 
-open class BackdropCardFragment : Fragment() {
+open class BackdropCardFragment : BackdropFragment() {
 
     var cardTopMargin: Int
         get() = arguments?.getInt("top_margin", 0) ?: 0
@@ -31,7 +30,7 @@ open class BackdropCardFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflatedLayout = inflateMainLayout(inflater, container)
         inflatedLayout?.backdrop_basecard?.setTopMargin(cardTopMargin)
-        inflatedLayout?.addView(onCreateContentView(inflater, container, savedInstanceState))
+        inflatedLayout?.backdrop_basecard_content?.addView(onCreateContentView(inflater, container, savedInstanceState))
         return inflatedLayout
     }
 

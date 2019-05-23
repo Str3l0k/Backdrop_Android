@@ -28,12 +28,8 @@ internal fun BackdropActivity.onEvent(event: BackdropEvent, payload: Any?): Bool
         BackdropEvent.DISABLE_CARDSTACK -> {
             true
         }
-        BackdropEvent.ADD_TOP_CARD -> {
-            true
-        }
-        BackdropEvent.REMOVE_TOP_CARD -> {
-            true
-        }
+        BackdropEvent.ADD_TOP_CARD -> handleAddTopCardEvent(payload)
+        BackdropEvent.REMOVE_TOP_CARD -> handleRemoveTopCardEvent()
 
         // send everything not consumed to open function for custom implementation
         else -> onEventReceived(event, payload)
@@ -135,13 +131,15 @@ private fun BackdropActivity.handleDeactivateMoreActionEvent(): Boolean {
 /* endregion */
 
 /* region card stack event handling functions */
-private fun BackdropActivity.handleAddTopCardEvent(payload: Any?) {
-    isPayloadCardFragment(payload)?.let { backdropCardFragment ->
+private fun BackdropActivity.handleAddTopCardEvent(payload: Any?): Boolean {
+    return isPayloadCardFragment(payload)?.let { backdropCardFragment ->
         cardStack.push(backdropCardFragment)
-    }
+        true
+    } ?: false
 }
 
-private fun BackdropActivity.handleRemoveTopCardEvent() {
+private fun BackdropActivity.handleRemoveTopCardEvent(): Boolean {
     cardStack.pop()
+    return true
 }
 /* endregion card stack event handling functions */

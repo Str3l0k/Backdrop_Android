@@ -11,7 +11,6 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
 
     // view elements
     private val layoutContainer = activity.layout_backdrop_cardstack
-    private val layoutTouchBlock = activity.layout_cardstack_touchblock
 
     // properties
     private val fragmentManager: FragmentManager = activity.supportFragmentManager
@@ -39,6 +38,8 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
         val fragmentTransaction = fragmentManager.beginTransaction()
         fragmentTransaction.add(layoutContainer.id, fragment)
         fragmentTransaction.commit()
+
+        // TODO disable previous views to gone
     }
 
     internal fun pop() {
