@@ -68,6 +68,7 @@ private fun BackdropActivity.handleShowBackdropContentEvent(payload: Any?): Bool
         content.setContentView(layoutResId) { contentView ->
             toolbar.disableActions()
             toolbar.showBackdropCloseButton()
+            cardStack.disable()
             animateBackdropOpening(contentView.height.toFloat())
         }
         true
@@ -77,6 +78,7 @@ private fun BackdropActivity.handleShowBackdropContentEvent(payload: Any?): Bool
 private fun BackdropActivity.handleHideBackdropContentEvent(): Boolean {
     animateBackdropClosing()
     content.hide()
+    cardStack.enable()
     toolbar.enableActions()
     toolbar.showMenuButton()
     viewModel.emit(BackdropEvent.BACKDROP_CONTENT_INVISIBLE)

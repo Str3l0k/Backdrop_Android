@@ -18,6 +18,9 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
     // stack
     private val fragmentStack: Stack<BackdropCardFragment> = Stack()
 
+    internal val isTranslatedByY: Boolean
+        get() = layoutContainer.translationY > 0
+
     internal val hasMoreThanOneEntry
         get() = fragmentStack.count() > 1
 
@@ -30,9 +33,13 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
             fragmentTransaction.commit()
         }
 
+    internal val topFragment
+        get() = fragmentStack.peek()
+
     internal fun push(fragment: BackdropCardFragment) {
         fragment.cardTopMargin = fragmentStack.count() * 8 // TODO calculation in DP instead of pixels
 
+        topFragment.hideContent()
         fragmentStack.push(fragment)
 
         val fragmentTransaction = fragmentManager.beginTransaction()
@@ -43,10 +50,24 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
     }
 
     internal fun pop() {
-        val topFragment = fragmentStack.pop()
+        val recentTopFragment = fragmentStack.pop()
 
         val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.remove(topFragment)
+        fragmentTransaction.remove(recentTopFragment)
         fragmentTransaction.commit()
+
+        topFragment.showContent()
+    }
+
+    internal fun disable() {
+        fragmentStack.forEach { fragment ->
+            fragment.disable()
+        }
+    }
+
+    internal fun enable() {
+        fragmentStack.forEach { fragment ->
+            fragment.enable()
+        }
     }
 }

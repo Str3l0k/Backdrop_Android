@@ -19,7 +19,7 @@ import kotlinx.android.synthetic.main.backdrop_base.*
 
 abstract class BackdropActivity : AppCompatActivity() {
 
-    // viewmodel
+    // viewModel
     val viewModel by lazy {
         BackdropViewModel.registeredInstance(this)
     }
@@ -30,7 +30,7 @@ abstract class BackdropActivity : AppCompatActivity() {
     internal lateinit var cardStack: BackdropCardStack
 
     internal val open: Boolean
-        get() = layout_backdrop_cardstack.translationY.toInt() > Backdrop.BACKDROP_CLOSED_TRANSLATION_Y.toInt()
+        get() = cardStack.isTranslatedByY
 
     /* animation properties */
     private val backdropOpenCloseAnimator by lazy {
@@ -64,7 +64,7 @@ abstract class BackdropActivity : AppCompatActivity() {
                 viewModel.emit(BackdropEvent.HIDE_BACKDROP_CONTENT)
             }
             cardStack.hasMoreThanOneEntry -> {
-                cardStack.pop()
+                viewModel.emit(BackdropEvent.REMOVE_TOP_CARD)
             }
             else -> {
                 super.onBackPressed()

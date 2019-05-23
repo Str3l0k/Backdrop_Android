@@ -6,11 +6,16 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.R
+import de.si.kotlinx.fadeIn
+import de.si.kotlinx.fadeInAnimator
+import de.si.kotlinx.fadeOut
 import de.si.kotlinx.setTopMargin
 import kotlinx.android.synthetic.main.backdrop_card_layout.view.*
 
-open class BackdropCardFragment : BackdropFragment() {
+abstract class BackdropCardFragment : BackdropFragment() {
 
     var cardTopMargin: Int
         get() = arguments?.getInt("top_margin", 0) ?: 0
@@ -22,15 +27,15 @@ open class BackdropCardFragment : BackdropFragment() {
 
     // construction
     init {
-        enterTransition = Slide(Gravity.BOTTOM)
-        exitTransition = Slide(Gravity.BOTTOM)
+        enterTransition = Slide(Gravity.BOTTOM).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION)
+        exitTransition = Slide(Gravity.BOTTOM).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION)
     }
 
     // view
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val inflatedLayout = inflateMainLayout(inflater, container)
-        inflatedLayout?.backdrop_basecard?.setTopMargin(cardTopMargin)
-        inflatedLayout?.backdrop_basecard_content?.addView(onCreateContentView(inflater, container, savedInstanceState))
+        inflatedLayout?.view_cardstack_card?.setTopMargin(cardTopMargin)
+        inflatedLayout?.layout_cardstack_fragment_content?.addView(onCreateContentView(inflater, container, savedInstanceState))
         return inflatedLayout
     }
 
@@ -38,8 +43,32 @@ open class BackdropCardFragment : BackdropFragment() {
         return inflater.inflate(R.layout.backdrop_card_layout, container, false) as? ViewGroup
     }
 
-    // TODO add abstract method to inflate content
-    open fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return View(context)
+    // backdrop control
+    internal fun disable() {
+        view?.layout_cardstack_blocklayer?.isVisible = true
+        val fadeInAnimator = view?.layout_cardstack_blocklayer?.fadeInAnimator
+        fadeInAnimator?.setDuration(Backdrop.BACKDROP_ANIMATION_DURATION)
+        fadeInAnimator?.setFloatValues(0.42f)
+        fadeInAnimator?.start()
     }
+
+    internal fun enable() {
+        view?.layout_cardstack_blocklayer?.fadeOut(Backdrop.BACKDROP_ANIMATION_DURATION) {
+            view?.layout_cardstack_blocklayer?.isVisible = false
+        }
+    }
+
+    internal fun hideContent() {
+        view?.layout_cardstack_fragment_content?.fadeOut(Backdrop.BACKDROP_ANIMATION_DURATION) {
+            view?.layout_cardstack_fragment_content?.isVisible = false
+        }
+    }
+
+    internal fun showContent() {
+        view?.layout_cardstack_fragment_content?.alpha = 1f
+        view?.layout_cardstack_fragment_content?.isVisible = true
+    }
+
+    // TODO add abstract method to inflate content
+    abstract fun onCreateContentView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?
 }
