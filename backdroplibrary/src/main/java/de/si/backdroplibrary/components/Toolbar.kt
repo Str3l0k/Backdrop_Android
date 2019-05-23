@@ -61,6 +61,7 @@ class Toolbar(override val activity: Activity) : Component {
 
         buttonPrimaryAction.setOnClickListener {
             viewModel.emit(Event.PRIMARY_ACTION_TRIGGERED)
+            // TODO problem when going back to base card, primary action is not triggered
         }
 
         buttonBack.setOnClickListener {
@@ -160,7 +161,6 @@ class Toolbar(override val activity: Activity) : Component {
 
     internal fun hidePrimaryAction() {
         buttonPrimaryAction.isVisible = false
-        buttonPrimaryAction.setOnClickListener(null)
     }
 
     internal fun showMoreAction() {
