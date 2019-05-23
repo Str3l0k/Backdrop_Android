@@ -5,9 +5,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.BackdropViewModel
 import de.si.backdroplibrary.R
@@ -17,17 +17,21 @@ import de.si.backdroplibrary.components.BackdropContent
 import de.si.backdroplibrary.components.BackdropToolbar
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-abstract class BackdropActivity : AppCompatActivity() {
+abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
     // viewModel
-    val viewModel by lazy {
+    override val viewModel by lazy {
         BackdropViewModel.registeredInstance(this)
     }
+
+    override val activity: BackdropActivity = this
 
     /* backdrop components */
     internal lateinit var toolbar: BackdropToolbar
     internal lateinit var content: BackdropContent
     internal lateinit var cardStack: BackdropCardStack
+
+    abstract val baseCardFragment: BackdropCardFragment
 
     internal val open: Boolean
         get() = cardStack.isTranslatedByY
@@ -45,6 +49,7 @@ abstract class BackdropActivity : AppCompatActivity() {
         setContentView(R.layout.backdrop_base)
         initializeViewModel()
         initializeComponents()
+        initalizeBaseCardFragment()
     }
 
     override fun onResume() {
@@ -96,6 +101,10 @@ abstract class BackdropActivity : AppCompatActivity() {
     private fun initializeCardStack() {
         cardStack = BackdropCardStack(this)
     }
+
+    private fun initalizeBaseCardFragment() {
+        cardStack.baseFragment = baseCardFragment
+    }
     /* endregion lifecycle */
 
     /* user related event handling */
@@ -132,8 +141,4 @@ abstract class BackdropActivity : AppCompatActivity() {
         }
     }
     /* endregion */
-
-    fun setBaseCardFragment(fragment: BackdropCardFragment) {
-        cardStack.baseCardFragment = fragment
-    }
 }

@@ -11,11 +11,11 @@ class BackdropViewModel : ViewModel() {
     @get:Synchronized
     private val callbackReceivers: MutableSet<BackdropEventCallback> = mutableSetOf()
 
-    fun registerEventCallback(callbackBackdrop: BackdropEventCallback) {
+    internal fun registerEventCallback(callbackBackdrop: BackdropEventCallback) {
         callbackReceivers.add(callbackBackdrop)
     }
 
-    fun unregisterEventCallbacks(callback: BackdropEventCallback) {
+    internal fun unregisterEventCallbacks(callback: BackdropEventCallback) {
         callbackReceivers.remove(callback)
     }
 
@@ -27,19 +27,9 @@ class BackdropViewModel : ViewModel() {
         }
     }
 
-    // TODO include convenience functions for easier event emit
-
     companion object {
         fun registeredInstance(activity: AppCompatActivity): BackdropViewModel {
             return ViewModelProviders.of(activity)[BackdropViewModel::class.java]
         }
     }
-}
-
-fun BackdropViewModel.changeTitle(newTitle: String) {
-    emit(BackdropEvent.CHANGE_TITLE, newTitle)
-}
-
-fun BackdropViewModel.clearSubtitle() {
-    emit(BackdropEvent.CLEAR_SUBTITLE)
 }

@@ -1,21 +1,31 @@
 package de.si.backdrop
 
 import android.os.Bundle
+import android.os.Handler
 import android.view.View
 import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.activity.BackdropActivity
-import de.si.backdroplibrary.changeTitle
-import de.si.backdroplibrary.clearSubtitle
+import de.si.backdroplibrary.children.BackdropCardFragment
 import kotlin.random.Random
 
 class MainActivity : BackdropActivity() {
+    override val baseCardFragment: BackdropCardFragment = NavigationFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setMenuLayout(R.layout.test_menu)
-        setBaseCardFragment(NavigationFragment())
-
         viewModel.emit(BackdropEvent.ACTIVATE_MORE_ACTION)
         viewModel.emit(BackdropEvent.ACTIVATE_PRIMARY_ACTION, R.drawable.abc_ic_commit_search_api_mtrl_alpha)
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        for (i in 0..2) {
+            Handler(mainLooper).postDelayed({
+                viewModel.emit(BackdropEvent.ADD_TOP_CARD, NavigationFragment())
+            }, 1500 * i.toLong())
+        }
     }
 
     override fun onEventReceived(event: BackdropEvent, payload: Any?): Boolean {
@@ -28,12 +38,12 @@ class MainActivity : BackdropActivity() {
                 } ?: false
             }
             BackdropEvent.PRIMARY_ACTION_TRIGGERED -> {
-                viewModel.changeTitle("Title ${Random.nextInt(42)}")
+                viewModel.emit(BackdropEvent.CHANGE_TITLE, "Title ${Random.nextInt(42)}")
                 viewModel.emit(BackdropEvent.DEACTIVATE_PRIMARY_ACTION)
                 true
             }
             BackdropEvent.MORE_ACTION_TRIGGERED -> {
-                viewModel.clearSubtitle()
+                viewModel.emit(BackdropEvent.CLEAR_SUBTITLE)
                 viewModel.emit(BackdropEvent.DEACTIVATE_MORE_ACTION)
                 true
             }

@@ -13,7 +13,7 @@ import de.si.kotlinx.fadeOut
 import de.si.kotlinx.inflateView
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-class BackdropContent(activity: BackdropActivity) : BackdropComponent(activity) {
+class BackdropContent(override val activity: BackdropActivity) : BackdropComponent {
 
     // view container
     private val layoutContentContainer: ViewGroup = activity.layout_backdrop_content

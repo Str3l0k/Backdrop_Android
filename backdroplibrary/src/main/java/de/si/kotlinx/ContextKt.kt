@@ -11,3 +11,7 @@ val Context.layoutInflater: LayoutInflater?
 fun Context.inflateView(layoutResId: Int, parentViewGroup: ViewGroup): View? {
     return layoutInflater?.inflate(layoutResId, parentViewGroup, false)
 }
+
+fun Int.realPixelsFromDensityPixels(context: Context): Int {
+    return (this * context.resources.displayMetrics.density).toInt()
+}

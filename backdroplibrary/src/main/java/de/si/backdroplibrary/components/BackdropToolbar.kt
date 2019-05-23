@@ -14,7 +14,7 @@ import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.*
 import kotlinx.android.synthetic.main.backdrop_base.*
 
-class BackdropToolbar(activity: BackdropActivity) : BackdropComponent(activity) {
+class BackdropToolbar(override val activity: BackdropActivity) : BackdropComponent {
 
     /* view elements */
     private val buttonCloseBackdrop: ImageButton = activity.button_backdrop_toolbar_hide

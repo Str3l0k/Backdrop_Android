@@ -1,13 +1,17 @@
 package de.si.backdroplibrary.components
 
+import android.util.Log
 import androidx.fragment.app.FragmentManager
 import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.backdroplibrary.children.BackdropCardFragment
+import de.si.kotlinx.add
+import de.si.kotlinx.realPixelsFromDensityPixels
+import de.si.kotlinx.remove
 import kotlinx.android.synthetic.main.backdrop_base.*
 import java.util.*
 
-class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity) {
+class BackdropCardStack(override val activity: BackdropActivity) : BackdropComponent {
 
     // view elements
     private val layoutContainer = activity.layout_backdrop_cardstack
@@ -24,7 +28,7 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
     internal val hasMoreThanOneEntry
         get() = fragmentStack.count() > 1
 
-    internal var baseCardFragment
+    internal var baseFragment
         get() = fragmentStack[0]
         set(value) {
             fragmentStack.add(0, value)
@@ -36,27 +40,25 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
     internal val topFragment
         get() = fragmentStack.peek()
 
-    internal fun push(fragment: BackdropCardFragment) {
-        fragment.cardTopMargin = fragmentStack.count() * 8 // TODO calculation in DP instead of pixels
+    internal val newTopCardMargin
+        get() = fragmentStack.size * 8.realPixelsFromDensityPixels(activity.applicationContext)
 
+    internal fun push(fragment: BackdropCardFragment) {
+        printCountWarningIfNecessary()
+        fragment.cardTopMargin = newTopCardMargin
         topFragment.hideContent()
         fragmentStack.push(fragment)
+        addNewFragment(fragment)
+    }
 
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(layoutContainer.id, fragment)
-        fragmentTransaction.commit()
-
-        // TODO disable previous views to gone
+    private fun addNewFragment(fragment: BackdropCardFragment) {
+        fragmentManager.add(fragment, layoutContainer.id)
     }
 
     internal fun pop() {
         val recentTopFragment = fragmentStack.pop()
-
-        val fragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.remove(recentTopFragment)
-        fragmentTransaction.commit()
-
         topFragment.showContent()
+        fragmentManager.remove(recentTopFragment)
     }
 
     internal fun disable() {
@@ -68,6 +70,12 @@ class BackdropCardStack(activity: BackdropActivity) : BackdropComponent(activity
     internal fun enable() {
         fragmentStack.forEach { fragment ->
             fragment.enable()
+        }
+    }
+
+    private fun printCountWarningIfNecessary() {
+        if (fragmentStack.count() > 3) {
+            Log.w("Backdrop_Card_Stack", "Recommended maximum count already reached before (is 3).")
         }
     }
 }
