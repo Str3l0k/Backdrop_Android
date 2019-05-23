@@ -23,6 +23,19 @@
             app:titleTextColor="@color/textColorLight">
 
         <ImageButton
+                android:id="@+id/button_backdrop_toolbar_back"
+                android:layout_width="?attr/actionBarSize"
+                android:layout_height="match_parent"
+                android:tint="@android:color/white"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:src="@drawable/ic_back"
+                android:scaleType="center"
+                android:background="?attr/selectableItemBackgroundBorderless"/>
+
+        <ImageButton
                 android:id="@+id/button_backdrop_toolbar_hide"
                 android:layout_width="?attr/actionBarSize"
                 android:layout_height="match_parent"

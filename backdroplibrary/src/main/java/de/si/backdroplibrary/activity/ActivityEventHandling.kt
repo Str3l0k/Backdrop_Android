@@ -105,7 +105,7 @@ private fun Activity.handleSubTitleClearEvent(): Boolean {
 private fun Activity.handleAddTopCardEvent(payload: Any?): Boolean {
     return isPayloadCardFragment(payload)?.let { backdropCardFragment ->
         backdropCardFragment.toolbarItem.let {
-            toolbar.configure(it)
+            toolbar.configure(it, true)
         }
         cardStack.push(backdropCardFragment)
         true
@@ -114,7 +114,7 @@ private fun Activity.handleAddTopCardEvent(payload: Any?): Boolean {
 
 private fun Activity.handleRemoveTopCardEvent(): Boolean {
     cardStack.pop()
-    toolbar.configure(cardStack.topFragment.toolbarItem)
+    toolbar.configure(cardStack.topFragment.toolbarItem, cardStack.hasMoreThanOneEntry)
     return true
 }
 /* endregion card stack event handling functions */

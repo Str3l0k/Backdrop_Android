@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.backdrop_base.*
 class Toolbar(override val activity: Activity) : Component {
 
     /* view elements */
+    private val buttonBack: ImageButton = activity.button_backdrop_toolbar_back
     private val buttonCloseBackdrop: ImageButton = activity.button_backdrop_toolbar_hide
     private val buttonOpenMenu: ImageButton = activity.button_backdrop_toolbar_menu_show
     private val buttonPrimaryAction: ImageButton = activity.button_backdrop_toolbar_action
@@ -61,6 +62,10 @@ class Toolbar(override val activity: Activity) : Component {
         buttonPrimaryAction.setOnClickListener {
             viewModel.emit(Event.PRIMARY_ACTION_TRIGGERED)
         }
+
+        buttonBack.setOnClickListener {
+            activity.onBackPressed()
+        }
     }
 
     /* callbacks */
@@ -84,7 +89,9 @@ class Toolbar(override val activity: Activity) : Component {
         }
 
     /* API */
-    internal fun configure(item: ToolbarItem) {
+    internal fun configure(item: ToolbarItem, back: Boolean) {
+        // TODO create a complete animation set when changing the toolbar item, now it looks stupid
+
         title = item.title
         subTitle = item.subtitle
 
@@ -98,6 +105,20 @@ class Toolbar(override val activity: Activity) : Component {
             showPrimaryAction(item.primaryAction)
         } else {
             hidePrimaryAction()
+        }
+
+        if (back) {
+            buttonOpenMenu.fadeOut {
+                buttonOpenMenu.isVisible = false
+            }
+            buttonBack.isVisible = true
+            buttonBack.fadeIn()
+        } else {
+            buttonBack.fadeOut {
+                buttonBack.isVisible = false
+            }
+            buttonOpenMenu.isVisible = true
+            buttonOpenMenu.fadeIn()
         }
     }
 

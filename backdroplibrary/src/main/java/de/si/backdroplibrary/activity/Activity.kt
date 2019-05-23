@@ -108,7 +108,7 @@ abstract class Activity : AppCompatActivity(), Component {
     }
 
     private fun initializeBaseToolbarItem() {
-        toolbar.configure(cardStack.baseFragment.toolbarItem)
+        toolbar.configure(cardStack.baseFragment.toolbarItem, false)
     }
     /* endregion lifecycle */
 
