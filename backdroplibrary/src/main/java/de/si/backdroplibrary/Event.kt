@@ -9,14 +9,15 @@ enum class Event {
     BACKDROP_CONTENT_INVISIBLE,
 
     // titles
-    CHANGE_TITLE,
-    CHANGE_SUBTITLE,
-    CLEAR_TITLE,
-    CLEAR_SUBTITLE,
+//    CHANGE_TITLE,
+//    CHANGE_SUBTITLE,
+//    CLEAR_TITLE,
+//    CLEAR_SUBTITLE,
 
-    // actions
+    // toolbar
     PRIMARY_ACTION_TRIGGERED,
     MORE_ACTION_TRIGGERED,
+    CHANGE_NAVIGATION_ITEM,
 
     // card stack
     ADD_TOP_CARD,

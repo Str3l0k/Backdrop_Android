@@ -137,20 +137,22 @@ class Toolbar(override val activity: Activity) : Component {
             textSubTitle.fadeTextChange(value)
         }
 
-    internal fun disableActions() { // TODO refactor
-        buttonPrimaryAction.isClickable = false
-        buttonPrimaryAction.animate().alpha(0.5f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
-
-        buttonMoreAction.isClickable = false
-        buttonMoreAction.animate().alpha(0.5f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
+    internal fun disableActions() {
+        buttonPrimaryAction.fadeOut(0.5f, Backdrop.BACKDROP_ANIMATION_DURATION) {
+            buttonPrimaryAction.isClickable = false
+        }
+        buttonMoreAction.fadeOut(0.5f, Backdrop.BACKDROP_ANIMATION_DURATION) {
+            buttonMoreAction.isClickable = false
+        }
     }
 
-    internal fun enableActions() { // TODO refactor
-        buttonPrimaryAction.isClickable = true
-        buttonPrimaryAction.animate().alpha(1f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
-
-        buttonMoreAction.isClickable = true
-        buttonMoreAction.animate().alpha(1f).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
+    internal fun enableActions() {
+        buttonPrimaryAction.fadeIn(Backdrop.BACKDROP_ANIMATION_DURATION) {
+            buttonPrimaryAction.isClickable = true
+        }
+        buttonMoreAction.fadeIn(Backdrop.BACKDROP_ANIMATION_DURATION) {
+            buttonMoreAction.isClickable = true
+        }
     }
 
     internal fun showPrimaryAction(@DrawableRes drawableResId: Int) {

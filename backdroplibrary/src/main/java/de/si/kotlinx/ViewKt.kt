@@ -11,9 +11,9 @@ val View.fadeInAnimator: ObjectAnimator
 val View.fadeOutAnimator: ObjectAnimator
     get() = ObjectAnimator.ofFloat(this, View.ALPHA, 1f, 0f)
 
-fun View.fadeOut(duration: Long = 150, fadedOutCallback: (() -> Unit)? = null) {
+fun View.fadeOut(alpha: Float = 0f, duration: Long = 150, fadedOutCallback: (() -> Unit)? = null) {
     animate()
-        .alpha(0f)
+        .alpha(alpha)
         .setDuration(duration)
         .withEndAction(fadedOutCallback)
 }

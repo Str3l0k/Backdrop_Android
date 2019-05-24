@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import de.si.backdroplibrary.children.CardFragment
 import de.si.backdroplibrary.components.ToolbarItem
-import kotlin.random.Random
 
 class MidCardFragment : CardFragment() {
     override val toolbarItem: ToolbarItem
@@ -28,7 +27,7 @@ class MidCardFragment : CardFragment() {
     }
 
     override fun onPrimaryActionClicked(): Boolean {
-        changeTitle("Title ${Random.nextInt(42)}")
+//        changeTitle("Title ${Random.nextInt(42)}")
         return true
     }
 }

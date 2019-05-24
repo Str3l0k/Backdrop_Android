@@ -70,13 +70,13 @@ abstract class CardFragment : Fragment() {
     }
 
     internal fun enable() {
-        view?.layout_cardstack_blocklayer?.fadeOut(Backdrop.BACKDROP_ANIMATION_DURATION) {
+        view?.layout_cardstack_blocklayer?.fadeOut(duration = Backdrop.BACKDROP_ANIMATION_DURATION) {
             view?.layout_cardstack_blocklayer?.isVisible = false
         }
     }
 
     internal fun hideContent() {
-        view?.layout_cardstack_fragment_content?.fadeOut(Backdrop.BACKDROP_ANIMATION_DURATION) {
+        view?.layout_cardstack_fragment_content?.fadeOut(duration = Backdrop.BACKDROP_ANIMATION_DURATION) {
             view?.layout_cardstack_fragment_content?.isVisible = false
         }
     }

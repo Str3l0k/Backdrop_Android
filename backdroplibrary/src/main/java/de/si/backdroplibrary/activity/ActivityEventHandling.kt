@@ -3,6 +3,7 @@ package de.si.backdroplibrary.activity
 import android.view.View
 import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.children.CardFragment
+import de.si.backdroplibrary.components.ToolbarItem
 
 internal fun Activity.onEvent(event: Event, payload: Any?): Boolean {
     return when (event) {
@@ -14,11 +15,12 @@ internal fun Activity.onEvent(event: Event, payload: Any?): Boolean {
         Event.BACKDROP_CONTENT_INVISIBLE -> onBackdropContentInvisible()
 
         // title events
-        Event.CHANGE_TITLE -> handleTitleChangeEvent(payload)
-        Event.CLEAR_TITLE -> handleTitleClearEvent()
-        Event.CLEAR_SUBTITLE -> handleSubTitleClearEvent()
+//        Event.CHANGE_TITLE -> handleTitleChangeEvent(payload)
+//        Event.CLEAR_TITLE -> handleTitleClearEvent()
+//        Event.CLEAR_SUBTITLE -> handleSubTitleClearEvent()
 
-        // action events
+        // toolbar events
+        Event.CHANGE_NAVIGATION_ITEM -> handleToolbarItemChangedEvent(payload)
         Event.PRIMARY_ACTION_TRIGGERED -> onPrimaryActionClicked()
         Event.MORE_ACTION_TRIGGERED -> onMoreActionClicked()
 
@@ -81,6 +83,12 @@ private fun Activity.handleHideBackdropContentEvent(): Boolean {
 /* endregion */
 
 /* region toolbar title event handling functions */
+private fun Activity.handleToolbarItemChangedEvent(payload: Any?): Boolean {
+    val toolbarItem = payload as ToolbarItem
+    toolbar.configure(toolbarItem, cardStack.hasMoreThanOneEntry)
+    return true
+}
+
 private fun Activity.handleTitleChangeEvent(payload: Any?): Boolean {
     isPayloadAString(payload)?.let { newTitle ->
         toolbar.title = newTitle

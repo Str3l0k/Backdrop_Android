@@ -30,7 +30,14 @@ class BaseCardFragment : CardFragment() {
     }
 
     override fun onPrimaryActionClicked(): Boolean {
-        changeTitle("Title ${Random.nextInt(42)}")
+//        changeTitle("Title ${Random.nextInt(42)}")
+        changeToolbarItem(
+            ToolbarItem(
+                title = "Title ${Random.nextInt(42)}",
+                primaryAction = toolbarItem.primaryAction,
+                moreActionEnabled = toolbarItem.moreActionEnabled
+            )
+        )
         return true
     }
 

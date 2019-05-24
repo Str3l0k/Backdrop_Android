@@ -5,6 +5,7 @@ import androidx.annotation.LayoutRes
 import de.si.backdroplibrary.activity.Activity
 import de.si.backdroplibrary.children.CardFragment
 import de.si.backdroplibrary.children.FullscreenFragment
+import de.si.backdroplibrary.components.ToolbarItem
 
 interface Component {
     val activity: Activity
@@ -35,20 +36,8 @@ interface Component {
         TODO("Not implemented")
     }
 
-    fun changeTitle(title: String) {
-        viewModel.emit(Event.CHANGE_TITLE, title)
-    }
-
-    fun clearTitle() {
-        viewModel.emit(Event.CLEAR_TITLE)
-    }
-
-    fun setSubtitle(subtitle: String) {
-        viewModel.emit(Event.CHANGE_SUBTITLE, subtitle)
-    }
-
-    fun clearSubtitle() {
-        viewModel.emit(Event.CLEAR_SUBTITLE)
+    fun changeToolbarItem(toolbarItem: ToolbarItem) {
+        viewModel.emit(Event.CHANGE_NAVIGATION_ITEM, toolbarItem)
     }
 
     fun onBackdropContentVisible(view: View): Boolean {
