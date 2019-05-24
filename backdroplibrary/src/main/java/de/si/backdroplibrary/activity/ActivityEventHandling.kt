@@ -74,8 +74,8 @@ private fun Activity.handleToolbarItemChangedEvent(toolbarItem: ToolbarItem): Bo
 /* region card stack event handling */
 private fun Activity.handleAddTopCardEvent(cardFragment: CardFragment): Boolean {
     val toolbarItem = cardFragment.toolbarItem
-    toolbar.configure(toolbarItem, cardStack.hasMoreThanOneEntry)
     cardStack.push(cardFragment)
+    toolbar.configure(toolbarItem, cardStack.hasMoreThanOneEntry)
     return true
 }
 
