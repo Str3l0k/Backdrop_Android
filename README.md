@@ -17,6 +17,7 @@ Basically use the Activity as base class.
 </p>
 
 # TODO
+See issues for now.
 
 ## License
 Apache 2.0
