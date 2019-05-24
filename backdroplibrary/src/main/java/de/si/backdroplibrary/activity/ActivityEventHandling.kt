@@ -1,74 +1,56 @@
 package de.si.backdroplibrary.activity
 
+import android.transition.Transition
 import android.view.View
+import androidx.core.transition.doOnEnd
+import androidx.core.view.isVisible
 import de.si.backdroplibrary.Event
+import de.si.backdroplibrary.R
 import de.si.backdroplibrary.children.CardFragment
+import de.si.backdroplibrary.children.FullscreenFragment
 import de.si.backdroplibrary.components.ToolbarItem
+import de.si.kotlinx.add
+import de.si.kotlinx.remove
+import kotlinx.android.synthetic.main.backdrop_base.*
 
 internal fun Activity.onEvent(event: Event, payload: Any?): Boolean {
     return when (event) {
         // content events
-        Event.PREFETCH_BACKDROP_CONTENT_VIEW -> handlePrefetchBackdropContentEvent(payload)
-        Event.SHOW_BACKDROP_CONTENT -> handleShowBackdropContentEvent(payload)
+        Event.PREFETCH_BACKDROP_CONTENT_VIEW -> handlePrefetchBackdropContentEvent(payload as Int)
+        Event.SHOW_BACKDROP_CONTENT -> handleShowBackdropContentEvent(payload as Int)
         Event.HIDE_BACKDROP_CONTENT -> handleHideBackdropContentEvent()
         Event.BACKDROP_CONTENT_VISIBLE -> onBackdropContentVisible(payload as View)
         Event.BACKDROP_CONTENT_INVISIBLE -> onBackdropContentInvisible()
 
-        // title events
-//        Event.CHANGE_TITLE -> handleTitleChangeEvent(payload)
-//        Event.CLEAR_TITLE -> handleTitleClearEvent()
-//        Event.CLEAR_SUBTITLE -> handleSubTitleClearEvent()
-
         // toolbar events
-        Event.CHANGE_NAVIGATION_ITEM -> handleToolbarItemChangedEvent(payload)
+        Event.CHANGE_NAVIGATION_ITEM -> handleToolbarItemChangedEvent(payload as ToolbarItem)
         Event.PRIMARY_ACTION_TRIGGERED -> onPrimaryActionClicked()
         Event.MORE_ACTION_TRIGGERED -> onMoreActionClicked()
 
         // card stack events
-        Event.ADD_TOP_CARD -> handleAddTopCardEvent(payload)
+        Event.ADD_TOP_CARD -> handleAddTopCardEvent(payload as CardFragment)
         Event.REMOVE_TOP_CARD -> handleRemoveTopCardEvent()
 
-        else -> false
+        // fullscreen
+        Event.SHOW_FULLSCREEN_FRAGMENT -> handleShowFullscreenFragmentEvent(payload as FullscreenFragment)
+        Event.HIDE_FULLSCREEN_FRAGMENT -> handleHideFullscreenFragmentEvent()
     }
 }
 
-/* helper functions */
-private fun isPayloadResourceId(payload: Any?): Int? {
-    val payloadInt = payload as? Int ?: -1
+/* region backdrop content event handling */
+private fun Activity.handlePrefetchBackdropContentEvent(layoutResId: Int): Boolean {
+    content.preCacheContentView(layoutResId)
+    return true
+}
 
-    return if (payloadInt > 0) {
-        payloadInt
-    } else {
-        null
+private fun Activity.handleShowBackdropContentEvent(layoutResId: Int): Boolean {
+    content.setContentView(layoutResId) { contentView ->
+        toolbar.disableActions()
+        toolbar.showBackdropCloseButton()
+        cardStack.disable()
+        animateBackdropOpening(contentView.height.toFloat())
     }
-}
-
-private fun isPayloadAString(payload: Any?): String? {
-    return payload as? String
-}
-
-private fun isPayloadCardFragment(payload: Any?): CardFragment? {
-    return payload as? CardFragment
-}
-
-/* region backdrop content event handling functions */
-private fun Activity.handlePrefetchBackdropContentEvent(payload: Any?): Boolean {
-    return isPayloadResourceId(payload)?.let { layoutResId ->
-        content.preCacheContentView(layoutResId)
-        true
-    } ?: false
-}
-
-private fun Activity.handleShowBackdropContentEvent(payload: Any?): Boolean {
-    return isPayloadResourceId(payload)?.let { layoutResId ->
-        content.setContentView(layoutResId) { contentView ->
-            toolbar.disableActions()
-            toolbar.showBackdropCloseButton()
-            cardStack.disable()
-            animateBackdropOpening(contentView.height.toFloat())
-        }
-        true
-    } ?: false
+    return true
 }
 
 private fun Activity.handleHideBackdropContentEvent(): Boolean {
@@ -82,42 +64,19 @@ private fun Activity.handleHideBackdropContentEvent(): Boolean {
 }
 /* endregion */
 
-/* region toolbar title event handling functions */
-private fun Activity.handleToolbarItemChangedEvent(payload: Any?): Boolean {
-    val toolbarItem = payload as ToolbarItem
+/* region toolbar event handling */
+private fun Activity.handleToolbarItemChangedEvent(toolbarItem: ToolbarItem): Boolean {
     toolbar.configure(toolbarItem, cardStack.hasMoreThanOneEntry)
-    return true
-}
-
-private fun Activity.handleTitleChangeEvent(payload: Any?): Boolean {
-    isPayloadAString(payload)?.let { newTitle ->
-        toolbar.title = newTitle
-    }
-
-    return true
-}
-
-private fun Activity.handleTitleClearEvent(): Boolean {
-    toolbar.title = null
-    return true
-}
-
-
-private fun Activity.handleSubTitleClearEvent(): Boolean {
-    toolbar.subTitle = null
     return true
 }
 /* endregion */
 
-/* region card stack event handling functions */
-private fun Activity.handleAddTopCardEvent(payload: Any?): Boolean {
-    return isPayloadCardFragment(payload)?.let { backdropCardFragment ->
-        backdropCardFragment.toolbarItem.let {
-            toolbar.configure(it, true)
-        }
-        cardStack.push(backdropCardFragment)
-        true
-    } ?: false
+/* region card stack event handling */
+private fun Activity.handleAddTopCardEvent(cardFragment: CardFragment): Boolean {
+    val toolbarItem = cardFragment.toolbarItem
+    toolbar.configure(toolbarItem, cardStack.hasMoreThanOneEntry)
+    cardStack.push(cardFragment)
+    return true
 }
 
 private fun Activity.handleRemoveTopCardEvent(): Boolean {
@@ -126,3 +85,21 @@ private fun Activity.handleRemoveTopCardEvent(): Boolean {
     return true
 }
 /* endregion card stack event handling functions */
+
+/* region fullscreen fragment event handling */
+private fun Activity.handleShowFullscreenFragmentEvent(fragment: FullscreenFragment): Boolean {
+    layout_backdrop_overlay.isVisible = true
+    supportFragmentManager.add(fragment, R.id.layout_backdrop_overlay)
+    return true
+}
+
+private fun Activity.handleHideFullscreenFragmentEvent(): Boolean {
+    val fragment = supportFragmentManager.findFragmentById(R.id.layout_backdrop_overlay)
+    (fragment?.exitTransition as Transition).doOnEnd {
+        layout_backdrop_overlay.isVisible = false
+    }
+    fragment.let(supportFragmentManager::remove)
+
+    return true
+}
+/* endregion */

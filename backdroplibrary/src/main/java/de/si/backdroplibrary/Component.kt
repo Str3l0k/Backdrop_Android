@@ -29,11 +29,11 @@ interface Component {
     }
 
     fun showFullscreenFragment(fragment: FullscreenFragment) {
-        TODO("Not implemented")
+        viewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
     }
 
     fun hideFullscreenFragment() {
-        TODO("Not implemented")
+        viewModel.emit(Event.HIDE_FULLSCREEN_FRAGMENT)
     }
 
     fun changeToolbarItem(toolbarItem: ToolbarItem) {

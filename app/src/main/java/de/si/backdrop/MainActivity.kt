@@ -24,6 +24,7 @@ class MainActivity : Activity() {
             R.id.layout_test_content -> {
                 view.findViewById<Button>(R.id.button_backdrop_content_test).setOnClickListener {
                     Snackbar.make(view, "Test", Snackbar.LENGTH_SHORT).show()
+                    showFullscreenFragment(FullscreenDialogFragment())
                 }
                 true
             }

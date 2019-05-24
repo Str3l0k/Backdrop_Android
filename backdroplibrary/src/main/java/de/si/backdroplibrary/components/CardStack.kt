@@ -32,9 +32,7 @@ class CardStack(override val activity: Activity) : Component {
         get() = fragmentStack[0]
         set(value) {
             fragmentStack.add(0, value)
-            val fragmentTransaction = fragmentManager.beginTransaction()
-            fragmentTransaction.add(layoutContainer.id, value)
-            fragmentTransaction.commit()
+            fragmentManager.add(value, layoutContainer.id)
         }
 
     internal val topFragment

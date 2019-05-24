@@ -8,12 +8,6 @@ enum class Event {
     BACKDROP_CONTENT_VISIBLE,
     BACKDROP_CONTENT_INVISIBLE,
 
-    // titles
-//    CHANGE_TITLE,
-//    CHANGE_SUBTITLE,
-//    CLEAR_TITLE,
-//    CLEAR_SUBTITLE,
-
     // toolbar
     PRIMARY_ACTION_TRIGGERED,
     MORE_ACTION_TRIGGERED,
@@ -21,5 +15,9 @@ enum class Event {
 
     // card stack
     ADD_TOP_CARD,
-    REMOVE_TOP_CARD
+    REMOVE_TOP_CARD,
+
+    // fullscreen
+    SHOW_FULLSCREEN_FRAGMENT,
+    HIDE_FULLSCREEN_FRAGMENT
 }

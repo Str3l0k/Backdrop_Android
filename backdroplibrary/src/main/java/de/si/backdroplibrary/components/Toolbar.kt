@@ -12,7 +12,7 @@ import de.si.backdroplibrary.Component
 import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.activity.Activity
 import de.si.kotlinx.*
-import kotlinx.android.synthetic.main.backdrop_base.*
+import kotlinx.android.synthetic.main.layout_toolbar.*
 
 class Toolbar(override val activity: Activity) : Component {
 
@@ -182,7 +182,9 @@ class Toolbar(override val activity: Activity) : Component {
     }
 
     internal fun showBackdropCloseButton() {
-        buttonCloseBackdrop.isVisible = true
-        showCloseButtonAnimatorSet.start()
+        if (buttonCloseBackdrop.isVisible.not()) {
+            buttonCloseBackdrop.isVisible = true
+            showCloseButtonAnimatorSet.start()
+        }
     }
 }
