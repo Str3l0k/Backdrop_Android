@@ -1,6 +1,6 @@
 package de.si.backdroplibrary
 
-enum class Event {
+internal enum class Event {
     // Backdrop content
     PREFETCH_BACKDROP_CONTENT_VIEW,
     SHOW_BACKDROP_CONTENT,
@@ -19,5 +19,6 @@ enum class Event {
 
     // fullscreen
     SHOW_FULLSCREEN_FRAGMENT,
+    REVEAL_FULLSCREEN_FRAGMENT,
     HIDE_FULLSCREEN_FRAGMENT
 }

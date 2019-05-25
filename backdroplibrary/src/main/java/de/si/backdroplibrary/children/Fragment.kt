@@ -25,7 +25,7 @@ abstract class Fragment : Fragment(), Component {
         viewModel.unregisterEventCallbacks(this::onEvent)
     }
 
-    protected fun onEvent(event: Event, payload: Any?): Boolean {
+    private fun onEvent(event: Event, payload: Any?): Boolean {
         return when (event) {
             Event.BACKDROP_CONTENT_VISIBLE -> onBackdropContentVisible(payload as View)
             Event.BACKDROP_CONTENT_INVISIBLE -> onBackdropContentInvisible()

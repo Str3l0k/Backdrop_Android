@@ -60,21 +60,4 @@
 
     </LinearLayout>
 
-    <LinearLayout
-            android:id="@+id/layout_backdrop_reveal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryLight"
-            android:clickable="true"
-            android:orientation="vertical"
-            android:padding="0dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:focusable="true">
-
-    </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>

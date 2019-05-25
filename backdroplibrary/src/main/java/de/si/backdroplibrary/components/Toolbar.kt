@@ -14,7 +14,7 @@ import de.si.backdroplibrary.activity.Activity
 import de.si.kotlinx.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
-class Toolbar(override val activity: Activity) : Component {
+internal class Toolbar(override val activity: Activity) : Component {
 
     /* view elements */
     private val buttonBack: ImageButton = activity.button_backdrop_toolbar_back

@@ -11,7 +11,7 @@ import de.si.kotlinx.remove
 import kotlinx.android.synthetic.main.backdrop_base.*
 import java.util.*
 
-class CardStack(override val activity: Activity) : Component {
+internal class CardStack(override val activity: Activity) : Component {
 
     // view elements
     private val layoutContainer = activity.layout_backdrop_cardstack

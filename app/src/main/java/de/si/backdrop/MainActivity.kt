@@ -1,11 +1,15 @@
 package de.si.backdrop
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
-import com.google.android.material.snackbar.Snackbar
 import de.si.backdroplibrary.activity.Activity
 import de.si.backdroplibrary.children.CardFragment
+import de.si.backdroplibrary.children.FullscreenRevealFragment
+import de.si.kotlinx.globalCenterPoint
 
 class MainActivity : Activity() {
     override val baseCardFragment: CardFragment = BaseCardFragment()
@@ -22,9 +26,10 @@ class MainActivity : Activity() {
                 true
             }
             R.id.layout_test_content -> {
-                view.findViewById<Button>(R.id.button_backdrop_content_test).setOnClickListener {
-                    Snackbar.make(view, "Test", Snackbar.LENGTH_SHORT).show()
-                    showFullscreenFragment(FullscreenDialogFragment())
+                view.findViewById<Button>(R.id.button_backdrop_content_test).setOnClickListener { button ->
+                    val fragment = RevealFragment()
+                    fragment.revealEpiCenter = button.globalCenterPoint
+                    revealFullscreenFragment(fragment)
                 }
                 true
             }
@@ -41,5 +46,13 @@ class MainActivity : Activity() {
         buttonTest.setOnClickListener {
             showBackdropContent(R.layout.backdrop_test_content)
         }
+    }
+}
+
+class RevealFragment : FullscreenRevealFragment() {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        val inflate = inflater.inflate(R.layout.base_card, container, false)
+        inflate.setBackgroundColor(Color.WHITE)
+        return inflate
     }
 }

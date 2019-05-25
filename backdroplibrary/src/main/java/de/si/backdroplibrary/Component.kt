@@ -5,6 +5,7 @@ import androidx.annotation.LayoutRes
 import de.si.backdroplibrary.activity.Activity
 import de.si.backdroplibrary.children.CardFragment
 import de.si.backdroplibrary.children.FullscreenFragment
+import de.si.backdroplibrary.children.FullscreenRevealFragment
 import de.si.backdroplibrary.components.ToolbarItem
 
 interface Component {
@@ -30,6 +31,10 @@ interface Component {
 
     fun showFullscreenFragment(fragment: FullscreenFragment) {
         viewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
+    }
+
+    fun revealFullscreenFragment(parameters: FullscreenRevealFragment) {
+        viewModel.emit(Event.REVEAL_FULLSCREEN_FRAGMENT, parameters)
     }
 
     fun hideFullscreenFragment() {

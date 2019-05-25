@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProviders
 
-typealias BackdropEventCallback = ((Event, Any?) -> Boolean)
+internal typealias BackdropEventCallback = ((Event, Any?) -> Boolean)
 
 class BackdropViewModel : ViewModel() {
 

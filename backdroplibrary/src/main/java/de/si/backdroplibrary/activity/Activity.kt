@@ -14,6 +14,7 @@ import de.si.backdroplibrary.R
 import de.si.backdroplibrary.children.CardFragment
 import de.si.backdroplibrary.components.CardStack
 import de.si.backdroplibrary.components.Content
+import de.si.backdroplibrary.components.FullscreenDialogs
 import de.si.backdroplibrary.components.Toolbar
 import kotlinx.android.synthetic.main.backdrop_base.*
 
@@ -30,10 +31,11 @@ abstract class Activity : AppCompatActivity(), Component {
     internal lateinit var toolbar: Toolbar
     internal lateinit var content: Content
     internal lateinit var cardStack: CardStack
+    internal lateinit var fullscreenDialogs: FullscreenDialogs
 
     abstract val baseCardFragment: CardFragment
 
-    internal val open: Boolean
+    private val open: Boolean
         get() = cardStack.isTranslatedByY
 
     /* animation properties */
@@ -65,7 +67,9 @@ abstract class Activity : AppCompatActivity(), Component {
 
     override fun onBackPressed() {
         when {
-            // TODO fullscreen -> hide
+            fullscreenDialogs.isVisible -> {
+                fullscreenDialogs.hideFullscreenFragment()
+            }
             open -> {
                 hideBackdropContent()
             }
@@ -86,6 +90,7 @@ abstract class Activity : AppCompatActivity(), Component {
         initializeContent()
         initializeCardStack()
         initializeToolbar()
+        initializeFullscreenDialogs()
     }
 
     private fun initializeToolbar() {
@@ -109,6 +114,10 @@ abstract class Activity : AppCompatActivity(), Component {
 
     private fun initializeBaseToolbarItem() {
         toolbar.configure(cardStack.baseFragment.toolbarItem, false)
+    }
+
+    private fun initializeFullscreenDialogs() {
+        fullscreenDialogs = FullscreenDialogs(this)
     }
     /* endregion lifecycle */
 

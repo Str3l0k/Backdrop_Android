@@ -1,17 +1,11 @@
 package de.si.backdroplibrary.activity
 
-import android.transition.Transition
 import android.view.View
-import androidx.core.transition.doOnEnd
-import androidx.core.view.isVisible
 import de.si.backdroplibrary.Event
-import de.si.backdroplibrary.R
 import de.si.backdroplibrary.children.CardFragment
 import de.si.backdroplibrary.children.FullscreenFragment
+import de.si.backdroplibrary.children.FullscreenRevealFragment
 import de.si.backdroplibrary.components.ToolbarItem
-import de.si.kotlinx.add
-import de.si.kotlinx.remove
-import kotlinx.android.synthetic.main.backdrop_base.*
 
 internal fun Activity.onEvent(event: Event, payload: Any?): Boolean {
     return when (event) {
@@ -33,6 +27,7 @@ internal fun Activity.onEvent(event: Event, payload: Any?): Boolean {
 
         // fullscreen
         Event.SHOW_FULLSCREEN_FRAGMENT -> handleShowFullscreenFragmentEvent(payload as FullscreenFragment)
+        Event.REVEAL_FULLSCREEN_FRAGMENT -> handleRevealFullscreenFragmentEvent(payload as FullscreenRevealFragment)
         Event.HIDE_FULLSCREEN_FRAGMENT -> handleHideFullscreenFragmentEvent()
     }
 }
@@ -88,18 +83,17 @@ private fun Activity.handleRemoveTopCardEvent(): Boolean {
 
 /* region fullscreen fragment event handling */
 private fun Activity.handleShowFullscreenFragmentEvent(fragment: FullscreenFragment): Boolean {
-    layout_backdrop_overlay.isVisible = true
-    supportFragmentManager.add(fragment, R.id.layout_backdrop_overlay)
+    fullscreenDialogs.showFullscreenFragment(fragment)
     return true
 }
 
 private fun Activity.handleHideFullscreenFragmentEvent(): Boolean {
-    val fragment = supportFragmentManager.findFragmentById(R.id.layout_backdrop_overlay)
-    (fragment?.exitTransition as Transition).doOnEnd {
-        layout_backdrop_overlay.isVisible = false
-    }
-    fragment.let(supportFragmentManager::remove)
+    fullscreenDialogs.hideFullscreenFragment()
+    return true
+}
 
+private fun Activity.handleRevealFullscreenFragmentEvent(fragment: FullscreenRevealFragment): Boolean {
+    fullscreenDialogs.revealFullscreen(fragment)
     return true
 }
 /* endregion */

@@ -1,9 +1,27 @@
 package de.si.kotlinx
 
 import android.animation.ObjectAnimator
+import android.graphics.Point
+import android.graphics.Rect
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.updateLayoutParams
+
+val View.revealRadius
+    get() = Math.hypot(width.toDouble(), height.toDouble()).toFloat()
+
+val View.globalVisibleRect: Rect
+    get() {
+        return Rect().apply {
+            getGlobalVisibleRect(this)
+        }
+    }
+
+val View.globalCenterPoint: Point
+    get() {
+        val rect = globalVisibleRect
+        return Point(rect.centerX(), rect.centerY())
+    }
 
 val View.fadeInAnimator: ObjectAnimator
     get() = ObjectAnimator.ofFloat(this, View.ALPHA, 0f, 1f)
