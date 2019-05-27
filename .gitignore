@@ -21,5 +21,4 @@
 .idea/runConfigurations.xml
 .idea/statistic.xml
 .idea/vcs.xml
-gradlew
-gradlew.bat
+.idea/.name
