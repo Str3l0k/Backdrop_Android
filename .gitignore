@@ -21,6 +21,5 @@
 .idea/runConfigurations.xml
 .idea/statistic.xml
 .idea/vcs.xml
-gradle/wrapper/gradle-wrapper.jar
 gradlew
 gradlew.bat
