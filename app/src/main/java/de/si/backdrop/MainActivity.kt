@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import de.si.backdrop.children.BaseCardFragment
 import de.si.backdroplibrary.activity.Activity
 import de.si.backdroplibrary.children.CardFragment
 import de.si.backdroplibrary.children.FullscreenRevealFragment

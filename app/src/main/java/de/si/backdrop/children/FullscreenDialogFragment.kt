@@ -1,9 +1,10 @@
-package de.si.backdrop
+package de.si.backdrop.children
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import de.si.backdrop.R
 import de.si.backdroplibrary.children.FullscreenFragment
 import kotlinx.android.synthetic.main.fragment_fullscreen.view.*
 
