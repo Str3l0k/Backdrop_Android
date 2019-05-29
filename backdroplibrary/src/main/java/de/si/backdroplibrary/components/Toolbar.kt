@@ -2,6 +2,7 @@ package de.si.backdroplibrary.components
 
 import android.animation.AnimatorSet
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.annotation.DrawableRes
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.layout_toolbar.*
 internal class Toolbar(override val activity: Activity) : Component {
 
     /* view elements */
+    private val toolbarLayout: ViewGroup = activity.layout_backdrop_toolbar
     private val buttonBack: ImageButton = activity.button_backdrop_toolbar_back
     private val buttonCloseBackdrop: ImageButton = activity.button_backdrop_toolbar_hide
     private val buttonOpenMenu: ImageButton = activity.button_backdrop_toolbar_menu_show
@@ -61,7 +63,6 @@ internal class Toolbar(override val activity: Activity) : Component {
 
         buttonPrimaryAction.setOnClickListener {
             viewModel.emit(Event.PRIMARY_ACTION_TRIGGERED)
-            // TODO problem when going back to base card, primary action is not triggered
         }
 
         buttonBack.setOnClickListener {
@@ -91,50 +92,30 @@ internal class Toolbar(override val activity: Activity) : Component {
 
     /* API */
     internal fun configure(item: ToolbarItem, back: Boolean) {
-        // TODO create a complete animation set when changing the toolbar item, now it looks stupid
+        toolbarLayout.fade {
+            title = item.title
+            subTitle = item.subtitle
+            buttonMoreAction.isVisible = item.moreActionEnabled
+            buttonPrimaryAction.isVisible = item.primaryAction != null
+            item.primaryAction?.let { buttonPrimaryAction.setImageResource(it) }
 
-        title = item.title
-        subTitle = item.subtitle
-
-        if (item.moreActionEnabled) {
-            showMoreAction()
-        } else {
-            hideMoreAction()
-        }
-
-        if (item.primaryAction != null) {
-            showPrimaryAction(item.primaryAction)
-        } else {
-            hidePrimaryAction()
-        }
-
-        if (back) {
-            buttonOpenMenu.fadeOut {
-                buttonOpenMenu.isVisible = false
-            }
-            buttonBack.isVisible = true
-            buttonBack.fadeIn()
-        } else {
-            buttonBack.fadeOut {
-                buttonBack.isVisible = false
-            }
-            buttonOpenMenu.isVisible = true
-            buttonOpenMenu.fadeIn()
+            buttonBack.isVisible = back
+            buttonOpenMenu.isVisible = back.not()
         }
     }
 
-    internal var title: String?
+    private var title: String?
         get() = textTitle.text.toString()
         set(value) {
             textTitle.isVisible = value.isNullOrBlank().not()
-            textTitle.fadeTextChange(value)
+            textTitle.text = value
         }
 
-    internal var subTitle: String?
+    private var subTitle: String?
         get() = textSubTitle.text.toString()
         set(value) {
             textSubTitle.isVisible = value.isNullOrBlank().not()
-            textSubTitle.fadeTextChange(value)
+            textSubTitle.text = value
         }
 
     internal fun disableActions() {
