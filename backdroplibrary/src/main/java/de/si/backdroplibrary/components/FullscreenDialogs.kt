@@ -16,7 +16,7 @@ import de.si.backdroplibrary.children.FullscreenRevealFragment
 import de.si.kotlinx.add
 import de.si.kotlinx.remove
 import de.si.kotlinx.revealRadius
-import kotlinx.android.synthetic.main.backdrop_base.*
+import kotlinx.android.synthetic.main.layout_main.*
 
 internal class FullscreenDialogs(override val activity: Activity) : Component {
     private val fragmentManager = activity.supportFragmentManager

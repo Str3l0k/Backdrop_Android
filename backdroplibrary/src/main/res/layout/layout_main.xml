@@ -10,19 +10,6 @@
     <include layout="@layout/layout_toolbar"/>
 
     <LinearLayout
-            android:id="@+id/layout_backdrop_actionmode"
-            android:layout_width="0dp"
-            android:layout_height="72dp"
-            android:background="@color/colorPrimaryLight"
-            android:orientation="vertical"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
-
-    </LinearLayout>
-
-    <LinearLayout
             android:id="@+id/layout_backdrop_content"
             android:layout_width="0dp"
             android:layout_height="0dp"

@@ -9,9 +9,10 @@ import androidx.core.view.isVisible
 import de.si.backdroplibrary.Component
 import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.activity.Activity
+import de.si.kotlinx.fade
 import de.si.kotlinx.fadeOut
 import de.si.kotlinx.inflateView
-import kotlinx.android.synthetic.main.backdrop_base.*
+import kotlinx.android.synthetic.main.layout_main.*
 
 internal class Content(override val activity: Activity) : Component {
 
@@ -36,9 +37,10 @@ internal class Content(override val activity: Activity) : Component {
 
     internal fun setContentView(@LayoutRes layoutResId: Int, nextLayoutCallback: (View) -> Unit) {
         checkCacheAndInflateIfNecessary(layoutResId)
-        getContentViewAndSetLayoutCallback(layoutResId, nextLayoutCallback)?.let { contentView ->
-            prepareLayoutContainerAndAddContent(contentView)
-        }
+        getContentViewAndSetLayoutCallback(
+            layoutResId,
+            nextLayoutCallback
+        )?.let(this::prepareLayoutContainerAndAddContent)
     }
 
     internal fun hide() {
@@ -82,9 +84,16 @@ internal class Content(override val activity: Activity) : Component {
     }
 
     private fun prepareLayoutContainerAndAddContent(contentView: View) {
-        layoutContentContainer.alpha = 1f
-        layoutContentContainer.isVisible = true
-        layoutContentContainer.removeAllViews()
-        layoutContentContainer.addView(contentView)
+        if (layoutContentContainer.isVisible) {
+            layoutContentContainer.fade {
+                layoutContentContainer.removeAllViews()
+                layoutContentContainer.addView(contentView)
+            }
+        } else {
+            layoutContentContainer.alpha = 1f
+            layoutContentContainer.isVisible = true
+            layoutContentContainer.removeAllViews()
+            layoutContentContainer.addView(contentView)
+        }
     }
 }
