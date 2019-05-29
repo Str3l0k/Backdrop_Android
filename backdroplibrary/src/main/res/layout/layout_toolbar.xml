@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:title="@string/app_name"
         app:titleTextColor="@color/textColorLight"
-        tools:showIn="@layout/backdrop_base">
+        tools:showIn="@layout/layout_main">
 
     <ImageButton
             android:id="@+id/button_backdrop_toolbar_back"

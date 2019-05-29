@@ -8,7 +8,7 @@ import de.si.backdroplibrary.children.CardFragment
 import de.si.kotlinx.add
 import de.si.kotlinx.realPixelsFromDensityPixels
 import de.si.kotlinx.remove
-import kotlinx.android.synthetic.main.backdrop_base.*
+import kotlinx.android.synthetic.main.layout_main.*
 import java.util.*
 
 internal class CardStack(override val activity: Activity) : Component {

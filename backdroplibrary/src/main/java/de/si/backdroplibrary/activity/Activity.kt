@@ -16,7 +16,7 @@ import de.si.backdroplibrary.components.CardStack
 import de.si.backdroplibrary.components.Content
 import de.si.backdroplibrary.components.FullscreenDialogs
 import de.si.backdroplibrary.components.Toolbar
-import kotlinx.android.synthetic.main.backdrop_base.*
+import kotlinx.android.synthetic.main.layout_main.*
 
 abstract class Activity : AppCompatActivity(), Component {
 
@@ -48,7 +48,7 @@ abstract class Activity : AppCompatActivity(), Component {
     /* region lifecycle */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.backdrop_base)
+        setContentView(R.layout.layout_main)
         initializeViewModel()
         initializeComponents()
         initializeBaseCardFragment()

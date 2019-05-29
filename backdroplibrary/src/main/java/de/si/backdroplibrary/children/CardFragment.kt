@@ -15,7 +15,7 @@ import de.si.backdroplibrary.components.ToolbarItem
 import de.si.kotlinx.fadeInAnimator
 import de.si.kotlinx.fadeOut
 import de.si.kotlinx.setTopMargin
-import kotlinx.android.synthetic.main.backdrop_card_layout.view.*
+import kotlinx.android.synthetic.main.layout_card_fragment.view.*
 
 abstract class CardFragment : Fragment() {
 
@@ -57,7 +57,7 @@ abstract class CardFragment : Fragment() {
     }
 
     private fun inflateMainLayout(inflater: LayoutInflater, container: ViewGroup?): ViewGroup? {
-        return inflater.inflate(R.layout.backdrop_card_layout, container, false) as? ViewGroup
+        return inflater.inflate(R.layout.layout_card_fragment, container, false) as? ViewGroup
     }
 
     // backdrop control
