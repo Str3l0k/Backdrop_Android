@@ -38,7 +38,7 @@ internal class CardStack(override val activity: Activity) : Component {
     internal val topFragment
         get() = fragmentStack.peek()
 
-    internal val newTopCardMargin
+    private val newTopCardMargin
         get() = fragmentStack.size * 8.realPixelsFromDensityPixels(activity.applicationContext)
 
     internal fun push(fragment: CardFragment) {

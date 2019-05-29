@@ -25,7 +25,8 @@ abstract class Activity : AppCompatActivity(), Component {
         BackdropViewModel.registeredInstance(this)
     }
 
-    override val activity: Activity = this
+    override val activity: Activity
+        get() = this
 
     /* backdrop components */
     internal lateinit var toolbar: Toolbar
@@ -134,10 +135,12 @@ abstract class Activity : AppCompatActivity(), Component {
     /* endregion animation functions */
 
     /* region main menu */
+    @Suppress("unused")
     fun setMenuButtonClickCallback(clickCallback: () -> Unit) {
         toolbar.openMenuClickCallback = clickCallback
     }
 
+    @Suppress("unused")
     fun setMenuButtonLongClickCallback(longClickCallback: () -> Boolean) {
         toolbar.openMenuLongClickCallback = longClickCallback
     }

@@ -5,7 +5,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.annotation.DrawableRes
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
@@ -133,27 +132,6 @@ internal class Toolbar(override val activity: Activity) : Component {
         }
         buttonMoreAction.fadeIn(Backdrop.BACKDROP_ANIMATION_DURATION) {
             buttonMoreAction.isClickable = true
-        }
-    }
-
-    internal fun showPrimaryAction(@DrawableRes drawableResId: Int) {
-        buttonPrimaryAction.isVisible = true
-        buttonPrimaryAction.fadeIn()
-        buttonPrimaryAction.setImageResource(drawableResId)
-    }
-
-    internal fun hidePrimaryAction() {
-        buttonPrimaryAction.isVisible = false
-    }
-
-    internal fun showMoreAction() {
-        buttonMoreAction.isVisible = true
-        buttonMoreAction.fadeIn()
-    }
-
-    internal fun hideMoreAction() {
-        buttonMoreAction.fadeOut {
-            buttonMoreAction.isVisible = false
         }
     }
 
