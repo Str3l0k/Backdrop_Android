@@ -13,6 +13,10 @@ interface Component {
     val viewModel: BackdropViewModel
         get() = BackdropViewModel.registeredInstance(activity)
 
+    fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
+        viewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
+    }
+
     fun showBackdropContent(@LayoutRes layoutResId: Int) {
         viewModel.emit(Event.SHOW_BACKDROP_CONTENT, layoutResId)
     }

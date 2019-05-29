@@ -1,34 +1,34 @@
 package de.si.backdrop
 
-import android.graphics.Color
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Button
 import de.si.backdrop.children.BaseCardFragment
+import de.si.backdrop.children.FullscreenRevealFragment
+import de.si.backdrop.content.MainMenu
 import de.si.backdroplibrary.activity.Activity
 import de.si.backdroplibrary.children.CardFragment
-import de.si.backdroplibrary.children.FullscreenRevealFragment
 import de.si.kotlinx.globalCenterPoint
 
 class MainActivity : Activity() {
+    private var mainMenu: MainMenu? = null
+
     override val baseCardFragment: CardFragment = BaseCardFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setMenuLayout(R.layout.test_menu)
+        setMenuLayout(R.layout.main_menu)
     }
 
     override fun onBackdropContentVisible(view: View): Boolean {
         return when (view.id) {
-            R.id.backdrop_main_menu_layout -> {
+            R.id.menu_main_layout -> {
                 configureTestMenuView(view)
                 true
             }
             R.id.layout_test_content -> {
                 view.findViewById<Button>(R.id.button_backdrop_content_test).setOnClickListener { button ->
-                    val fragment = RevealFragment()
+                    val fragment = FullscreenRevealFragment()
                     fragment.revealEpiCenter = button.globalCenterPoint
                     revealFullscreenFragment(fragment)
                 }
@@ -39,21 +39,11 @@ class MainActivity : Activity() {
     }
 
     private fun configureTestMenuView(menuView: View) {
-        if (menuView.id != R.id.backdrop_main_menu_layout) {
-            return
+        when {
+            menuView.id != MainMenu.resourceId -> return
+            mainMenu == null -> {
+                mainMenu = MainMenu(menuView, this)
+            }
         }
-
-        val buttonTest = menuView.findViewById<View>(R.id.backdrop_main_menu_feedback)
-        buttonTest.setOnClickListener {
-            showBackdropContent(R.layout.backdrop_test_content)
-        }
-    }
-}
-
-class RevealFragment : FullscreenRevealFragment() {
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val inflate = inflater.inflate(R.layout.base_card, container, false)
-        inflate.setBackgroundColor(Color.WHITE)
-        return inflate
     }
 }

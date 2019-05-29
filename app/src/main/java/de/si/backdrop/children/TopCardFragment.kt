@@ -8,11 +8,12 @@ import de.si.backdrop.R
 import de.si.backdroplibrary.children.CardFragment
 import de.si.backdroplibrary.components.ToolbarItem
 
-class MidCardFragment : CardFragment() {
+class TopCardFragment : CardFragment() {
     override val toolbarItem: ToolbarItem
         get() = ToolbarItem(
             title = "Mid card",
-            moreActionEnabled = false
+            moreActionEnabled = false,
+            primaryAction = R.drawable.ic_add
         )
 
     override fun onCreateContentView(
@@ -20,7 +21,7 @@ class MidCardFragment : CardFragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.base_card, container, false)
+        return inflater.inflate(R.layout.top_card, container, false)
     }
 
     override fun onContentViewCreated(view: View?, savedInstanceState: Bundle?) {
@@ -28,7 +29,6 @@ class MidCardFragment : CardFragment() {
     }
 
     override fun onPrimaryActionClicked(): Boolean {
-//        changeTitle("Title ${Random.nextInt(42)}")
         return true
     }
 }

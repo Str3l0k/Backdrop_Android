@@ -63,8 +63,8 @@ internal class FullscreenDialogs(override val activity: Activity) : Component {
         val transition = fragment.exitTransition as? Transition
         transition?.doOnEnd {
             layoutContainer.isVisible = false
-            fragmentManager.remove(fragment)
         }
+        fragmentManager.remove(fragment)
     }
 
     private fun concealFullscreen(fragment: FullscreenRevealFragment) {

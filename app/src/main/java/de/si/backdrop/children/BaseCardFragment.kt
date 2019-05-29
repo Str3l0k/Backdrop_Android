@@ -12,9 +12,9 @@ import kotlin.random.Random
 class BaseCardFragment : CardFragment() {
     override val toolbarItem: ToolbarItem
         get() = ToolbarItem(
-            title = "Test",
-//            subtitle = "Test subtitle",
-            primaryAction = R.drawable.abc_ic_clear_material,
+            title = "Backdrop",
+            subtitle = "Demonstration",
+            primaryAction = R.drawable.ic_add,
             moreActionEnabled = true
         )
 
@@ -42,7 +42,7 @@ class BaseCardFragment : CardFragment() {
     }
 
     override fun onMoreActionClicked(): Boolean {
-        addCardFragment(MidCardFragment())
+        addCardFragment(TopCardFragment())
         return true
     }
 }

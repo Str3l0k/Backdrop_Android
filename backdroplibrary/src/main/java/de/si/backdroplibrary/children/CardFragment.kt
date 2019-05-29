@@ -45,7 +45,8 @@ abstract class CardFragment : Fragment() {
                 inflater,
                 container,
                 savedInstanceState
-            )
+            ),
+            ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
         )
         return inflatedLayout
     }
