@@ -5,13 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.si.backdrop.R
-import de.si.backdroplibrary.children.CardFragment
-import de.si.backdroplibrary.components.ToolbarItem
+import de.si.backdroplibrary.children.CardBackdropFragment
+import de.si.backdroplibrary.components.BackdropToolbarItem
 import kotlin.random.Random
 
-class BaseCardFragment : CardFragment() {
-    override val toolbarItem: ToolbarItem
-        get() = ToolbarItem(
+class BaseCardBackdropFragment : CardBackdropFragment() {
+    override val toolbarItem: BackdropToolbarItem
+        get() = BackdropToolbarItem(
             title = "Backdrop",
             subtitle = "Demonstration",
             primaryAction = R.drawable.ic_add,
@@ -32,7 +32,7 @@ class BaseCardFragment : CardFragment() {
 
     override fun onPrimaryActionClicked(): Boolean {
         changeToolbarItem(
-            ToolbarItem(
+            BackdropToolbarItem(
                 title = "Title ${Random.nextInt(42)}",
                 primaryAction = toolbarItem.primaryAction,
                 moreActionEnabled = toolbarItem.moreActionEnabled
@@ -42,7 +42,7 @@ class BaseCardFragment : CardFragment() {
     }
 
     override fun onMoreActionClicked(): Boolean {
-        addCardFragment(TopCardFragment())
+        addCardFragment(TopCardBackdropFragment())
         return true
     }
 }

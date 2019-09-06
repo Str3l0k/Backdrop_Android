@@ -2,16 +2,13 @@ package de.si.backdrop.content
 
 import android.view.View
 import de.si.backdrop.R
-import de.si.backdrop.children.FullscreenDialogFragment
-import de.si.backdrop.children.FullscreenRevealFragment
-import de.si.backdroplibrary.Component
+import de.si.backdrop.children.FullscreenDialogBackdropFragment
+import de.si.backdrop.children.FullscreenRevealBackdropFragment
+import de.si.backdroplibrary.BackdropComponent
 import de.si.kotlinx.globalCenterPoint
 import kotlinx.android.synthetic.main.main_menu.view.*
 
-class MainMenu(
-    view: View,
-    private val backdropComponent: Component
-) {
+class MainMenu(view: View, private val backdropBackdropComponent: BackdropComponent) {
     companion object {
         internal const val resourceId = R.id.menu_main_layout
     }
@@ -26,19 +23,21 @@ class MainMenu(
         buttonFullscreenFragmentReveal.setOnClickListener(this::showFullscreenFragmentReveal)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun changeContent(view: View) {
-        backdropComponent.showBackdropContent(R.layout.test_content)
+        backdropBackdropComponent.showBackdropContent(R.layout.test_content)
     }
 
+    @Suppress("UNUSED_PARAMETER")
     private fun showFullscreenFragmentSlide(view: View) {
-        backdropComponent.showFullscreenFragment(FullscreenDialogFragment())
+        backdropBackdropComponent.showFullscreenFragment(FullscreenDialogBackdropFragment())
     }
 
     private fun showFullscreenFragmentReveal(view: View) {
         val centerPoint = view.globalCenterPoint
-        val fullscreenRevealFragment = FullscreenRevealFragment().apply {
+        val fullscreenRevealFragment = FullscreenRevealBackdropFragment().apply {
             revealEpiCenter = centerPoint
         }
-        backdropComponent.revealFullscreenFragment(fullscreenRevealFragment)
+        backdropBackdropComponent.revealFullscreenFragment(fullscreenRevealFragment)
     }
 }

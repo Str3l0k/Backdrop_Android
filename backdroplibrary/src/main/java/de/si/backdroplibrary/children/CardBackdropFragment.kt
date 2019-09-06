@@ -10,17 +10,17 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.R
-import de.si.backdroplibrary.activity.Activity
-import de.si.backdroplibrary.components.ToolbarItem
+import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.backdroplibrary.components.BackdropToolbarItem
 import de.si.kotlinx.fadeInAnimator
 import de.si.kotlinx.fadeOut
 import de.si.kotlinx.setTopMargin
 import kotlinx.android.synthetic.main.layout_card_fragment.view.*
 
-abstract class CardFragment : Fragment() {
+abstract class CardBackdropFragment : BackdropFragment() {
 
-    override val activity: Activity
-        get() = getActivity() as Activity
+    override val backdropActivity: BackdropActivity
+        get() = activity as BackdropActivity
 
     var cardTopMargin: Int
         get() = arguments?.getInt("top_margin", 0) ?: 0
@@ -96,6 +96,6 @@ abstract class CardFragment : Fragment() {
     /* region abstract implementation */
     abstract fun onContentViewCreated(view: View?, savedInstanceState: Bundle?)
 
-    abstract val toolbarItem: ToolbarItem
+    abstract val toolbarItem: BackdropToolbarItem
     /* endregion */
 }

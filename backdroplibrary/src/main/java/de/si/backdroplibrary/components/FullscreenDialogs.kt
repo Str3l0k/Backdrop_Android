@@ -8,24 +8,25 @@ import androidx.core.content.ContextCompat
 import androidx.core.transition.doOnEnd
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
-import de.si.backdroplibrary.Component
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.R
-import de.si.backdroplibrary.activity.Activity
-import de.si.backdroplibrary.children.FullscreenFragment
-import de.si.backdroplibrary.children.FullscreenRevealFragment
+import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.backdroplibrary.children.FullscreenBackdropFragment
+import de.si.backdroplibrary.children.FullscreenRevealBackdropFragment
 import de.si.kotlinx.add
 import de.si.kotlinx.remove
 import de.si.kotlinx.revealRadius
 import kotlinx.android.synthetic.main.layout_main.*
 
-internal class FullscreenDialogs(override val activity: Activity) : Component {
-    private val fragmentManager = activity.supportFragmentManager
-    private val layoutContainer = activity.layout_backdrop_overlay
+internal class FullscreenDialogs(override val backdropActivity: BackdropActivity) :
+    BackdropComponent {
+    private val fragmentManager = backdropActivity.supportFragmentManager
+    private val layoutContainer = backdropActivity.layout_backdrop_overlay
 
     val isVisible
         get() = layoutContainer.isVisible
 
-    override fun showFullscreenFragment(fragment: FullscreenFragment) {
+    override fun showFullscreenFragment(fragment: FullscreenBackdropFragment) {
         layoutContainer.setBackgroundColor(Color.TRANSPARENT)
         layoutContainer.isVisible = true
         fragmentManager.add(fragment, layoutContainer.id)
@@ -33,17 +34,17 @@ internal class FullscreenDialogs(override val activity: Activity) : Component {
 
     override fun hideFullscreenFragment() {
         when (val fragment = fragmentManager.findFragmentById(layoutContainer.id)) {
-            is FullscreenFragment -> hideFullScreen(fragment)
-            is FullscreenRevealFragment -> concealFullscreen(fragment)
+            is FullscreenBackdropFragment -> hideFullScreen(fragment)
+            is FullscreenRevealBackdropFragment -> concealFullscreen(fragment)
         }
     }
 
-    internal fun revealFullscreen(fragment: FullscreenRevealFragment) {
+    internal fun revealFullscreen(fragment: FullscreenRevealBackdropFragment) {
         val epiCenter = fragment.revealEpiCenter
 
         layoutContainer.setBackgroundColor(
             ContextCompat.getColor(
-                activity.applicationContext,
+                backdropActivity.applicationContext,
                 R.color.colorPrimaryLightLowAlpha
             )
         )
@@ -59,7 +60,7 @@ internal class FullscreenDialogs(override val activity: Activity) : Component {
         ).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
     }
 
-    private fun hideFullScreen(fragment: FullscreenFragment) {
+    private fun hideFullScreen(fragment: FullscreenBackdropFragment) {
         val transition = fragment.exitTransition as? Transition
         transition?.doOnEnd {
             layoutContainer.isVisible = false
@@ -67,7 +68,7 @@ internal class FullscreenDialogs(override val activity: Activity) : Component {
         fragmentManager.remove(fragment)
     }
 
-    private fun concealFullscreen(fragment: FullscreenRevealFragment) {
+    private fun concealFullscreen(fragment: FullscreenRevealBackdropFragment) {
         val epiCenter = fragment.revealEpiCenter
 
         val concealAnimator = ViewAnimationUtils.createCircularReveal(

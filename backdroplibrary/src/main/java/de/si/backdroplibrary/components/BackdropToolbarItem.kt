@@ -1,6 +1,6 @@
 package de.si.backdroplibrary.components
 
-data class ToolbarItem(
+data class BackdropToolbarItem(
     val title: String,
     val subtitle: String? = null,
     val primaryAction: Int? = null,

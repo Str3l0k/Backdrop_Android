@@ -2,25 +2,26 @@ package de.si.backdroplibrary.components
 
 import android.util.Log
 import androidx.fragment.app.FragmentManager
-import de.si.backdroplibrary.Component
-import de.si.backdroplibrary.activity.Activity
-import de.si.backdroplibrary.children.CardFragment
+import de.si.backdroplibrary.BackdropComponent
+import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.backdroplibrary.children.CardBackdropFragment
 import de.si.kotlinx.add
 import de.si.kotlinx.realPixelsFromDensityPixels
 import de.si.kotlinx.remove
 import kotlinx.android.synthetic.main.layout_main.*
 import java.util.*
 
-internal class CardStack(override val activity: Activity) : Component {
+internal class BackdropCardStack(override val backdropActivity: BackdropActivity) :
+    BackdropComponent {
 
     // view elements
-    private val layoutContainer = activity.layout_backdrop_cardstack
+    private val layoutContainer = backdropActivity.layout_backdrop_cardstack
 
     // properties
-    private val fragmentManager: FragmentManager = activity.supportFragmentManager
+    private val fragmentManager: FragmentManager = backdropActivity.supportFragmentManager
 
     // stack
-    private val fragmentStack: Stack<CardFragment> = Stack()
+    private val fragmentStack: Stack<CardBackdropFragment> = Stack()
 
     internal val isTranslatedByY: Boolean
         get() = layoutContainer.translationY > 0
@@ -39,9 +40,9 @@ internal class CardStack(override val activity: Activity) : Component {
         get() = fragmentStack.peek()
 
     private val newTopCardMargin
-        get() = fragmentStack.size * 8.realPixelsFromDensityPixels(activity.applicationContext)
+        get() = fragmentStack.size * 8.realPixelsFromDensityPixels(backdropActivity.applicationContext)
 
-    internal fun push(fragment: CardFragment) {
+    internal fun push(fragment: CardBackdropFragment) {
         printCountWarningIfNecessary()
         fragment.cardTopMargin = newTopCardMargin
         topFragment.hideContent()
@@ -49,7 +50,7 @@ internal class CardStack(override val activity: Activity) : Component {
         addNewFragment(fragment)
     }
 
-    private fun addNewFragment(fragment: CardFragment) {
+    private fun addNewFragment(fragment: CardBackdropFragment) {
         fragmentManager.add(fragment, layoutContainer.id)
     }
 

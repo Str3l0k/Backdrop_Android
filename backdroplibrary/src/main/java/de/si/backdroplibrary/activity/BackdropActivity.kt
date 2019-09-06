@@ -7,37 +7,37 @@ import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.BackdropViewModel
-import de.si.backdroplibrary.Component
 import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.R
-import de.si.backdroplibrary.children.CardFragment
-import de.si.backdroplibrary.components.CardStack
-import de.si.backdroplibrary.components.Content
+import de.si.backdroplibrary.children.CardBackdropFragment
+import de.si.backdroplibrary.components.BackdropCardStack
+import de.si.backdroplibrary.components.BackdropContent
+import de.si.backdroplibrary.components.BackdropToolbar
 import de.si.backdroplibrary.components.FullscreenDialogs
-import de.si.backdroplibrary.components.Toolbar
 import kotlinx.android.synthetic.main.layout_main.*
 
-abstract class Activity : AppCompatActivity(), Component {
+abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
     // viewModel
     override val viewModel by lazy {
         BackdropViewModel.registeredInstance(this)
     }
 
-    override val activity: Activity
+    override val backdropActivity: BackdropActivity
         get() = this
 
     /* backdrop components */
-    internal lateinit var toolbar: Toolbar
-    internal lateinit var content: Content
-    internal lateinit var cardStack: CardStack
+    internal lateinit var backdropToolbar: BackdropToolbar
+    internal lateinit var backdropContent: BackdropContent
+    internal lateinit var backdropCardStack: BackdropCardStack
     internal lateinit var fullscreenDialogs: FullscreenDialogs
 
-    abstract val baseCardFragment: CardFragment
+    abstract val baseCardFragment: CardBackdropFragment
 
     private val open: Boolean
-        get() = cardStack.isTranslatedByY
+        get() = backdropCardStack.isTranslatedByY
 
     /* animation properties */
     private val backdropOpenCloseAnimator by lazy {
@@ -74,7 +74,7 @@ abstract class Activity : AppCompatActivity(), Component {
             open -> {
                 hideBackdropContent()
             }
-            cardStack.hasMoreThanOneEntry -> {
+            backdropCardStack.hasMoreThanOneEntry -> {
                 removeTopCardFragment()
             }
             else -> {
@@ -95,26 +95,26 @@ abstract class Activity : AppCompatActivity(), Component {
     }
 
     private fun initializeToolbar() {
-        toolbar = Toolbar(this)
-        toolbar.closeBackdropClickCallback = {
+        backdropToolbar = BackdropToolbar(this)
+        backdropToolbar.closeBackdropClickCallback = {
             hideBackdropContent()
         }
     }
 
     private fun initializeContent() {
-        content = Content(this)
+        backdropContent = BackdropContent(this)
     }
 
     private fun initializeCardStack() {
-        cardStack = CardStack(this)
+        backdropCardStack = BackdropCardStack(this)
     }
 
     private fun initializeBaseCardFragment() {
-        cardStack.baseFragment = baseCardFragment
+        backdropCardStack.baseFragment = baseCardFragment
     }
 
     private fun initializeBaseToolbarItem() {
-        toolbar.configure(cardStack.baseFragment.toolbarItem, false)
+        backdropToolbar.configure(backdropCardStack.baseFragment.toolbarItem, false)
     }
 
     private fun initializeFullscreenDialogs() {
@@ -137,17 +137,17 @@ abstract class Activity : AppCompatActivity(), Component {
     /* region main menu */
     @Suppress("unused")
     fun setMenuButtonClickCallback(clickCallback: () -> Unit) {
-        toolbar.openMenuClickCallback = clickCallback
+        backdropToolbar.openMenuClickCallback = clickCallback
     }
 
     @Suppress("unused")
     fun setMenuButtonLongClickCallback(longClickCallback: () -> Boolean) {
-        toolbar.openMenuLongClickCallback = longClickCallback
+        backdropToolbar.openMenuLongClickCallback = longClickCallback
     }
 
     fun setMenuLayout(@LayoutRes layoutResId: Int) {
         viewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
-        toolbar.openMenuClickCallback = {
+        backdropToolbar.openMenuClickCallback = {
             showBackdropContent(layoutResId)
         }
     }

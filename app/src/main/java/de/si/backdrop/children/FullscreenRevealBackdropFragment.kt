@@ -6,10 +6,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.si.backdrop.R
-import de.si.backdroplibrary.children.FullscreenRevealFragment
+import de.si.backdroplibrary.children.FullscreenRevealBackdropFragment
 import kotlinx.android.synthetic.main.fragment_fullscreen.view.*
 
-class FullscreenRevealFragment : FullscreenRevealFragment() {
+class FullscreenRevealBackdropFragment : FullscreenRevealBackdropFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_fullscreen, container, false)
     }

@@ -2,14 +2,17 @@ package de.si.backdroplibrary.children
 
 import android.view.View
 import androidx.fragment.app.Fragment
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.BackdropViewModel
-import de.si.backdroplibrary.Component
 import de.si.backdroplibrary.Event
-import de.si.backdroplibrary.activity.Activity
+import de.si.backdroplibrary.activity.BackdropActivity
 
-abstract class Fragment : Fragment(), Component {
+abstract class BackdropFragment : Fragment(), BackdropComponent {
+    override val backdropActivity: BackdropActivity
+        get() = requireActivity() as BackdropActivity
+
     override val viewModel: BackdropViewModel by lazy {
-        val backdropActivity = activity as? Activity
+        val backdropActivity = backdropActivity as? BackdropActivity
         backdropActivity?.let {
             BackdropViewModel.registeredInstance(it)
         } ?: throw ExceptionInInitializerError()

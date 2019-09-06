@@ -6,18 +6,19 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
-import de.si.backdroplibrary.Component
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.Event
-import de.si.backdroplibrary.activity.Activity
+import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.fade
 import de.si.kotlinx.fadeOut
 import de.si.kotlinx.inflateView
 import kotlinx.android.synthetic.main.layout_main.*
 
-internal class Content(override val activity: Activity) : Component {
+internal class BackdropContent(override val backdropActivity: BackdropActivity) :
+    BackdropComponent {
 
     // view container
-    private val layoutContentContainer: ViewGroup = activity.layout_backdrop_content
+    private val layoutContentContainer: ViewGroup = backdropActivity.layout_backdrop_content
 
     // view cache
     private val backdropViewCache: MutableMap<Int, View> = mutableMapOf()
@@ -51,7 +52,7 @@ internal class Content(override val activity: Activity) : Component {
 
     /* internal functions */
     private fun inflateViewAndCheckForId(@LayoutRes layoutResId: Int): View? {
-        val inflatedView = activity.inflateView(layoutResId, layoutContentContainer)
+        val inflatedView = backdropActivity.inflateView(layoutResId, layoutContentContainer)
 
         return inflatedView?.takeIf { view ->
             view.id > 0

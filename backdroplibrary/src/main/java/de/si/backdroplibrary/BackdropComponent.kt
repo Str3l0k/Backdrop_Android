@@ -2,16 +2,17 @@ package de.si.backdroplibrary
 
 import android.view.View
 import androidx.annotation.LayoutRes
-import de.si.backdroplibrary.activity.Activity
-import de.si.backdroplibrary.children.CardFragment
-import de.si.backdroplibrary.children.FullscreenFragment
-import de.si.backdroplibrary.children.FullscreenRevealFragment
-import de.si.backdroplibrary.components.ToolbarItem
+import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.backdroplibrary.children.CardBackdropFragment
+import de.si.backdroplibrary.children.FullscreenBackdropFragment
+import de.si.backdroplibrary.children.FullscreenRevealBackdropFragment
+import de.si.backdroplibrary.components.BackdropToolbarItem
 
-interface Component {
-    val activity: Activity
+interface BackdropComponent {
+    val backdropActivity: BackdropActivity
+
     val viewModel: BackdropViewModel
-        get() = BackdropViewModel.registeredInstance(activity)
+        get() = BackdropViewModel.registeredInstance(backdropActivity)
 
     fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
         viewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
@@ -25,7 +26,7 @@ interface Component {
         viewModel.emit(Event.HIDE_BACKDROP_CONTENT)
     }
 
-    fun addCardFragment(cardFragment: CardFragment) {
+    fun addCardFragment(cardFragment: CardBackdropFragment) {
         viewModel.emit(Event.ADD_TOP_CARD, cardFragment)
     }
 
@@ -33,11 +34,11 @@ interface Component {
         viewModel.emit(Event.REMOVE_TOP_CARD)
     }
 
-    fun showFullscreenFragment(fragment: FullscreenFragment) {
+    fun showFullscreenFragment(fragment: FullscreenBackdropFragment) {
         viewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
     }
 
-    fun revealFullscreenFragment(parameters: FullscreenRevealFragment) {
+    fun revealFullscreenFragment(parameters: FullscreenRevealBackdropFragment) {
         viewModel.emit(Event.REVEAL_FULLSCREEN_FRAGMENT, parameters)
     }
 
@@ -45,7 +46,7 @@ interface Component {
         viewModel.emit(Event.HIDE_FULLSCREEN_FRAGMENT)
     }
 
-    fun changeToolbarItem(toolbarItem: ToolbarItem) {
+    fun changeToolbarItem(toolbarItem: BackdropToolbarItem) {
         viewModel.emit(Event.CHANGE_NAVIGATION_ITEM, toolbarItem)
     }
 

@@ -3,12 +3,12 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
 
     defaultConfig {
         applicationId "de.si.backdrop"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
 
@@ -21,6 +21,16 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
+
+    kotlinOptions {
+
+    }
+
+    buildToolsVersion = '29.0.2'
 }
 
 dependencies {
@@ -35,17 +45,17 @@ dependencies {
     implementation project(path: ':backdroplibrary')
 
     testImplementation 'junit:junit:4.12'
-    testImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    testImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
-    testImplementation 'androidx.test.ext:junit:1.1.0'
-    testImplementation 'androidx.test.ext:junit-ktx:1.1.0'
+    testImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation 'androidx.test.ext:junit-ktx:1.1.1'
     testImplementation 'org.robolectric:robolectric:4.2.1'
-    testImplementation 'androidx.test.ext:truth:1.1.0'
+    testImplementation 'androidx.test.ext:truth:1.2.0'
 
-    androidTestImplementation 'androidx.test:core:1.2.0-beta01'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.0'
-    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.1.1'
+    androidTestImplementation 'androidx.test:core:1.2.1-alpha02'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.ext:junit-ktx:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-intents:3.2.0'
 }

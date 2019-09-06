@@ -5,12 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import de.si.backdrop.R
-import de.si.backdroplibrary.children.CardFragment
-import de.si.backdroplibrary.components.ToolbarItem
+import de.si.backdroplibrary.children.CardBackdropFragment
+import de.si.backdroplibrary.components.BackdropToolbarItem
 
-class TopCardFragment : CardFragment() {
-    override val toolbarItem: ToolbarItem
-        get() = ToolbarItem(
+class TopCardBackdropFragment : CardBackdropFragment() {
+    override val toolbarItem: BackdropToolbarItem
+        get() = BackdropToolbarItem(
             title = "Mid card",
             moreActionEnabled = false,
             primaryAction = R.drawable.ic_add

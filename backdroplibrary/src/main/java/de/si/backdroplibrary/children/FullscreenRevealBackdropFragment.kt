@@ -2,11 +2,11 @@ package de.si.backdroplibrary.children
 
 import android.graphics.Point
 import android.transition.Fade
-import de.si.backdroplibrary.activity.Activity
+import de.si.backdroplibrary.activity.BackdropActivity
 
-abstract class FullscreenRevealFragment : Fragment() {
-    override val activity: Activity
-        get() = getActivity() as Activity
+abstract class FullscreenRevealBackdropFragment : BackdropFragment() {
+    override val backdropActivity: BackdropActivity
+        get() = activity as BackdropActivity
 
     var revealEpiCenter: Point = Point()
 

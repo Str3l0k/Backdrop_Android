@@ -8,24 +8,25 @@ import android.widget.TextView
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
-import de.si.backdroplibrary.Component
+import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.Event
-import de.si.backdroplibrary.activity.Activity
+import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
-internal class Toolbar(override val activity: Activity) : Component {
+internal class BackdropToolbar(override val backdropActivity: BackdropActivity) :
+    BackdropComponent {
 
     /* view elements */
-    private val toolbarLayout: ViewGroup = activity.layout_backdrop_toolbar
-    private val buttonBack: ImageButton = activity.button_backdrop_toolbar_back
-    private val buttonCloseBackdrop: ImageButton = activity.button_backdrop_toolbar_hide
-    private val buttonOpenMenu: ImageButton = activity.button_backdrop_toolbar_menu_show
-    private val buttonPrimaryAction: ImageButton = activity.button_backdrop_toolbar_action
-    private val buttonMoreAction: ImageButton = activity.button_backdrop_toolbar_more
+    private val toolbarLayout: ViewGroup = backdropActivity.layout_backdrop_toolbar
+    private val buttonBack: ImageButton = backdropActivity.button_backdrop_toolbar_back
+    private val buttonCloseBackdrop: ImageButton = backdropActivity.button_backdrop_toolbar_hide
+    private val buttonOpenMenu: ImageButton = backdropActivity.button_backdrop_toolbar_menu_show
+    private val buttonPrimaryAction: ImageButton = backdropActivity.button_backdrop_toolbar_action
+    private val buttonMoreAction: ImageButton = backdropActivity.button_backdrop_toolbar_more
 
-    private val textTitle: TextView = activity.text_backdrop_toolbar_title
-    private val textSubTitle: TextView = activity.text_backdrop_toolbar_subtitle
+    private val textTitle: TextView = backdropActivity.text_backdrop_toolbar_title
+    private val textSubTitle: TextView = backdropActivity.text_backdrop_toolbar_subtitle
 
     /* animations */
     private val buttonMenuShowAnimator = buttonOpenMenu.fadeInAnimator
@@ -65,7 +66,7 @@ internal class Toolbar(override val activity: Activity) : Component {
         }
 
         buttonBack.setOnClickListener {
-            activity.onBackPressed()
+            backdropActivity.onBackPressed()
         }
     }
 
@@ -90,7 +91,7 @@ internal class Toolbar(override val activity: Activity) : Component {
         }
 
     /* API */
-    internal fun configure(item: ToolbarItem, back: Boolean) {
+    internal fun configure(item: BackdropToolbarItem, back: Boolean) {
         toolbarLayout.fade {
             title = item.title
             subTitle = item.subtitle
