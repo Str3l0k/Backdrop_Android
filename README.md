@@ -1,3 +1,5 @@
+[![](https://jitpack.io/v/Str3l0k/Backdrop_Android.svg)](https://jitpack.io/#Str3l0k/Backdrop_Android)
+
 # Backdrop for Android
 This project is an approach to create a template for Backdrop UI design on Android.
 Backdrop means that the toolbar moves into the background and the navigation drawer is no longer the main source for navigation.
