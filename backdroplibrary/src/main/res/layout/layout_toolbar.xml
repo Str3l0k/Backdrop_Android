@@ -20,9 +20,10 @@
 
     <ImageButton
             android:id="@+id/button_backdrop_toolbar_back"
+            style="@style/Widget.AppCompat.ActionButton"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
-            android:contentDescription="back"
+            android:contentDescription="@string/back"
             android:scaleType="center"
             android:src="@drawable/ic_back"
             android:tint="@android:color/white"
@@ -33,11 +34,11 @@
 
     <ImageButton
             android:id="@+id/button_backdrop_toolbar_hide"
+            style="@style/Widget.AppCompat.ActionButton"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:alpha="0"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="hide"
+            android:contentDescription="@string/hide"
             android:scaleType="center"
             android:src="@drawable/ic_clear"
             android:tint="@android:color/white"
@@ -48,10 +49,10 @@
 
     <ImageButton
             android:id="@+id/button_backdrop_toolbar_menu_show"
+            style="@style/Widget.AppCompat.ActionButton"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="show"
+            android:contentDescription="@string/show"
             android:scaleType="center"
             android:src="@drawable/ic_menu"
             android:tint="@android:color/white"
@@ -94,10 +95,10 @@
 
     <ImageButton
             android:id="@+id/button_backdrop_toolbar_action"
-            style="@style/Widget.AppCompat.ActionButton.Overflow"
+            style="@style/Widget.AppCompat.ActionButton"
             android:layout_width="42dp"
             android:layout_height="0dp"
-            android:contentDescription="action"
+            android:contentDescription="@string/action"
             android:src="@drawable/ic_add"
             android:tint="@android:color/white"
             android:visibility="invisible"
@@ -108,10 +109,10 @@
 
     <ImageButton
             android:id="@+id/button_backdrop_toolbar_more"
-            style="@style/Widget.AppCompat.ActionButton.Overflow"
+            style="@style/Widget.AppCompat.ActionButton"
             android:layout_width="42dp"
             android:layout_height="0dp"
-            android:contentDescription="more"
+            android:contentDescription="@string/more"
             android:src="@drawable/ic_more"
             android:tint="@android:color/white"
             android:visibility="invisible"

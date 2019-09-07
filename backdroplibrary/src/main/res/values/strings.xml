@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Backdrop</string>
+    <string name="action">action</string>
+    <string name="more">more</string>
+    <string name="show">show</string>
+    <string name="hide">hide</string>
+    <string name="back">back</string>
 </resources>
