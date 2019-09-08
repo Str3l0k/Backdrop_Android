@@ -75,7 +75,7 @@ publishing {
         maven(MavenPublication) {
             groupId = 'de.si.backdrop'
             artifactId = 'core'
-            version = '0.2.1'
+            version = '0.3.0'
 
             from components.android
         }
