@@ -18,8 +18,8 @@ import de.si.kotlinx.remove
 import de.si.kotlinx.revealRadius
 import kotlinx.android.synthetic.main.layout_main.*
 
-internal class FullscreenDialogs(override val backdropActivity: BackdropActivity) :
-    BackdropComponent {
+internal class FullscreenDialogs(override val backdropActivity: BackdropActivity) : BackdropComponent {
+
     private val fragmentManager = backdropActivity.supportFragmentManager
     private val layoutContainer = backdropActivity.layout_backdrop_overlay
 
@@ -43,20 +43,20 @@ internal class FullscreenDialogs(override val backdropActivity: BackdropActivity
         val epiCenter = fragment.revealEpiCenter
 
         layoutContainer.setBackgroundColor(
-            ContextCompat.getColor(
-                backdropActivity.applicationContext,
-                R.color.colorPrimaryLightLowAlpha
-            )
+                ContextCompat.getColor(
+                        backdropActivity.applicationContext,
+                        R.color.colorPrimaryLightLowAlpha
+                )
         )
         layoutContainer.isVisible = true
         fragmentManager.add(fragment, layoutContainer.id)
 
         ViewAnimationUtils.createCircularReveal(
-            layoutContainer,
-            epiCenter.x,
-            epiCenter.y,
-            0f,
-            layoutContainer.revealRadius
+                layoutContainer,
+                epiCenter.x,
+                epiCenter.y,
+                0f,
+                layoutContainer.revealRadius
         ).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION).start()
     }
 
@@ -72,11 +72,11 @@ internal class FullscreenDialogs(override val backdropActivity: BackdropActivity
         val epiCenter = fragment.revealEpiCenter
 
         val concealAnimator = ViewAnimationUtils.createCircularReveal(
-            layoutContainer,
-            epiCenter.x,
-            epiCenter.y,
-            layoutContainer.revealRadius,
-            0f
+                layoutContainer,
+                epiCenter.x,
+                epiCenter.y,
+                layoutContainer.revealRadius,
+                0f
         ).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION)
         concealAnimator.doOnEnd {
             layoutContainer.isVisible = false

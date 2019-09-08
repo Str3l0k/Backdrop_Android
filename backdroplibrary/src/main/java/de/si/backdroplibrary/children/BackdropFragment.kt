@@ -8,14 +8,12 @@ import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.activity.BackdropActivity
 
 abstract class BackdropFragment : Fragment(), BackdropComponent {
+
     override val backdropActivity: BackdropActivity
         get() = requireActivity() as BackdropActivity
 
     override val viewModel: BackdropViewModel by lazy {
-        val backdropActivity = backdropActivity as? BackdropActivity
-        backdropActivity?.let {
-            BackdropViewModel.registeredInstance(it)
-        } ?: throw ExceptionInInitializerError()
+        BackdropViewModel.registeredInstance(backdropActivity)
     }
 
     override fun onStart() {

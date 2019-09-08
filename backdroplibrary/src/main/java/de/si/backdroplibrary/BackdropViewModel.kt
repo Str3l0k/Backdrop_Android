@@ -9,6 +9,14 @@ internal typealias BackdropEventCallback = ((Event, Any?) -> Boolean)
 
 class BackdropViewModel : ViewModel() {
 
+    //-----------------------------------------
+    // properties
+    //-----------------------------------------
+    var gestureNavigationEnabled: Boolean = true
+
+    //-----------------------------------------
+    // observers
+    //-----------------------------------------
     @get:Synchronized
     private val callbackReceivers: MutableSet<BackdropEventCallback> = mutableSetOf()
 
@@ -28,6 +36,8 @@ class BackdropViewModel : ViewModel() {
         }
     }
 
+    //-----------------------------------------
+    //-----------------------------------------
     companion object {
         internal fun registeredInstance(activity: AppCompatActivity): BackdropViewModel {
             return ViewModelProviders.of(activity)[BackdropViewModel::class.java]

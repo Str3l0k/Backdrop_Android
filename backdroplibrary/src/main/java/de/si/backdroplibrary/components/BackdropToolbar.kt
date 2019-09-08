@@ -14,10 +14,11 @@ import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.*
 import kotlinx.android.synthetic.main.layout_toolbar.*
 
-internal class BackdropToolbar(override val backdropActivity: BackdropActivity) :
-    BackdropComponent {
+internal class BackdropToolbar(override val backdropActivity: BackdropActivity) : BackdropComponent {
 
-    /* view elements */
+    //-----------------------------------------
+    // region view elements
+    //-----------------------------------------
     private val toolbarLayout: ViewGroup = backdropActivity.layout_backdrop_toolbar
     private val buttonBack: ImageButton = backdropActivity.button_backdrop_toolbar_back
     private val buttonCloseBackdrop: ImageButton = backdropActivity.button_backdrop_toolbar_hide
@@ -27,8 +28,13 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
 
     private val textTitle: TextView = backdropActivity.text_backdrop_toolbar_title
     private val textSubTitle: TextView = backdropActivity.text_backdrop_toolbar_subtitle
+    //-----------------------------------------
+    // endregion
+    //-----------------------------------------
 
-    /* animations */
+    //-----------------------------------------
+    // region animators
+    //-----------------------------------------
     private val buttonMenuShowAnimator = buttonOpenMenu.fadeInAnimator
     private val buttonMenuHideAnimator = buttonOpenMenu.fadeOutAnimator.apply {
         doOnEnd {
@@ -54,6 +60,9 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         duration = Backdrop.BACKDROP_ANIMATION_HALF_DURATION
         playSequentially(buttonCloseHideAnimator, buttonMenuShowAnimator)
     }
+    //-----------------------------------------
+    // endregion
+    //-----------------------------------------
 
     // additional constructor init
     init {
@@ -91,7 +100,11 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         }
 
     /* API */
-    internal fun configure(item: BackdropToolbarItem, back: Boolean) {
+    internal val menuButtonVisible: Boolean
+        get() = buttonOpenMenu.isVisible
+
+    internal fun configure(item: BackdropToolbarItem, mainButtonState: BackdropToolbarMainButtonState) {
+        // TODO optional compare items and only animate differences
         toolbarLayout.fade {
             title = item.title
             subTitle = item.subtitle
@@ -99,24 +112,30 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
             buttonPrimaryAction.isVisible = item.primaryAction != null
             item.primaryAction?.let { buttonPrimaryAction.setImageResource(it) }
 
-            buttonBack.isVisible = back
-            buttonOpenMenu.isVisible = back.not()
+            when (mainButtonState) {
+                BackdropToolbarMainButtonState.MENU -> {
+                    buttonBack.isVisible = false
+                    buttonOpenMenu.isVisible = true
+                    buttonCloseBackdrop.isVisible = false
+                }
+                BackdropToolbarMainButtonState.BACK -> {
+                    buttonBack.isVisible = true
+                    buttonOpenMenu.isVisible = false
+                    buttonCloseBackdrop.isVisible = false
+                }
+                BackdropToolbarMainButtonState.CLOSE -> {
+                    buttonBack.isVisible = false
+                    buttonOpenMenu.isVisible = false
+                    buttonCloseBackdrop.isVisible = true
+                }
+                BackdropToolbarMainButtonState.NONE -> {
+                    buttonBack.isVisible = false
+                    buttonOpenMenu.isVisible = false
+                    buttonCloseBackdrop.isVisible = false
+                }
+            }
         }
     }
-
-    private var title: String?
-        get() = textTitle.text.toString()
-        set(value) {
-            textTitle.isVisible = value.isNullOrBlank().not()
-            textTitle.text = value
-        }
-
-    private var subTitle: String?
-        get() = textSubTitle.text.toString()
-        set(value) {
-            textSubTitle.isVisible = value.isNullOrBlank().not()
-            textSubTitle.text = value
-        }
 
     internal fun disableActions() {
         buttonPrimaryAction.fadeOut(0.5f, Backdrop.BACKDROP_ANIMATION_DURATION) {
@@ -147,4 +166,25 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
             showCloseButtonAnimatorSet.start()
         }
     }
+
+    private var title: String?
+        get() = textTitle.text.toString()
+        set(value) {
+            textTitle.isVisible = value.isNullOrBlank().not()
+            textTitle.text = value
+        }
+
+    private var subTitle: String?
+        get() = textSubTitle.text.toString()
+        set(value) {
+            textSubTitle.isVisible = value.isNullOrBlank().not()
+            textSubTitle.text = value
+        }
+}
+
+enum class BackdropToolbarMainButtonState {
+    MENU,
+    BACK,
+    CLOSE,
+    NONE;
 }

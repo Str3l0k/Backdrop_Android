@@ -9,18 +9,13 @@ import de.si.backdroplibrary.children.CardBackdropFragment
 import de.si.backdroplibrary.components.BackdropToolbarItem
 
 class TopCardBackdropFragment : CardBackdropFragment() {
-    override val toolbarItem: BackdropToolbarItem
-        get() = BackdropToolbarItem(
-            title = "Mid card",
-            moreActionEnabled = false,
-            primaryAction = R.drawable.ic_add
-        )
+    override val toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Mid card",
+                                                                        moreActionEnabled = false,
+                                                                        primaryAction = R.drawable.ic_add)
 
-    override fun onCreateContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override fun onCreateContentView(inflater: LayoutInflater,
+                                     container: ViewGroup?,
+                                     savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.top_card, container, false)
     }
 

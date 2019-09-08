@@ -6,6 +6,7 @@ import de.si.backdroplibrary.children.CardBackdropFragment
 import de.si.backdroplibrary.children.FullscreenBackdropFragment
 import de.si.backdroplibrary.children.FullscreenRevealBackdropFragment
 import de.si.backdroplibrary.components.BackdropToolbarItem
+import de.si.backdroplibrary.components.BackdropToolbarMainButtonState
 
 internal fun BackdropActivity.onEvent(event: Event, payload: Any?): Boolean {
     return when (event) {
@@ -39,7 +40,7 @@ private fun BackdropActivity.handlePrefetchBackdropContentEvent(layoutResId: Int
 }
 
 private fun BackdropActivity.handleShowBackdropContentEvent(layoutResId: Int): Boolean {
-    backdropContent.setContentView(layoutResId) { contentView ->
+    backdropContent.showContentView(layoutResId) { contentView ->
         backdropToolbar.disableActions()
         backdropToolbar.showBackdropCloseButton()
         backdropCardStack.disable()
@@ -61,7 +62,13 @@ private fun BackdropActivity.handleHideBackdropContentEvent(): Boolean {
 
 /* region toolbar event handling */
 private fun BackdropActivity.handleToolbarItemChangedEvent(toolbarItem: BackdropToolbarItem): Boolean {
-    backdropToolbar.configure(toolbarItem, backdropCardStack.hasMoreThanOneEntry)
+    val mainButtonState: BackdropToolbarMainButtonState = if (backdropCardStack.hasMoreThanOneEntry) {
+        BackdropToolbarMainButtonState.BACK
+    } else {
+        baseCardFragment.menuButtonState
+    }
+
+    backdropToolbar.configure(toolbarItem, mainButtonState)
     return true
 }
 /* endregion */
@@ -70,16 +77,20 @@ private fun BackdropActivity.handleToolbarItemChangedEvent(toolbarItem: Backdrop
 private fun BackdropActivity.handleAddTopCardEvent(cardFragment: CardBackdropFragment): Boolean {
     val toolbarItem = cardFragment.toolbarItem
     backdropCardStack.push(cardFragment)
-    backdropToolbar.configure(toolbarItem, backdropCardStack.hasMoreThanOneEntry)
+    backdropToolbar.configure(toolbarItem, BackdropToolbarMainButtonState.BACK)
     return true
 }
 
 private fun BackdropActivity.handleRemoveTopCardEvent(): Boolean {
     backdropCardStack.pop()
-    backdropToolbar.configure(
-        backdropCardStack.topFragment.toolbarItem,
-        backdropCardStack.hasMoreThanOneEntry
-    )
+
+    val mainButtonState: BackdropToolbarMainButtonState = if (backdropCardStack.hasMoreThanOneEntry) {
+        BackdropToolbarMainButtonState.BACK
+    } else {
+        baseCardFragment.menuButtonState
+    }
+
+    backdropToolbar.configure(backdropCardStack.topFragment.toolbarItem, mainButtonState)
     return true
 }
 /* endregion card stack event handling functions */
