@@ -12,7 +12,7 @@ import kotlin.random.Random
 
 class BaseFragment : MainCardBackdropFragment() {
     override val menuButtonState: BackdropToolbarMainButtonState
-        get() = BackdropToolbarMainButtonState.NONE
+        get() = BackdropToolbarMainButtonState.MENU
 
     override val toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Backdrop",
                                                                         subtitle = "Demonstration",

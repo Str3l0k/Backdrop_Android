@@ -25,7 +25,7 @@ abstract class CardBackdropFragment : BackdropFragment() {
         }
 
     internal val gestureNavigationListener = BackdropGestureNavigationListener()
-    internal val gestureDetector: GestureDetector = GestureDetector(requireContext(), gestureNavigationListener)
+    internal val gestureDetector: GestureDetector by lazy { GestureDetector(requireContext(), gestureNavigationListener) }
 
     // additional construction
     init {
