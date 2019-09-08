@@ -5,8 +5,29 @@ This project is an approach to create a template for Backdrop UI design on Andro
 Backdrop means that the toolbar moves into the background and the navigation drawer is no longer the main source for navigation.
 Instead the card stack element holds the navigation steps and can reveal additional options or configurations in the backdrop element.
 
+# Download
+Available through jitpack:
+https://jitpack.io/#Str3l0k/Backdrop_Android
+
+Add it in your root build.gradle at the end of repositories:
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+Add the dependency:
+```
+	dependencies {
+	        implementation 'com.github.Str3l0k:Backdrop_Android:Tag'
+	}
+```
+
 # Usage
-The app shows hows to use it for now as demonstration. 
+The app module shows a basic how-to-use it for now as demonstration. 
 It is intended as One-Activity-Application with Fragments for all other means.
 Basically use the Activity as base class.
 
