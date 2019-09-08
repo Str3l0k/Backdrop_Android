@@ -19,26 +19,24 @@ So the basic configuration for an working app is one activity and one Fragment.
 __MainActivity__
 ```kotlin
 class MainActivity : Activity() {
-    override val baseCardFragment: CardFragment = BaseCardFragment()
+    override val baseCardFragment: MainCardBackdropFragment = BaseFragment()
 }
 ```
 
 __BaseFragment__
 ```kotlin
-class BaseCardFragment : CardFragment() {
-    override val toolbarItem: ToolbarItem
-        get() = ToolbarItem(
-            title = "Backdrop",
-            subtitle = "Demonstration",
-            primaryAction = R.drawable.ic_add,
-            moreActionEnabled = true
-        )
+class BaseFragment : MainCardBackdropFragment() {
+    override val menuButtonState: BackdropToolbarMainButtonState
+        get() = BackdropToolbarMainButtonState.MENU
 
-    override fun onCreateContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override val toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Backdrop",
+                                                                        subtitle = "Demonstration",
+                                                                        primaryAction = R.drawable.ic_add,
+                                                                        moreActionEnabled = true)
+
+    override fun onCreateContentView(inflater: LayoutInflater,
+                                     container: ViewGroup?,
+                                     savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.base_card, container, false)
     }
 
@@ -48,7 +46,7 @@ class BaseCardFragment : CardFragment() {
 }
 ```
 
-The base fragment is returned as property in the Activity and currently the only thing that is required to be 
+The main fragment is returned as property in the Activity and currently the only thing that is required to be 
 implemented when using the Activity class. The fragment needs a __ToolbarItem__ which configures the toolbar titles and 
 action items. Instead of using the *onCreateView* and *onViewCreated* from the Android __Fragment__ class use the *onCreateContentView* and
 *onContentViewCreated* from the backdrop Fragment to inflate and configure the desired layout.
