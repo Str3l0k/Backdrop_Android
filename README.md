@@ -5,8 +5,29 @@ This project is an approach to create a template for Backdrop UI design on Andro
 Backdrop means that the toolbar moves into the background and the navigation drawer is no longer the main source for navigation.
 Instead the card stack element holds the navigation steps and can reveal additional options or configurations in the backdrop element.
 
+# Download
+Available through jitpack:
+https://jitpack.io/#Str3l0k/Backdrop_Android
+
+Add it in your root build.gradle at the end of repositories:
+```
+allprojects {
+		repositories {
+			...
+			maven { url 'https://jitpack.io' }
+		}
+	}
+```
+
+Add the dependency:
+```
+	dependencies {
+	        implementation 'com.github.Str3l0k:Backdrop_Android:Tag'
+	}
+```
+
 # Usage
-The app shows hows to use it for now as demonstration. 
+The app module shows a basic how-to-use it for now as demonstration. 
 It is intended as One-Activity-Application with Fragments for all other means.
 Basically use the Activity as base class.
 
@@ -19,26 +40,24 @@ So the basic configuration for an working app is one activity and one Fragment.
 __MainActivity__
 ```kotlin
 class MainActivity : Activity() {
-    override val baseCardFragment: CardFragment = BaseCardFragment()
+    override val baseCardFragment: MainCardBackdropFragment = BaseFragment()
 }
 ```
 
 __BaseFragment__
 ```kotlin
-class BaseCardFragment : CardFragment() {
-    override val toolbarItem: ToolbarItem
-        get() = ToolbarItem(
-            title = "Backdrop",
-            subtitle = "Demonstration",
-            primaryAction = R.drawable.ic_add,
-            moreActionEnabled = true
-        )
+class BaseFragment : MainCardBackdropFragment() {
+    override val menuButtonState: BackdropToolbarMainButtonState
+        get() = BackdropToolbarMainButtonState.MENU
 
-    override fun onCreateContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    override val toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Backdrop",
+                                                                        subtitle = "Demonstration",
+                                                                        primaryAction = R.drawable.ic_add,
+                                                                        moreActionEnabled = true)
+
+    override fun onCreateContentView(inflater: LayoutInflater,
+                                     container: ViewGroup?,
+                                     savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.base_card, container, false)
     }
 
@@ -48,7 +67,7 @@ class BaseCardFragment : CardFragment() {
 }
 ```
 
-The base fragment is returned as property in the Activity and currently the only thing that is required to be 
+The main fragment is returned as property in the Activity and currently the only thing that is required to be 
 implemented when using the Activity class. The fragment needs a __ToolbarItem__ which configures the toolbar titles and 
 action items. Instead of using the *onCreateView* and *onViewCreated* from the Android __Fragment__ class use the *onCreateContentView* and
 *onContentViewCreated* from the backdrop Fragment to inflate and configure the desired layout.
