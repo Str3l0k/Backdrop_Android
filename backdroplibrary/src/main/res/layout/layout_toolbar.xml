@@ -19,40 +19,11 @@
         tools:showIn="@layout/layout_main">
 
     <ImageButton
-            android:id="@+id/button_backdrop_toolbar_back"
+            android:id="@+id/button_backdrop_toolbar"
             style="@style/Widget.AppCompat.ActionButton"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="match_parent"
             android:contentDescription="@string/back"
-            android:scaleType="center"
-            android:src="@drawable/ic_back"
-            android:tint="@android:color/white"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageButton
-            android:id="@+id/button_backdrop_toolbar_hide"
-            style="@style/Widget.AppCompat.ActionButton"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
-            android:alpha="0"
-            android:contentDescription="@string/hide"
-            android:scaleType="center"
-            android:src="@drawable/ic_clear"
-            android:tint="@android:color/white"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
-
-    <ImageButton
-            android:id="@+id/button_backdrop_toolbar_menu_show"
-            style="@style/Widget.AppCompat.ActionButton"
-            android:layout_width="?attr/actionBarSize"
-            android:layout_height="match_parent"
-            android:contentDescription="@string/show"
             android:scaleType="center"
             android:src="@drawable/ic_menu"
             android:tint="@android:color/white"
@@ -78,18 +49,20 @@
                 android:layout_height="28dp"
                 android:textAlignment="center"
                 android:textColor="@color/textColorLight"
-                android:textSize="19sp"/>
+                android:textSize="19sp"
+                tools:text="Backdrop"/>
 
         <TextView
                 android:id="@+id/text_backdrop_toolbar_subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="15dp"
-                android:gravity="bottom"
+                android:gravity="bottom|center"
                 android:textAlignment="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle.Inverse"
                 android:textColor="@color/textColorLight"
                 android:textSize="12sp"
-                android:visibility="visible"/>
+                android:visibility="visible"
+                tools:text="Subtitle"/>
     </LinearLayout>
 
     <ImageButton

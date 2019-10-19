@@ -7,12 +7,13 @@ import de.si.backdrop.children.BaseFragment
 import de.si.backdrop.children.FullscreenRevealBackdropFragment
 import de.si.backdrop.content.MainMenu
 import de.si.backdroplibrary.activity.BackdropActivity
+import de.si.backdroplibrary.children.MainCardBackdropFragment
 import de.si.kotlinx.globalCenterPoint
 
 class MainActivity : BackdropActivity() {
     private var mainMenu: MainMenu? = null
 
-    override val baseCardFragment: BaseFragment = BaseFragment()
+    override val baseCardFragment: MainCardBackdropFragment = BaseFragment()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,9 +28,7 @@ class MainActivity : BackdropActivity() {
             }
             R.id.layout_test_content -> {
                 view.findViewById<Button>(R.id.button_backdrop_content_test).setOnClickListener { button ->
-                    val fragment = FullscreenRevealBackdropFragment()
-                    fragment.revealEpiCenter = button.globalCenterPoint
-                    revealFullscreenFragment(fragment)
+                    revealFullscreenFragment(FullscreenRevealBackdropFragment(), button.globalCenterPoint, button.globalCenterPoint)
                 }
                 true
             }

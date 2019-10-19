@@ -69,7 +69,7 @@ internal class FullscreenDialogs(override val backdropActivity: BackdropActivity
     }
 
     private fun concealFullscreen(fragment: FullscreenRevealBackdropFragment) {
-        val epiCenter = fragment.revealEpiCenter
+        val epiCenter = fragment.concealEpiCenter
 
         val concealAnimator = ViewAnimationUtils.createCircularReveal(
                 layoutContainer,

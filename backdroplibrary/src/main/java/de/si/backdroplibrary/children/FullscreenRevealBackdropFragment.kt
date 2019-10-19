@@ -9,6 +9,7 @@ abstract class FullscreenRevealBackdropFragment : BackdropFragment() {
         get() = activity as BackdropActivity
 
     var revealEpiCenter: Point = Point()
+    var concealEpiCenter: Point = Point()
 
     init {
         enterTransition = Fade()

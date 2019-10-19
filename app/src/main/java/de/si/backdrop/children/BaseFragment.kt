@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.FragmentTransaction
 import de.si.backdrop.R
 import de.si.backdroplibrary.children.MainCardBackdropFragment
 import de.si.backdroplibrary.components.BackdropToolbarItem
 import de.si.backdroplibrary.components.BackdropToolbarMainButtonState
+import kotlinx.android.synthetic.main.base_card.*
 import kotlin.random.Random
 
 class BaseFragment : MainCardBackdropFragment() {
@@ -27,6 +29,18 @@ class BaseFragment : MainCardBackdropFragment() {
 
     override fun onContentViewCreated(view: View?, savedInstanceState: Bundle?) {
         // configure content view here
+        button.setOnClickListener {
+
+        }
+
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            val transaction = childFragmentManager.beginTransaction()
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+            transaction.replace(R.id.testContainer, TestFragment())
+            transaction.commit()
+
+            true
+        }
     }
 
     override fun onPrimaryActionClicked(): Boolean {

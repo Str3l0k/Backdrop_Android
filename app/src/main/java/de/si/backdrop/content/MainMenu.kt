@@ -35,9 +35,6 @@ class MainMenu(view: View, private val backdropBackdropComponent: BackdropCompon
 
     private fun showFullscreenFragmentReveal(view: View) {
         val centerPoint = view.globalCenterPoint
-        val fullscreenRevealFragment = FullscreenRevealBackdropFragment().apply {
-            revealEpiCenter = centerPoint
-        }
-        backdropBackdropComponent.revealFullscreenFragment(fullscreenRevealFragment)
+        backdropBackdropComponent.revealFullscreenFragment(FullscreenRevealBackdropFragment(), centerPoint, centerPoint)
     }
 }

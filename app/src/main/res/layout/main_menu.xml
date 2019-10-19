@@ -8,111 +8,48 @@
   ~ Last modified 7/24/18 5:31 PM
   -->
 
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                   android:id="@+id/menu_main_layout"
-                                                   android:layout_width="match_parent"
-                                                   android:layout_height="wrap_content"
-                                                   android:paddingTop="8dp"
-                                                   android:paddingBottom="8dp">
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/menu_main_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/button_menu_main_change_content"
             style="@style/BrandButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:orientation="horizontal"
+            android:text="Change backdrop content"
+            app:icon="@drawable/ic_change_content"
             app:layout_constraintBottom_toTopOf="@+id/button_menu_main_fullscreen_slide"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:clickable="true"
-            android:focusable="true">
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-                android:layout_width="36dp"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:tint="@color/textColorLight"
-                app:srcCompat="@drawable/ic_change_content"/>
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="8dp"
-                android:text="Change backdrop content"
-                android:textColor="@color/textColorLight"
-                android:textSize="12sp"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/button_menu_main_fullscreen_slide"
             style="@style/BrandButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:orientation="horizontal"
+            android:text="Fullscreen fragment slide"
+            app:icon="@drawable/ic_fullscreen"
             app:layout_constraintBottom_toTopOf="@+id/button_menu_main_fullscreen_reveal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_menu_main_change_content">
+            app:layout_constraintTop_toTopOf="parent"/>
 
-        <ImageView
-                android:layout_width="36dp"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:tint="@color/textColorLight"
-                app:srcCompat="@drawable/ic_fullscreen"/>
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="8dp"
-                android:text="Fullscreen fragment slide"
-                android:textColor="@color/textColorLight"
-                android:textSize="12sp"/>
-    </LinearLayout>
-
-    <LinearLayout
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/button_menu_main_fullscreen_reveal"
             style="@style/BrandButtonStyle"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginStart="32dp"
-            android:layout_marginEnd="32dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="Fullscreen fragment reveal"
+            app:icon="@drawable/ic_fullscreen"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_menu_main_fullscreen_slide"
-            android:clickable="true"
-            android:focusable="true">
-
-        <ImageView
-                android:layout_width="36dp"
-                android:layout_height="match_parent"
-                android:scaleType="centerInside"
-                android:tint="@color/textColorLight"
-                app:srcCompat="@drawable/ic_fullscreen"/>
-
-        <TextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:paddingLeft="8dp"
-                android:text="Fullscreen fragment reveal"
-                android:textColor="@color/textColorLight"
-                android:textSize="12sp"/>
-    </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/button_menu_main_fullscreen_slide"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

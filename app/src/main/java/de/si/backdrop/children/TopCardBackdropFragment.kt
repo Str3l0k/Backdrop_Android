@@ -9,7 +9,7 @@ import de.si.backdroplibrary.children.CardBackdropFragment
 import de.si.backdroplibrary.components.BackdropToolbarItem
 
 class TopCardBackdropFragment : CardBackdropFragment() {
-    override val toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Mid card",
+    override var toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Mid card",
                                                                         moreActionEnabled = false,
                                                                         primaryAction = R.drawable.ic_add)
 
@@ -24,6 +24,13 @@ class TopCardBackdropFragment : CardBackdropFragment() {
     }
 
     override fun onPrimaryActionClicked(): Boolean {
+        toolbarItem = if (toolbarItem.subtitle == null) {
+            toolbarItem.copy(subtitle = "Test subtitle animation")
+        } else {
+            toolbarItem.copy(subtitle = null)
+        }
+
+        changeToolbarItem(toolbarItem)
         return true
     }
 }

@@ -1,5 +1,6 @@
 package de.si.backdroplibrary
 
+import android.graphics.Point
 import android.view.View
 import androidx.annotation.LayoutRes
 import de.si.backdroplibrary.activity.BackdropActivity
@@ -46,7 +47,9 @@ interface BackdropComponent {
         viewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
     }
 
-    fun revealFullscreenFragment(parameters: FullscreenRevealBackdropFragment) {
+    fun revealFullscreenFragment(parameters: FullscreenRevealBackdropFragment, revealEpicenter: Point, concealEpicenter: Point) {
+        parameters.revealEpiCenter = revealEpicenter
+        parameters.concealEpiCenter = concealEpicenter
         viewModel.emit(Event.REVEAL_FULLSCREEN_FRAGMENT, parameters)
     }
 
