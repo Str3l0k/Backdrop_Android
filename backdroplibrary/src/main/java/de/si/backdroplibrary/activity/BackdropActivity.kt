@@ -16,15 +16,17 @@ import de.si.backdroplibrary.R
 import de.si.backdroplibrary.children.MainCardBackdropFragment
 import de.si.backdroplibrary.components.BackdropCardStack
 import de.si.backdroplibrary.components.BackdropContent
-import de.si.backdroplibrary.components.BackdropToolbar
 import de.si.backdroplibrary.components.FullscreenDialogs
+import de.si.backdroplibrary.components.toolbar.BackdropToolbar
 import de.si.backdroplibrary.gestures.BackdropGestureNavigationListener
 import kotlinx.android.synthetic.main.layout_main.*
 
 abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
+    //-----------------------------------------
     // viewModel
-    override val viewModel by lazy {
+    //-----------------------------------------
+    override val backdropViewModel by lazy {
         BackdropViewModel.registeredInstance(this)
     }
 
@@ -60,7 +62,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     }
 
     //-----------------------------------------
-    // region lifecycle
+    // lifecycle
     //-----------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -79,23 +81,16 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
     override fun onPause() {
         super.onPause()
-        viewModel.unregisterEventCallbacks(this::onEvent)
+        backdropViewModel.unregisterEventCallbacks(this::onEvent)
     }
 
     override fun onBackPressed() {
         when {
-            fullscreenDialogs.isVisible -> {
-                fullscreenDialogs.hideFullscreenFragment()
-            }
-            backdropOpen -> {
-                hideBackdropContent()
-            }
-            backdropCardStack.hasMoreThanOneEntry -> {
-                removeTopCardFragment()
-            }
-            else -> {
-                super.onBackPressed()
-            }
+            fullscreenDialogs.isVisible           -> fullscreenDialogs.hideFullscreenFragment()
+            backdropOpen                          -> hideBackdropContent()
+            backdropCardStack.hasMoreThanOneEntry -> removeTopCardFragment()
+            backdropToolbar.isInActionMode        -> finishToolbarActionMode()
+            else                                  -> super.onBackPressed()
         }
     }
 
@@ -104,7 +99,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     }
 
     private fun initializeViewModel() {
-        viewModel.registerEventCallback(this::onEvent)
+        backdropViewModel.registerEventCallback(this::onEvent)
     }
 
     private fun initializeComponents() {
@@ -113,6 +108,9 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         backdropToolbar = BackdropToolbar(this)
         backdropToolbar.closeBackdropClickCallback = {
             hideBackdropContent()
+        }
+        backdropToolbar.finishActionModeCallback = {
+            finishToolbarActionMode()
         }
         fullscreenDialogs = FullscreenDialogs(this)
     }
@@ -130,7 +128,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         gestureDetector = GestureDetector(applicationContext, gestureNavigationListener)
 
         gestureNavigationListener.onFlingDownCallback = {
-            if (viewModel.gestureNavigationEnabled) {
+            if (backdropViewModel.gestureNavigationEnabled) {
                 if (backdropCardStack.hasMoreThanOneEntry) {
                     removeTopCardFragment()
                 } else if (backdropToolbar.menuButtonVisible && backdropOpen.not() && menuLayoutRes > 0) {
@@ -139,12 +137,9 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
             }
         }
     }
-    //-----------------------------------------
-    // endregion lifecycle
-    //-----------------------------------------
 
     //-----------------------------------------
-    // region animation functions
+    // animation functions
     //-----------------------------------------
     internal fun animateBackdropOpening(translationY: Float) {
         backdropOpenCloseAnimator.setFloatValues(translationY)
@@ -155,12 +150,9 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         backdropOpenCloseAnimator.setFloatValues(BACKDROP_CLOSED_TRANSLATION_Y)
         backdropOpenCloseAnimator.start()
     }
-    //-----------------------------------------
-    // endregion animation functions
-    //-----------------------------------------
 
     //-----------------------------------------
-    // region main menu
+    // main menu
     //-----------------------------------------
     @Suppress("unused")
     fun setMenuButtonClickCallback(clickCallback: () -> Unit) {
@@ -174,13 +166,10 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
     fun setMenuLayout(@LayoutRes layoutResId: Int) {
         menuLayoutRes = layoutResId
-        viewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
+        backdropViewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
         backdropToolbar.showMenuButton()
         backdropToolbar.openMenuClickCallback = {
             showBackdropContent(layoutResId)
         }
     }
-    //-----------------------------------------
-    // endregion
-    //-----------------------------------------
 }

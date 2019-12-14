@@ -80,7 +80,7 @@ internal class BackdropContent(override val backdropActivity: BackdropActivity) 
 
         newContentView?.doOnNextLayout { newContentViewAfterLayout ->
             nextLayoutCallback(newContentViewAfterLayout)
-            viewModel.emit(Event.BACKDROP_CONTENT_VISIBLE, newContentViewAfterLayout)
+            backdropViewModel.emit(Event.BACKDROP_CONTENT_VISIBLE, newContentViewAfterLayout)
         }
 
         return newContentView

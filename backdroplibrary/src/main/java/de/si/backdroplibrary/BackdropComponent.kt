@@ -7,7 +7,7 @@ import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.backdroplibrary.children.CardBackdropFragment
 import de.si.backdroplibrary.children.FullscreenBackdropFragment
 import de.si.backdroplibrary.children.FullscreenRevealBackdropFragment
-import de.si.backdroplibrary.components.BackdropToolbarItem
+import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
 
 interface BackdropComponent {
 
@@ -15,61 +15,61 @@ interface BackdropComponent {
     //-----------------------------------------
     val backdropActivity: BackdropActivity
 
-    val viewModel: BackdropViewModel
+    val backdropViewModel: BackdropViewModel
         get() = BackdropViewModel.registeredInstance(backdropActivity)
 
     //-----------------------------------------
     // General
     //-----------------------------------------
     fun enableGestureNavigation() {
-        viewModel.gestureNavigationEnabled = true
+        backdropViewModel.gestureNavigationEnabled = true
     }
 
     fun disableGestureNavigation() {
-        viewModel.gestureNavigationEnabled = false
+        backdropViewModel.gestureNavigationEnabled = false
     }
 
     //-----------------------------------------
     // Card stack
     //-----------------------------------------
     fun addCardFragment(cardFragment: CardBackdropFragment) {
-        viewModel.emit(Event.ADD_TOP_CARD, cardFragment)
+        backdropViewModel.emit(Event.ADD_TOP_CARD, cardFragment)
     }
 
     fun removeTopCardFragment() {
-        viewModel.emit(Event.REMOVE_TOP_CARD)
+        backdropViewModel.emit(Event.REMOVE_TOP_CARD)
     }
 
     //-----------------------------------------
     // Fullscreen fragments
     //-----------------------------------------
     fun showFullscreenFragment(fragment: FullscreenBackdropFragment) {
-        viewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
+        backdropViewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
     }
 
     fun revealFullscreenFragment(parameters: FullscreenRevealBackdropFragment, revealEpicenter: Point, concealEpicenter: Point) {
         parameters.revealEpiCenter = revealEpicenter
         parameters.concealEpiCenter = concealEpicenter
-        viewModel.emit(Event.REVEAL_FULLSCREEN_FRAGMENT, parameters)
+        backdropViewModel.emit(Event.REVEAL_FULLSCREEN_FRAGMENT, parameters)
     }
 
     fun hideFullscreenFragment() {
-        viewModel.emit(Event.HIDE_FULLSCREEN_FRAGMENT)
+        backdropViewModel.emit(Event.HIDE_FULLSCREEN_FRAGMENT)
     }
 
     //-----------------------------------------
     // Content
     //-----------------------------------------
     fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
-        viewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
+        backdropViewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
     }
 
     fun showBackdropContent(@LayoutRes layoutResId: Int) {
-        viewModel.emit(Event.SHOW_BACKDROP_CONTENT, layoutResId)
+        backdropViewModel.emit(Event.SHOW_BACKDROP_CONTENT, layoutResId)
     }
 
     fun hideBackdropContent() {
-        viewModel.emit(Event.HIDE_BACKDROP_CONTENT)
+        backdropViewModel.emit(Event.HIDE_BACKDROP_CONTENT)
     }
 
     fun onBackdropContentVisible(view: View): Boolean {
@@ -83,8 +83,24 @@ interface BackdropComponent {
     //-----------------------------------------
     // Toolbar
     //-----------------------------------------
+    fun currentToolbarItem(): BackdropToolbarItem {
+        return backdropActivity.backdropToolbar.currentToolbarItem
+    }
+
+    fun actionModeToolbarItem(): BackdropToolbarItem? {
+        return backdropActivity.backdropToolbar.actionModeToolbarItem
+    }
+
     fun changeToolbarItem(toolbarItem: BackdropToolbarItem) {
-        viewModel.emit(Event.CHANGE_NAVIGATION_ITEM, toolbarItem)
+        backdropViewModel.emit(Event.CHANGE_NAVIGATION_ITEM, toolbarItem)
+    }
+
+    fun startToolbarActionMode(toolbarItem: BackdropToolbarItem) {
+        backdropViewModel.emit(Event.START_ACTION_MODE, toolbarItem)
+    }
+
+    fun finishToolbarActionMode() {
+        backdropViewModel.emit(Event.FINISH_ACTION_MODE)
     }
 
     fun onPrimaryActionClicked(): Boolean {
@@ -92,6 +108,18 @@ interface BackdropComponent {
     }
 
     fun onMoreActionClicked(): Boolean {
+        return false
+    }
+
+    fun onPrimaryActionInActionModeClicked(): Boolean {
+        return false
+    }
+
+    fun onMoreActionInActionModeClicked(): Boolean {
+        return false
+    }
+
+    fun onToolbarActionModeFinished(): Boolean {
         return false
     }
 }

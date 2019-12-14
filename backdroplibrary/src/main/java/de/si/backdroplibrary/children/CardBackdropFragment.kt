@@ -7,7 +7,7 @@ import androidx.core.view.get
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.R
-import de.si.backdroplibrary.components.BackdropToolbarItem
+import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
 import de.si.backdroplibrary.gestures.BackdropGestureNavigationListener
 import de.si.kotlinx.fadeInAnimator
 import de.si.kotlinx.fadeOut
@@ -62,7 +62,7 @@ abstract class CardBackdropFragment : BackdropFragment() {
 
     private fun initializeGestureNavigation() {
         gestureNavigationListener.onFlingUpCallback = {
-            if (viewModel.gestureNavigationEnabled) {
+            if (backdropViewModel.gestureNavigationEnabled) {
                 hideBackdropContent()
             }
         }

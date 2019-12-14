@@ -6,12 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import de.si.backdrop.R
 import de.si.backdroplibrary.children.CardBackdropFragment
-import de.si.backdroplibrary.components.BackdropToolbarItem
+import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
 
 class TopCardBackdropFragment : CardBackdropFragment() {
-    override var toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Mid card",
-                                                                        moreActionEnabled = false,
-                                                                        primaryAction = R.drawable.ic_add)
+    override var toolbarItem: BackdropToolbarItem =
+        BackdropToolbarItem(title = "Mid card",
+                            moreActionEnabled = true,
+                            primaryAction = R.drawable.ic_add)
 
     override fun onCreateContentView(inflater: LayoutInflater,
                                      container: ViewGroup?,
@@ -31,6 +32,17 @@ class TopCardBackdropFragment : CardBackdropFragment() {
         }
 
         changeToolbarItem(toolbarItem)
+        return true
+    }
+
+    override fun onMoreActionClicked(): Boolean {
+        startToolbarActionMode(BackdropToolbarItem(title = "Card action mode",
+                                                   primaryAction = R.drawable.ic_change_content))
+        return true
+    }
+
+    override fun onToolbarActionModeFinished(): Boolean {
+        println("TopCardBackdropFragment.onToolbarActionModeFinished")
         return true
     }
 }

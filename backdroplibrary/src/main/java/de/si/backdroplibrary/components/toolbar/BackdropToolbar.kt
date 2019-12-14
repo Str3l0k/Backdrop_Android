@@ -1,4 +1,4 @@
-package de.si.backdroplibrary.components
+package de.si.backdroplibrary.components.toolbar
 
 import android.animation.AnimatorSet
 import android.animation.LayoutTransition
@@ -33,9 +33,6 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     private val titleLayout: LinearLayout = backdropActivity.layout_backdrop_toolbar_titles
     private val textTitle: TextView = backdropActivity.text_backdrop_toolbar_title
     private val textSubTitle: TextView = backdropActivity.text_backdrop_toolbar_subtitle
-    //-----------------------------------------
-    // endregion
-    //-----------------------------------------
 
     //-----------------------------------------
     //
@@ -54,38 +51,55 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
             textSubTitle.text = value
         }
 
+    var currentToolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Toolbar")
+        private set
+    var actionModeToolbarItem: BackdropToolbarItem? = null
+        private set
+
     //-----------------------------------------
     //
     //-----------------------------------------
     init {
         buttonMoreAction.setOnClickListener {
-            viewModel.emit(Event.MORE_ACTION_TRIGGERED)
+            if (actionModeToolbarItem != null) {
+                backdropViewModel.emit(Event.MORE_ACTION_ACTIONMODE_TRIGGERED)
+            } else {
+                backdropViewModel.emit(Event.MORE_ACTION_TRIGGERED)
+            }
         }
 
         buttonPrimaryAction.setOnClickListener {
-            viewModel.emit(Event.PRIMARY_ACTION_TRIGGERED)
+            if (actionModeToolbarItem != null) {
+                backdropViewModel.emit(Event.PRIMARY_ACTION_ACTIONMODE_TRIGGERED)
+            } else {
+                backdropViewModel.emit(Event.PRIMARY_ACTION_TRIGGERED)
+            }
         }
 
         buttonMenu.setOnClickListener {
             when (buttonMenu.tag as? BackdropToolbarMainButtonState) {
-                BackdropToolbarMainButtonState.MENU -> {
+                BackdropToolbarMainButtonState.MENU  -> {
                     openMenuClickCallback?.invoke()
                     buttonMenu.tag = BackdropToolbarMainButtonState.CLOSE
                     buttonMenu.fade {
                         buttonMenu.setImageResource(R.drawable.ic_clear)
                     }
                 }
-                BackdropToolbarMainButtonState.BACK -> {
+                BackdropToolbarMainButtonState.BACK  -> {
                     backdropActivity.onBackPressed()
                 }
                 BackdropToolbarMainButtonState.CLOSE -> {
-                    closeBackdropClickCallback?.invoke()
-                    buttonMenu.tag = BackdropToolbarMainButtonState.MENU
-                    buttonMenu.fade {
-                        buttonMenu.setImageResource(R.drawable.ic_menu)
+                    if (actionModeToolbarItem != null) {
+                        finishActionModeCallback?.invoke() ?: finishActionMode(BackdropToolbarMainButtonState.MENU)
+                    } else {
+                        closeBackdropClickCallback?.invoke()
+                        buttonMenu.tag = BackdropToolbarMainButtonState.MENU
+                        buttonMenu.fade {
+                            buttonMenu.setImageResource(R.drawable.ic_menu)
+                        }
                     }
                 }
-                else -> {
+                else                                 -> {
                     // Nothing to do here
                 }
             }
@@ -94,26 +108,40 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         buttonMenu.setOnLongClickListener {
             when (buttonMenu.tag as? BackdropToolbarMainButtonState) {
                 BackdropToolbarMainButtonState.MENU -> openMenuLongClickCallback?.invoke() ?: false
-                else -> false
+                else                                -> false
             }
         }
     }
 
-    /* callbacks */
+    //-----------------------------------------
+    // Callbacks
+    //-----------------------------------------
+
     internal var openMenuClickCallback: (() -> Unit)? = null
     internal var closeBackdropClickCallback: (() -> Unit)? = null
     internal var openMenuLongClickCallback: (() -> Boolean)? = null
+    internal var finishActionModeCallback: (() -> Unit)? = null
 
-    /* API */
+    //-----------------------------------------
+    // API
+    //-----------------------------------------
+
     internal val menuButtonVisible: Boolean
         get() = buttonMenu.tag == BackdropToolbarMainButtonState.MENU
 
-    internal fun configure(item: BackdropToolbarItem, mainButtonState: BackdropToolbarMainButtonState) {
+    internal val isInActionMode: Boolean
+        get() = actionModeToolbarItem != null
 
-        val itemDiff: BackdropToolbarItemDiff = item.calculateDiff(BackdropToolbarItem(title = title,
-                                                                                       subtitle = subTitle,
-                                                                                       primaryAction = buttonPrimaryAction.tag as Int?,
-                                                                                       moreActionEnabled = buttonMoreAction.isVisible))
+    internal fun configure(toolbarItem: BackdropToolbarItem, mainButtonState: BackdropToolbarMainButtonState) {
+        calculateAndStartToolbarAnimations(toolbarItem, mainButtonState)
+        currentToolbarItem = toolbarItem
+    }
+
+    private fun calculateAndStartToolbarAnimations(toolbarItem: BackdropToolbarItem, mainButtonState: BackdropToolbarMainButtonState) {
+        val itemDiff: BackdropToolbarItemDiff = toolbarItem.calculateDiff(BackdropToolbarItem(title = title,
+                                                                                              subtitle = subTitle,
+                                                                                              primaryAction = buttonPrimaryAction.tag as Int?,
+                                                                                              moreActionEnabled = buttonMoreAction.isVisible))
 
         val toolbarAnimations: MutableList<ObjectAnimator> = mutableListOf()
 
@@ -121,7 +149,7 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
             toolbarAnimations.add(ObjectAnimator.ofFloat(titleLayout, View.ALPHA, 1f, 0f))
         } else if (itemDiff.subtitleChanged) {
             titleLayout.layoutTransition = LayoutTransition()
-            subTitle = item.subtitle
+            subTitle = toolbarItem.subtitle
             titleLayout.layoutTransition = null
         } else if (itemDiff.titleChanged) {
             toolbarAnimations.add(ObjectAnimator.ofFloat(textTitle, View.ALPHA, 1f, 0f))
@@ -146,19 +174,19 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         val animatorSet = AnimatorSet()
         animatorSet.playTogether(*toolbarAnimations.toTypedArray())
         animatorSet.addListener(onEnd = {
-            title = item.title
-            subTitle = item.subtitle
-            buttonMoreAction.isVisible = item.moreActionEnabled
-            buttonPrimaryAction.tag = item.primaryAction
-            buttonPrimaryAction.isVisible = item.primaryAction != null
-            item.primaryAction?.let { buttonPrimaryAction.setImageResource(it) }
+            title = toolbarItem.title
+            subTitle = toolbarItem.subtitle
+            buttonMoreAction.isVisible = toolbarItem.moreActionEnabled
+            buttonPrimaryAction.tag = toolbarItem.primaryAction
+            buttonPrimaryAction.isVisible = toolbarItem.primaryAction != null
+            toolbarItem.primaryAction?.let { buttonPrimaryAction.setImageResource(it) }
 
             when (mainButtonState) {
-                BackdropToolbarMainButtonState.MENU -> {
+                BackdropToolbarMainButtonState.MENU  -> {
                     buttonMenu.isVisible = true
                     buttonMenu.setImageResource(R.drawable.ic_menu)
                 }
-                BackdropToolbarMainButtonState.BACK -> {
+                BackdropToolbarMainButtonState.BACK  -> {
                     buttonMenu.isVisible = true
                     buttonMenu.setImageResource(R.drawable.ic_back)
                 }
@@ -166,7 +194,7 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
                     buttonMenu.isVisible = true
                     buttonMenu.setImageResource(R.drawable.ic_clear)
                 }
-                BackdropToolbarMainButtonState.NONE -> {
+                BackdropToolbarMainButtonState.NONE  -> {
                     buttonMenu.isVisible = false
                 }
             }
@@ -204,24 +232,37 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     }
 
     internal fun showMenuButton() {
-        buttonMenu.tag = BackdropToolbarMainButtonState.MENU
-        buttonMenu.isVisible = true
-        buttonMenu.fadeIn()
+        if (buttonMenu.tag == BackdropToolbarMainButtonState.MENU) {
+            return
+        }
+
+        buttonMenu.fade {
+            buttonMenu.tag = BackdropToolbarMainButtonState.MENU
+            buttonMenu.isVisible = true
+            buttonMenu.setImageResource(R.drawable.ic_menu)
+        }
     }
 
     internal fun showBackdropCloseButton() {
-        if (buttonMenu.isVisible.not()) {
+        if (buttonMenu.tag == BackdropToolbarMainButtonState.CLOSE) {
+            return
+        }
+
+        buttonMenu.fade {
             buttonMenu.tag = BackdropToolbarMainButtonState.CLOSE
             buttonMenu.isVisible = true
             buttonMenu.setImageResource(R.drawable.ic_clear)
-            buttonMenu.fadeIn()
         }
     }
-}
 
-enum class BackdropToolbarMainButtonState {
-    MENU,
-    BACK,
-    CLOSE,
-    NONE;
+    internal fun startActionMode(toolbarItem: BackdropToolbarItem) {
+        calculateAndStartToolbarAnimations(toolbarItem, BackdropToolbarMainButtonState.CLOSE)
+        actionModeToolbarItem = toolbarItem
+    }
+
+    internal fun finishActionMode(mainButtonState: BackdropToolbarMainButtonState) {
+        calculateAndStartToolbarAnimations(currentToolbarItem, mainButtonState)
+        actionModeToolbarItem = null
+        backdropViewModel.emit(Event.ACTION_MODE_FINISHED)
+    }
 }

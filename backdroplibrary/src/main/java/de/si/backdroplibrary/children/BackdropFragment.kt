@@ -12,27 +12,30 @@ abstract class BackdropFragment : Fragment(), BackdropComponent {
     override val backdropActivity: BackdropActivity
         get() = requireActivity() as BackdropActivity
 
-    override val viewModel: BackdropViewModel by lazy {
+    override val backdropViewModel: BackdropViewModel by lazy {
         BackdropViewModel.registeredInstance(backdropActivity)
     }
 
     override fun onStart() {
         super.onStart()
-        viewModel.registerEventCallback(this::onEvent)
+        backdropViewModel.registerEventCallback(this::onEvent)
     }
 
     override fun onPause() {
         super.onPause()
-        viewModel.unregisterEventCallbacks(this::onEvent)
+        backdropViewModel.unregisterEventCallbacks(this::onEvent)
     }
 
     private fun onEvent(event: Event, payload: Any?): Boolean {
         return when (event) {
-            Event.BACKDROP_CONTENT_VISIBLE -> onBackdropContentVisible(payload as View)
-            Event.BACKDROP_CONTENT_INVISIBLE -> onBackdropContentInvisible()
-            Event.PRIMARY_ACTION_TRIGGERED -> onPrimaryActionClicked()
-            Event.MORE_ACTION_TRIGGERED -> onMoreActionClicked()
-            else -> false
+            Event.BACKDROP_CONTENT_VISIBLE            -> onBackdropContentVisible(payload as View)
+            Event.BACKDROP_CONTENT_INVISIBLE          -> onBackdropContentInvisible()
+            Event.PRIMARY_ACTION_TRIGGERED            -> onPrimaryActionClicked()
+            Event.MORE_ACTION_TRIGGERED               -> onMoreActionClicked()
+            Event.PRIMARY_ACTION_ACTIONMODE_TRIGGERED -> onPrimaryActionInActionModeClicked()
+            Event.MORE_ACTION_ACTIONMODE_TRIGGERED    -> onMoreActionInActionModeClicked()
+            Event.ACTION_MODE_FINISHED                -> onToolbarActionModeFinished()
+            else                                      -> false
         }
     }
 }

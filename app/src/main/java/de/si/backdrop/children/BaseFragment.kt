@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentTransaction
 import de.si.backdrop.R
 import de.si.backdroplibrary.children.MainCardBackdropFragment
-import de.si.backdroplibrary.components.BackdropToolbarItem
-import de.si.backdroplibrary.components.BackdropToolbarMainButtonState
+import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
+import de.si.backdroplibrary.components.toolbar.BackdropToolbarMainButtonState
 import kotlinx.android.synthetic.main.base_card.*
 import kotlin.random.Random
 
@@ -16,10 +15,11 @@ class BaseFragment : MainCardBackdropFragment() {
     override val menuButtonState: BackdropToolbarMainButtonState
         get() = BackdropToolbarMainButtonState.MENU
 
-    override val toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Backdrop",
-                                                                        subtitle = "Demonstration",
-                                                                        primaryAction = R.drawable.ic_add,
-                                                                        moreActionEnabled = true)
+    override val toolbarItem: BackdropToolbarItem =
+        BackdropToolbarItem(title = "Backdrop",
+                            subtitle = "Demonstration",
+                            primaryAction = R.drawable.ic_add,
+                            moreActionEnabled = true)
 
     override fun onCreateContentView(inflater: LayoutInflater,
                                      container: ViewGroup?,
@@ -31,15 +31,6 @@ class BaseFragment : MainCardBackdropFragment() {
         // configure content view here
         button.setOnClickListener {
 
-        }
-
-        bottomNavigationView.setOnNavigationItemSelectedListener {
-            val transaction = childFragmentManager.beginTransaction()
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-            transaction.replace(R.id.testContainer, TestFragment())
-            transaction.commit()
-
-            true
         }
     }
 

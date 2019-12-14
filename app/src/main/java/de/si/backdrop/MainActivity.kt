@@ -22,7 +22,7 @@ class MainActivity : BackdropActivity() {
 
     override fun onBackdropContentVisible(view: View): Boolean {
         return when (view.id) {
-            R.id.menu_main_layout -> {
+            R.id.menu_main_layout    -> {
                 configureTestMenuView(view)
                 true
             }
@@ -32,14 +32,14 @@ class MainActivity : BackdropActivity() {
                 }
                 true
             }
-            else -> false
+            else                     -> false
         }
     }
 
     private fun configureTestMenuView(menuView: View) {
         when {
             menuView.id != MainMenu.resourceId -> return
-            mainMenu == null -> {
+            mainMenu == null                   -> {
                 mainMenu = MainMenu(menuView, this)
             }
         }
