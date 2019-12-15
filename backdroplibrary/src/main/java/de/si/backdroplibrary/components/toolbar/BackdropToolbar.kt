@@ -133,6 +133,7 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         get() = actionModeToolbarItem != null
 
     internal fun configure(toolbarItem: BackdropToolbarItem, mainButtonState: BackdropToolbarMainButtonState) {
+        // TODO fast switch can overrule previous change
         calculateAndStartToolbarAnimations(toolbarItem, mainButtonState)
         currentToolbarItem = toolbarItem
     }
@@ -172,6 +173,7 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         }
 
         val animatorSet = AnimatorSet()
+        animatorSet.duration = Backdrop.BACKDROP_ANIMATION_HALF_DURATION
         animatorSet.playTogether(*toolbarAnimations.toTypedArray())
         animatorSet.addListener(onEnd = {
             title = toolbarItem.title

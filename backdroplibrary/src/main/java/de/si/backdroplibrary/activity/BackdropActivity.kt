@@ -88,8 +88,8 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         when {
             fullscreenDialogs.isVisible           -> fullscreenDialogs.hideFullscreenFragment()
             backdropOpen                          -> hideBackdropContent()
-            backdropCardStack.hasMoreThanOneEntry -> removeTopCardFragment()
             backdropToolbar.isInActionMode        -> finishToolbarActionMode()
+            backdropCardStack.hasMoreThanOneEntry -> removeTopCardFragment()
             else                                  -> super.onBackPressed()
         }
     }

@@ -60,15 +60,11 @@ internal class BackdropCardStack(override val backdropActivity: BackdropActivity
     }
 
     internal fun disable() {
-        fragmentStack.forEach { fragment ->
-            fragment.disable()
-        }
+        fragmentStack.forEach(CardBackdropFragment::disable)
     }
 
     internal fun enable() {
-        fragmentStack.forEach { fragment ->
-            fragment.enable()
-        }
+        fragmentStack.forEach(CardBackdropFragment::enable)
     }
 
     private fun printCountWarningIfNecessary() {
