@@ -29,8 +29,8 @@ class BackdropViewModel : ViewModel() {
     }
 
     internal fun emit(event: Event, payload: Any? = null) {
-        val callbackResult = callbackReceivers.reversed().firstOrNull {
-            it.invoke(event, payload)
+        val callbackResult = callbackReceivers.reversed().firstOrNull { callback ->
+            callback.invoke(event, payload)
         }
 
         if (callbackResult == null) {

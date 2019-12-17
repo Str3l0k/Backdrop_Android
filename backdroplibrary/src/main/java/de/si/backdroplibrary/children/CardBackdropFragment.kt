@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.transition.Slide
 import android.view.*
 import androidx.core.view.get
+import androidx.core.view.isGone
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.R
@@ -89,12 +90,14 @@ abstract class CardBackdropFragment : BackdropFragment() {
     }
 
     internal fun hideContent() {
+        onFragmentWillBeCovered()
         view?.layout_cardstack_fragment_content?.fadeOut(duration = Backdrop.BACKDROP_ANIMATION_DURATION) {
-            view?.layout_cardstack_fragment_content?.isVisible = false
+            view?.layout_cardstack_fragment_content?.isGone = true
         }
     }
 
     internal fun showContent() {
+        onFragmentWillBeRevealed()
         view?.layout_cardstack_fragment_content?.alpha = 1f
         view?.layout_cardstack_fragment_content?.isVisible = true
     }
@@ -111,7 +114,11 @@ abstract class CardBackdropFragment : BackdropFragment() {
 
     abstract fun onContentViewCreated(view: View?, savedInstanceState: Bundle?)
 
-    abstract val toolbarItem: BackdropToolbarItem
+    abstract fun onFragmentWillBeCovered()
+
+    abstract fun onFragmentWillBeRevealed()
+
+    abstract val toolbarItem: BackdropToolbarItem?
     //-----------------------------------------
     // endregion
     //-----------------------------------------

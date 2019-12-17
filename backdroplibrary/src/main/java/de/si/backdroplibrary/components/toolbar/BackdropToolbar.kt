@@ -132,10 +132,11 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     internal val isInActionMode: Boolean
         get() = actionModeToolbarItem != null
 
-    internal fun configure(toolbarItem: BackdropToolbarItem, mainButtonState: BackdropToolbarMainButtonState) {
-        // TODO fast switch can overrule previous change
-        calculateAndStartToolbarAnimations(toolbarItem, mainButtonState)
-        currentToolbarItem = toolbarItem
+    internal fun configure(toolbarItem: BackdropToolbarItem?, mainButtonState: BackdropToolbarMainButtonState) {
+        val newToolbarItem = toolbarItem ?: currentToolbarItem
+
+        calculateAndStartToolbarAnimations(newToolbarItem, mainButtonState)
+        currentToolbarItem = newToolbarItem
     }
 
     private fun calculateAndStartToolbarAnimations(toolbarItem: BackdropToolbarItem, mainButtonState: BackdropToolbarMainButtonState) {

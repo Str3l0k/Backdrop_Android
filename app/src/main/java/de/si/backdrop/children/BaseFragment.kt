@@ -45,4 +45,12 @@ class BaseFragment : MainCardBackdropFragment() {
         addCardFragment(TopCardBackdropFragment())
         return true
     }
+
+    override fun onFragmentWillBeCovered() {
+        println("BaseFragment.onFragmentWillBeCovered")
+    }
+
+    override fun onFragmentWillBeRevealed() {
+        println("BaseFragment.onFragmentWillBeRevealed")
+    }
 }

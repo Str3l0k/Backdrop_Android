@@ -26,7 +26,8 @@ class TopCardBackdropFragment : CardBackdropFragment() {
 
     override fun onPrimaryActionClicked(): Boolean {
         toolbarItem = if (toolbarItem.subtitle == null) {
-            toolbarItem.copy(subtitle = "Test subtitle animation")
+            toolbarItem.copy(title = "Very long title to test how this behaves",
+                             subtitle = "Test subtitle animation")
         } else {
             toolbarItem.copy(subtitle = null)
         }
@@ -44,5 +45,13 @@ class TopCardBackdropFragment : CardBackdropFragment() {
     override fun onToolbarActionModeFinished(): Boolean {
         println("TopCardBackdropFragment.onToolbarActionModeFinished")
         return true
+    }
+
+    override fun onFragmentWillBeCovered() {
+        println("TopCardBackdropFragment.onFragmentWillBeCovered")
+    }
+
+    override fun onFragmentWillBeRevealed() {
+        println("TopCardBackdropFragment.onFragmentWillBeRevealed")
     }
 }
