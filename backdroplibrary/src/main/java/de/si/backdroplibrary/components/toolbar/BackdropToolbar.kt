@@ -85,19 +85,9 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
                         buttonMenu.setImageResource(R.drawable.ic_clear)
                     }
                 }
-                BackdropToolbarMainButtonState.BACK  -> {
-                    backdropActivity.onBackPressed()
-                }
+                BackdropToolbarMainButtonState.BACK,
                 BackdropToolbarMainButtonState.CLOSE -> {
-                    if (actionModeToolbarItem != null) {
-                        finishActionModeCallback?.invoke() ?: finishActionMode(BackdropToolbarMainButtonState.MENU)
-                    } else {
-                        closeBackdropClickCallback?.invoke()
-                        buttonMenu.tag = BackdropToolbarMainButtonState.MENU
-                        buttonMenu.fade {
-                            buttonMenu.setImageResource(R.drawable.ic_menu)
-                        }
-                    }
+                    backdropActivity.onBackPressed()
                 }
                 else                                 -> {
                     // Nothing to do here
@@ -255,6 +245,18 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
             buttonMenu.tag = BackdropToolbarMainButtonState.CLOSE
             buttonMenu.isVisible = true
             buttonMenu.setImageResource(R.drawable.ic_clear)
+        }
+    }
+
+    internal fun showBackButton() {
+        if (buttonMenu.tag == BackdropToolbarMainButtonState.BACK) {
+            return
+        }
+
+        buttonMenu.fade {
+            buttonMenu.tag = BackdropToolbarMainButtonState.BACK
+            buttonMenu.isVisible = true
+            buttonMenu.setImageResource(R.drawable.ic_back)
         }
     }
 

@@ -62,7 +62,12 @@ private fun BackdropActivity.handleHideBackdropContentEvent(): Boolean {
     backdropContent.hide()
     backdropCardStack.enable()
     backdropToolbar.enableActions()
-    backdropToolbar.showMenuButton()
+
+    if (backdropCardStack.hasMoreThanOneEntry) {
+        backdropToolbar.showBackButton()
+    } else {
+        backdropToolbar.showMenuButton()
+    }
     backdropViewModel.emit(Event.BACKDROP_CONTENT_INVISIBLE)
     return true
 }

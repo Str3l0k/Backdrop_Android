@@ -47,6 +47,11 @@ class TopCardBackdropFragment : CardBackdropFragment() {
         return true
     }
 
+    override fun onPrimaryActionInActionModeClicked(): Boolean {
+        showBackdropContent(R.layout.test_content)
+        return true
+    }
+
     override fun onFragmentWillBeCovered() {
         println("TopCardBackdropFragment.onFragmentWillBeCovered")
     }
