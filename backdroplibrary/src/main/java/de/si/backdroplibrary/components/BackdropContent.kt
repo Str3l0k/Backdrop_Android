@@ -23,22 +23,23 @@ internal class BackdropContent(override val backdropActivity: BackdropActivity) 
     private val backdropViewCache: MutableMap<Int, View> = mutableMapOf()
 
     //-----------------------------------------
-    // region API
+    // API
     //-----------------------------------------
     internal fun preCacheContentView(@LayoutRes layoutResId: Int) {
         val contentView = inflateViewAndCheckForId(layoutResId)
         contentView?.let { view ->
             putViewInCache(view, layoutResId)
         } ?: run {
-            Log.e("BackdropContent",
-                  "The root view of the inflated layout with id $layoutResId does not have a proper id itself.")
+            Log.e("BackdropContent", "The root view of the inflated layout with id $layoutResId does not have a proper id itself.")
         }
     }
 
     internal fun showContentView(@LayoutRes layoutResId: Int, nextLayoutCallback: (View) -> Unit) {
         checkCacheAndInflateIfNecessary(layoutResId)
-        getContentViewAndSetLayoutCallback(layoutResId,
-                                           nextLayoutCallback)?.let(this::prepareLayoutContainerAndAddContent)
+        getContentViewAndSetLayoutCallback(
+                layoutResId,
+                nextLayoutCallback
+        )?.let(this::prepareLayoutContainerAndAddContent)
     }
 
     internal fun hide() {
@@ -46,12 +47,9 @@ internal class BackdropContent(override val backdropActivity: BackdropActivity) 
             layoutContentContainer.isVisible = false
         }
     }
-    //-----------------------------------------
-    // endregion
-    //-----------------------------------------
 
     //-----------------------------------------
-    // region internal functions
+    // Helper
     //-----------------------------------------
     private fun inflateViewAndCheckForId(@LayoutRes layoutResId: Int): View? {
         val inflatedView = backdropActivity.inflateView(layoutResId, layoutContentContainer)
@@ -99,7 +97,4 @@ internal class BackdropContent(override val backdropActivity: BackdropActivity) 
             layoutContentContainer.addView(contentView)
         }
     }
-    //-----------------------------------------
-    // endregion
-    //-----------------------------------------
 }

@@ -11,7 +11,6 @@ import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
 import de.si.backdroplibrary.BackdropComponent
 import de.si.backdroplibrary.BackdropViewModel
-import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.R
 import de.si.backdroplibrary.children.MainCardBackdropFragment
 import de.si.backdroplibrary.components.BackdropCardStack
@@ -27,7 +26,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     // viewModel
     //-----------------------------------------
     override val backdropViewModel by lazy {
-        BackdropViewModel.registeredInstance(this)
+        BackdropViewModel.registeredInstance(activity = this)
     }
 
     override val backdropActivity: BackdropActivity
@@ -66,21 +65,22 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     //-----------------------------------------
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.layout_main)
-        initializeViewModel()
+
         initializeComponents()
         initializeBaseCardFragment()
         initializeBaseToolbarItem()
         initializeGestureNavigation()
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         initializeViewModel()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         backdropViewModel.unregisterEventCallbacks(this::onEvent)
     }
 
@@ -98,21 +98,42 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         return gestureDetector.onTouchEvent(event) || super.onTouchEvent(event)
     }
 
+    override fun onMenuActionClicked(): Boolean {
+        showBackdropContent(menuLayoutRes)
+        return true
+    }
+
+    //-----------------------------------------
+    // Animation functions
+    //-----------------------------------------
+    internal fun animateBackdropOpening(translationY: Float) {
+        backdropOpenCloseAnimator.setFloatValues(translationY)
+        backdropOpenCloseAnimator.start()
+    }
+
+    internal fun animateBackdropClosing() {
+        backdropOpenCloseAnimator.setFloatValues(BACKDROP_CLOSED_TRANSLATION_Y)
+        backdropOpenCloseAnimator.start()
+    }
+
+    fun setMenuLayout(@LayoutRes layoutResId: Int) {
+        menuLayoutRes = layoutResId
+        prefetchBackdropContent(layoutResId)
+        backdropToolbar.showMenuButton()
+    }
+
+    //-----------------------------------------
+    // Helper
+    //-----------------------------------------
     private fun initializeViewModel() {
         backdropViewModel.registerEventCallback(this::onEvent)
     }
 
     private fun initializeComponents() {
-        backdropContent = BackdropContent(this)
-        backdropCardStack = BackdropCardStack(this)
-        backdropToolbar = BackdropToolbar(this)
-        backdropToolbar.closeBackdropClickCallback = {
-            hideBackdropContent()
-        }
-        backdropToolbar.finishActionModeCallback = {
-            finishToolbarActionMode()
-        }
-        fullscreenDialogs = FullscreenDialogs(this)
+        backdropContent = BackdropContent(backdropActivity = this)
+        backdropCardStack = BackdropCardStack(backdropActivity = this)
+        backdropToolbar = BackdropToolbar(backdropActivity = this)
+        fullscreenDialogs = FullscreenDialogs(backdropActivity = this)
     }
 
     private fun initializeBaseCardFragment() {
@@ -135,41 +156,6 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
                     showBackdropContent(menuLayoutRes)
                 }
             }
-        }
-    }
-
-    //-----------------------------------------
-    // animation functions
-    //-----------------------------------------
-    internal fun animateBackdropOpening(translationY: Float) {
-        backdropOpenCloseAnimator.setFloatValues(translationY)
-        backdropOpenCloseAnimator.start()
-    }
-
-    internal fun animateBackdropClosing() {
-        backdropOpenCloseAnimator.setFloatValues(BACKDROP_CLOSED_TRANSLATION_Y)
-        backdropOpenCloseAnimator.start()
-    }
-
-    //-----------------------------------------
-    // main menu
-    //-----------------------------------------
-    @Suppress("unused")
-    fun setMenuButtonClickCallback(clickCallback: () -> Unit) {
-        backdropToolbar.openMenuClickCallback = clickCallback
-    }
-
-    @Suppress("unused")
-    fun setMenuButtonLongClickCallback(longClickCallback: () -> Boolean) {
-        backdropToolbar.openMenuLongClickCallback = longClickCallback
-    }
-
-    fun setMenuLayout(@LayoutRes layoutResId: Int) {
-        menuLayoutRes = layoutResId
-        backdropViewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
-        backdropToolbar.showMenuButton()
-        backdropToolbar.openMenuClickCallback = {
-            showBackdropContent(layoutResId)
         }
     }
 }

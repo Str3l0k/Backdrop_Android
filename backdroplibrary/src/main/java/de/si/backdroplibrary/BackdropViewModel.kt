@@ -10,12 +10,12 @@ internal typealias BackdropEventCallback = ((Event, Any?) -> Boolean)
 class BackdropViewModel : ViewModel() {
 
     //-----------------------------------------
-    // properties
+    // Properties
     //-----------------------------------------
     var gestureNavigationEnabled: Boolean = true
 
     //-----------------------------------------
-    // observers
+    // Observers
     //-----------------------------------------
     @get:Synchronized
     private val callbackReceivers: MutableSet<BackdropEventCallback> = mutableSetOf()
@@ -29,16 +29,15 @@ class BackdropViewModel : ViewModel() {
     }
 
     internal fun emit(event: Event, payload: Any? = null) {
-        val callbackResult = callbackReceivers.reversed().firstOrNull { callback ->
+        val callbackResult: Any? = callbackReceivers.reversed().firstOrNull { callback ->
             callback.invoke(event, payload)
         }
 
         if (callbackResult == null) {
-            Log.w("Backdrop Event System", "Nobody consumed event = [$event], payload = [$payload]")
+            Log.d("Backdrop Event System", "Nobody consumed event = [$event], payload = [$payload]")
         }
     }
 
-    //-----------------------------------------
     //-----------------------------------------
     companion object {
         internal fun registeredInstance(activity: AppCompatActivity): BackdropViewModel {

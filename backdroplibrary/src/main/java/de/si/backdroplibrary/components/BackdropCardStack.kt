@@ -38,19 +38,12 @@ internal class BackdropCardStack(override val backdropActivity: BackdropActivity
     internal val topFragment
         get() = fragmentStack.peek()
 
-    private val newTopCardMargin
-        get() = fragmentStack.size * 8.realPixelsFromDensityPixels(backdropActivity.applicationContext)
-
     internal fun push(fragment: CardBackdropFragment) {
         printCountWarningIfNecessary()
-        fragment.cardTopMargin = newTopCardMargin
+        fragment.cardTopMargin = newTopCardMargin()
         topFragment.hideContent()
         fragmentStack.push(fragment)
         addNewFragment(fragment)
-    }
-
-    private fun addNewFragment(fragment: CardBackdropFragment) {
-        fragmentManager.add(fragment, layoutContainer.id)
     }
 
     internal fun pop() {
@@ -65,6 +58,14 @@ internal class BackdropCardStack(override val backdropActivity: BackdropActivity
 
     internal fun enable() {
         fragmentStack.forEach(CardBackdropFragment::enable)
+    }
+
+    private fun newTopCardMargin(): Int {
+        return fragmentStack.size * 8.realPixelsFromDensityPixels(backdropActivity.applicationContext)
+    }
+
+    private fun addNewFragment(fragment: CardBackdropFragment) {
+        fragmentManager.add(fragment, layoutContainer.id)
     }
 
     private fun printCountWarningIfNecessary() {

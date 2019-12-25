@@ -1,6 +1,7 @@
 package de.si.backdroplibrary
 
 internal enum class Event {
+
     // Backdrop content
     PREFETCH_BACKDROP_CONTENT_VIEW,
     SHOW_BACKDROP_CONTENT,
@@ -17,6 +18,7 @@ internal enum class Event {
     PRIMARY_ACTION_ACTIONMODE_TRIGGERED,
     MORE_ACTION_ACTIONMODE_TRIGGERED,
     ACTION_MODE_FINISHED,
+    MENU_ACTION_TRIGGERED,
 
     // card stack
     ADD_TOP_CARD,

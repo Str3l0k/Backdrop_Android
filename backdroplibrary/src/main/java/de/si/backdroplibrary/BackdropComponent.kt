@@ -47,7 +47,12 @@ interface BackdropComponent {
         backdropViewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
     }
 
-    fun revealFullscreenFragment(parameters: FullscreenRevealBackdropFragment, revealEpicenter: Point, concealEpicenter: Point) {
+    fun revealFullscreenFragment(
+        parameters: FullscreenRevealBackdropFragment,
+        revealEpicenter: Point,
+        concealEpicenter: Point
+    ) {
+
         parameters.revealEpiCenter = revealEpicenter
         parameters.concealEpiCenter = concealEpicenter
         backdropViewModel.emit(Event.REVEAL_FULLSCREEN_FRAGMENT, parameters)
@@ -120,6 +125,10 @@ interface BackdropComponent {
     }
 
     fun onToolbarActionModeFinished(): Boolean {
+        return false
+    }
+
+    fun onMenuActionClicked(): Boolean {
         return false
     }
 }

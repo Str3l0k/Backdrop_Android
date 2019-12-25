@@ -27,9 +27,14 @@ class MainActivity : BackdropActivity() {
                 true
             }
             R.id.layout_test_content -> {
-                view.findViewById<Button>(R.id.button_backdrop_content_test).setOnClickListener { button ->
-                    revealFullscreenFragment(FullscreenRevealBackdropFragment(), button.globalCenterPoint, button.globalCenterPoint)
-                }
+                view.findViewById<Button>(R.id.button_backdrop_content_test)
+                    .setOnClickListener { button ->
+                        revealFullscreenFragment(
+                                FullscreenRevealBackdropFragment(),
+                                button.globalCenterPoint,
+                                button.globalCenterPoint
+                        )
+                    }
                 true
             }
             else                     -> false

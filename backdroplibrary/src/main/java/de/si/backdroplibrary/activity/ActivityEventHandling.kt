@@ -26,6 +26,7 @@ internal fun BackdropActivity.onEvent(event: Event, payload: Any?): Boolean {
         Event.PRIMARY_ACTION_ACTIONMODE_TRIGGERED -> onPrimaryActionInActionModeClicked()
         Event.MORE_ACTION_ACTIONMODE_TRIGGERED    -> onMoreActionInActionModeClicked()
         Event.ACTION_MODE_FINISHED                -> onToolbarActionModeFinished()
+        Event.MENU_ACTION_TRIGGERED               -> onMenuActionClicked()
 
         // card stack events
         Event.ADD_TOP_CARD                        -> handleAddTopCardEvent(payload as CardBackdropFragment)
@@ -39,7 +40,7 @@ internal fun BackdropActivity.onEvent(event: Event, payload: Any?): Boolean {
 }
 
 //-----------------------------------------
-// backdrop content event handling
+// Backdrop content event handling
 //-----------------------------------------
 
 private fun BackdropActivity.handlePrefetchBackdropContentEvent(layoutResId: Int): Boolean {
@@ -50,7 +51,7 @@ private fun BackdropActivity.handlePrefetchBackdropContentEvent(layoutResId: Int
 private fun BackdropActivity.handleShowBackdropContentEvent(layoutResId: Int): Boolean {
     backdropContent.showContentView(layoutResId) { contentView ->
         backdropToolbar.disableActions()
-        backdropToolbar.showBackdropCloseButton()
+        backdropToolbar.showCloseButton()
         backdropCardStack.disable()
         animateBackdropOpening(contentView.height.toFloat())
     }
@@ -63,10 +64,10 @@ private fun BackdropActivity.handleHideBackdropContentEvent(): Boolean {
     backdropCardStack.enable()
     backdropToolbar.enableActions()
 
-    if (backdropCardStack.hasMoreThanOneEntry) {
-        backdropToolbar.showBackButton()
-    } else {
-        backdropToolbar.showMenuButton()
+    when {
+        backdropToolbar.isInActionMode        -> backdropToolbar.showCloseButton()
+        backdropCardStack.hasMoreThanOneEntry -> backdropToolbar.showBackButton()
+        else                                  -> backdropToolbar.showMenuButton()
     }
     backdropViewModel.emit(Event.BACKDROP_CONTENT_INVISIBLE)
     return true
