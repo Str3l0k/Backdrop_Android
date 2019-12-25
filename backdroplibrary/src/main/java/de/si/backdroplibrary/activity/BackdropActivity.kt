@@ -68,6 +68,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
         setContentView(R.layout.layout_main)
 
+        initializeViewModel()
         initializeComponents()
         initializeBaseCardFragment()
         initializeBaseToolbarItem()
@@ -81,7 +82,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
     override fun onStop() {
         super.onStop()
-        backdropViewModel.unregisterEventCallbacks(this::onEvent)
+        backdropViewModel.unregisterEventCallbacks(backdropComponent = this)
     }
 
     override fun onBackPressed() {
@@ -126,7 +127,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     // Helper
     //-----------------------------------------
     private fun initializeViewModel() {
-        backdropViewModel.registerEventCallback(this::onEvent)
+        backdropViewModel.registerEventCallback(backdropComponent = this, callbackBackdrop = this::onEvent)
     }
 
     private fun initializeComponents() {

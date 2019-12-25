@@ -18,18 +18,18 @@ class BackdropViewModel : ViewModel() {
     // Observers
     //-----------------------------------------
     @get:Synchronized
-    private val callbackReceivers: MutableSet<BackdropEventCallback> = mutableSetOf()
+    private val callbackReceivers: MutableMap<BackdropComponent, BackdropEventCallback> = mutableMapOf()
 
-    internal fun registerEventCallback(callbackBackdrop: BackdropEventCallback) {
-        callbackReceivers.add(callbackBackdrop)
+    internal fun registerEventCallback(backdropComponent: BackdropComponent, callbackBackdrop: BackdropEventCallback) {
+        callbackReceivers[backdropComponent] = callbackBackdrop
     }
 
-    internal fun unregisterEventCallbacks(callback: BackdropEventCallback) {
-        callbackReceivers.remove(callback)
+    internal fun unregisterEventCallbacks(backdropComponent: BackdropComponent) {
+        callbackReceivers.remove(backdropComponent)
     }
 
     internal fun emit(event: Event, payload: Any? = null) {
-        val callbackResult: Any? = callbackReceivers.reversed().firstOrNull { callback ->
+        val callbackResult: Any? = callbackReceivers.values.reversed().firstOrNull { callback ->
             callback.invoke(event, payload)
         }
 

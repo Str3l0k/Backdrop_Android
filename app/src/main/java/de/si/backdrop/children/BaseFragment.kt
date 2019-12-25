@@ -9,35 +9,35 @@ import de.si.backdroplibrary.children.MainCardBackdropFragment
 import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
 import de.si.backdroplibrary.components.toolbar.BackdropToolbarMainButtonState
 import kotlinx.android.synthetic.main.base_card.*
-import kotlin.random.Random
 
 class BaseFragment : MainCardBackdropFragment() {
     override val menuButtonState: BackdropToolbarMainButtonState
         get() = BackdropToolbarMainButtonState.MENU
 
-    override val toolbarItem: BackdropToolbarItem =
-        BackdropToolbarItem(title = "Backdrop",
-                            subtitle = "Demonstration",
-                            primaryAction = R.drawable.ic_add,
-                            moreActionEnabled = true)
+    override val toolbarItem: BackdropToolbarItem = BackdropToolbarItem(title = "Backdrop",
+                                                                        subtitle = "Demonstration",
+                                                                        primaryAction = R.drawable.ic_add,
+                                                                        moreActionEnabled = true)
 
-    override fun onCreateContentView(inflater: LayoutInflater,
-                                     container: ViewGroup?,
-                                     savedInstanceState: Bundle?): View? {
+    override fun onCreateContentView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.base_card, container, false)
     }
 
     override fun onContentViewCreated(view: View?, savedInstanceState: Bundle?) {
         // configure content view here
         button.setOnClickListener {
-
+            changeToolbarItem(toolbarItem)
         }
     }
 
     override fun onPrimaryActionClicked(): Boolean {
-        changeToolbarItem(BackdropToolbarItem(title = "Title ${Random.nextInt(42)}",
+        changeToolbarItem(BackdropToolbarItem(title = "Title 42",//${Random.nextInt(42)}",
                                               primaryAction = toolbarItem.primaryAction,
-                                              moreActionEnabled = toolbarItem.moreActionEnabled))
+                                              moreActionEnabled = toolbarItem.moreActionEnabled.not()))
         return true
     }
 

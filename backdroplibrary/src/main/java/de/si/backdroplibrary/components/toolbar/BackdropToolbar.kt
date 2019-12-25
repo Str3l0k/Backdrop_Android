@@ -44,10 +44,6 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     var actionModeToolbarItem: BackdropToolbarItem? = null
         private set
 
-    private fun currentTitle(): String = textTitle.text.toString()
-
-    private fun currentSubtitle(): String = textSubTitle.text.toString()
-
     internal val menuButtonVisible: Boolean
         get() = buttonMenu.tag == BackdropToolbarMainButtonState.MENU
 
@@ -184,14 +180,7 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         mainButtonState: BackdropToolbarMainButtonState,
         changeContentBlock: () -> Unit
     ) {
-        val itemDiff: BackdropToolbarItemDiff = newToolbarItem.calculateDiff(
-                BackdropToolbarItem(
-                        title = currentTitle(),
-                        subtitle = currentSubtitle(),
-                        primaryAction = buttonPrimaryAction.tag as? Int?,
-                        moreActionEnabled = buttonMoreAction.isVisible
-                )
-        )
+        val itemDiff: BackdropToolbarItemDiff = newToolbarItem.calculateDiff(currentToolbarItem)
 
         val hideAnimations: List<Animator> = calculateChangeHideAnimations(itemDiff, mainButtonState)
         val reappearAnimations: List<Animator> = calculateChangeReappearAnimations(itemDiff, mainButtonState)

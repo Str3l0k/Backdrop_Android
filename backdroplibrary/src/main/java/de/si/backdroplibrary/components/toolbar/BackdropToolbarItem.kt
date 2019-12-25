@@ -1,22 +1,22 @@
 package de.si.backdroplibrary.components.toolbar
 
 data class BackdropToolbarItem(
-    val title: String,
-    val subtitle: String? = null,
+    val title: String = "",
+    val subtitle: String = "",
     val primaryAction: Int? = null,
     val moreActionEnabled: Boolean = false
 ) {
 
     internal fun hasTitle(): Boolean = title.isNotBlank()
 
-    internal fun hasSubtitle(): Boolean = subtitle?.isNotBlank() == true
+    internal fun hasSubtitle(): Boolean = subtitle.isNotBlank() == true
 
     internal fun hasPrimaryAction(): Boolean = primaryAction != null
 
     internal fun calculateDiff(other: BackdropToolbarItem): BackdropToolbarItemDiff {
         return BackdropToolbarItemDiff(
                 titleChanged = this.title != other.title,
-                subtitleChanged = this.subtitle != (other.subtitle ?: ""),
+                subtitleChanged = this.subtitle != other.subtitle,
                 primaryActionChanged = this.primaryAction != other.primaryAction,
                 moreActionChanged = this.moreActionEnabled != other.moreActionEnabled
         )

@@ -18,12 +18,12 @@ abstract class BackdropFragment : Fragment(), BackdropComponent {
 
     override fun onStart() {
         super.onStart()
-        backdropViewModel.registerEventCallback(this::onEvent)
+        backdropViewModel.registerEventCallback(backdropComponent = this, callbackBackdrop = this::onEvent)
     }
 
     override fun onPause() {
         super.onPause()
-        backdropViewModel.unregisterEventCallbacks(this::onEvent)
+        backdropViewModel.unregisterEventCallbacks(backdropComponent = this)
     }
 
     private fun onEvent(event: Event, payload: Any?): Boolean {
@@ -35,6 +35,7 @@ abstract class BackdropFragment : Fragment(), BackdropComponent {
             Event.PRIMARY_ACTION_ACTIONMODE_TRIGGERED -> onPrimaryActionInActionModeClicked()
             Event.MORE_ACTION_ACTIONMODE_TRIGGERED    -> onMoreActionInActionModeClicked()
             Event.ACTION_MODE_FINISHED                -> onToolbarActionModeFinished()
+            Event.MENU_ACTION_TRIGGERED               -> onMenuActionClicked()
             else                                      -> false
         }
     }

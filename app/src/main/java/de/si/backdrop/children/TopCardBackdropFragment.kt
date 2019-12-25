@@ -25,11 +25,11 @@ class TopCardBackdropFragment : CardBackdropFragment() {
     }
 
     override fun onPrimaryActionClicked(): Boolean {
-        toolbarItem = if (toolbarItem.subtitle == null) {
+        toolbarItem = if (toolbarItem.subtitle.isBlank()) {
             toolbarItem.copy(title = "Very long title to test how this behaves",
                              subtitle = "Test subtitle animation")
         } else {
-            toolbarItem.copy(subtitle = null)
+            toolbarItem.copy(subtitle = "")
         }
 
         changeToolbarItem(toolbarItem)
