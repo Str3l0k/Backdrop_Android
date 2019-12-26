@@ -109,9 +109,9 @@ private fun BackdropActivity.handleToolbarActionModeFinish(): Boolean {
 //-----------------------------------------
 
 private fun BackdropActivity.handleAddTopCardEvent(cardFragment: CardBackdropFragment): Boolean {
-    val toolbarItem = cardFragment.toolbarItem
     backdropCardStack.push(cardFragment)
-    backdropToolbar.configure(toolbarItem, BackdropToolbarMainButtonState.BACK)
+    backdropToolbar.configure(cardFragment.toolbarItem, BackdropToolbarMainButtonState.BACK)
+
     return true
 }
 
@@ -125,6 +125,7 @@ private fun BackdropActivity.handleRemoveTopCardEvent(): Boolean {
     }
 
     backdropToolbar.configure(backdropCardStack.topFragment.toolbarItem, mainButtonState)
+
     return true
 }
 
@@ -133,15 +134,18 @@ private fun BackdropActivity.handleRemoveTopCardEvent(): Boolean {
 //-----------------------------------------
 private fun BackdropActivity.handleShowFullscreenFragmentEvent(fragment: FullscreenBackdropFragment): Boolean {
     fullscreenDialogs.showFullscreenFragment(fragment)
+
     return true
 }
 
 private fun BackdropActivity.handleHideFullscreenFragmentEvent(): Boolean {
     fullscreenDialogs.hideFullscreenFragment()
+
     return true
 }
 
 private fun BackdropActivity.handleRevealFullscreenFragmentEvent(fragment: FullscreenRevealBackdropFragment): Boolean {
     fullscreenDialogs.revealFullscreen(fragment)
+
     return true
 }

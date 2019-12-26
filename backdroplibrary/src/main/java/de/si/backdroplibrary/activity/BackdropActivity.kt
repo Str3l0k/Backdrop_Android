@@ -29,8 +29,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         BackdropViewModel.registeredInstance(activity = this)
     }
 
-    override val backdropActivity: BackdropActivity
-        get() = this
+    override val backdropActivity: BackdropActivity = this
 
     //-----------------------------------------
     //  backdrop components
@@ -75,8 +74,8 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         initializeGestureNavigation()
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onRestart() {
+        super.onRestart()
         initializeViewModel()
     }
 
@@ -120,7 +119,6 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     fun setMenuLayout(@LayoutRes layoutResId: Int) {
         menuLayoutRes = layoutResId
         prefetchBackdropContent(layoutResId)
-        backdropToolbar.showMenuButton()
     }
 
     //-----------------------------------------

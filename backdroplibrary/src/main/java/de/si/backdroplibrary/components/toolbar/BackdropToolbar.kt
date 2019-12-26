@@ -99,7 +99,11 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     ) {
 
         val newToolbarItem = toolbarItem ?: currentToolbarItem
-        calculateAndStartToolbarAnimations(newToolbarItem, mainButtonState) {
+        calculateAndStartToolbarAnimations(
+                oldToolbarItem = currentToolbarItem,
+                newToolbarItem = newToolbarItem,
+                mainButtonState = mainButtonState
+        ) {
             currentToolbarItem = newToolbarItem
         }
     }
@@ -159,13 +163,21 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     }
 
     internal fun startActionMode(toolbarItem: BackdropToolbarItem) {
-        calculateAndStartToolbarAnimations(toolbarItem, BackdropToolbarMainButtonState.CLOSE) {
+        calculateAndStartToolbarAnimations(
+                oldToolbarItem = currentToolbarItem,
+                newToolbarItem = toolbarItem,
+                mainButtonState = BackdropToolbarMainButtonState.CLOSE
+        ) {
             actionModeToolbarItem = toolbarItem
         }
     }
 
     internal fun finishActionMode(mainButtonState: BackdropToolbarMainButtonState) {
-        calculateAndStartToolbarAnimations(currentToolbarItem, mainButtonState) {
+        calculateAndStartToolbarAnimations(
+                oldToolbarItem = requireNotNull(actionModeToolbarItem),
+                newToolbarItem = currentToolbarItem,
+                mainButtonState = mainButtonState
+        ) {
             actionModeToolbarItem = null
             backdropViewModel.emit(Event.ACTION_MODE_FINISHED)
         }
@@ -176,11 +188,12 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     //-----------------------------------------
 
     private fun calculateAndStartToolbarAnimations(
+        oldToolbarItem: BackdropToolbarItem,
         newToolbarItem: BackdropToolbarItem,
         mainButtonState: BackdropToolbarMainButtonState,
         changeContentBlock: () -> Unit
     ) {
-        val itemDiff: BackdropToolbarItemDiff = newToolbarItem.calculateDiff(currentToolbarItem)
+        val itemDiff: BackdropToolbarItemDiff = newToolbarItem.calculateDiff(oldToolbarItem)
 
         val hideAnimations: List<Animator> = calculateChangeHideAnimations(itemDiff, mainButtonState)
         val reappearAnimations: List<Animator> = calculateChangeReappearAnimations(itemDiff, mainButtonState)
@@ -191,13 +204,14 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         }
 
         val hideAnimatorSet = AnimatorSet().apply {
+            playTogether(hideAnimations)
+            duration = Backdrop.BACKDROP_ANIMATION_HALF_DURATION
+
             doOnEnd {
                 updateContent(newToolbarItem, mainButtonState)
                 changeContentBlock()
                 reappearAnimatorSet.start()
             }
-            playTogether(hideAnimations)
-            duration = Backdrop.BACKDROP_ANIMATION_HALF_DURATION
         }
 
         hideAnimatorSet.start()
