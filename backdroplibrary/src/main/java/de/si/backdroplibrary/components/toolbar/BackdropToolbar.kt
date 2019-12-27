@@ -3,6 +3,7 @@ package de.si.backdroplibrary.components.toolbar
 import android.animation.Animator
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
@@ -173,6 +174,11 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     }
 
     internal fun finishActionMode(mainButtonState: BackdropToolbarMainButtonState) {
+        if(actionModeToolbarItem == null) {
+            Log.w("Backdrop", "Trying to finish action mode without starting it.")
+            return
+        }
+
         calculateAndStartToolbarAnimations(
                 oldToolbarItem = requireNotNull(actionModeToolbarItem),
                 newToolbarItem = currentToolbarItem,
