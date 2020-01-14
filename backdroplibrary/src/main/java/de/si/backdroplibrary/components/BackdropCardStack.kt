@@ -28,20 +28,24 @@ internal class BackdropCardStack(override val backdropActivity: BackdropActivity
     internal val hasMoreThanOneEntry
         get() = fragmentStack.count() > 1
 
-    internal var baseFragment
+    internal var baseFragment: CardBackdropFragment
         get() = fragmentStack[0]
         set(value) {
             fragmentStack.add(0, value)
             fragmentManager.add(value, layoutContainer.id)
         }
 
-    internal val topFragment
+    internal val topFragment: CardBackdropFragment
         get() = fragmentStack.peek()
 
     internal fun push(fragment: CardBackdropFragment) {
         printCountWarningIfNecessary()
         fragment.cardTopMargin = newTopCardMargin()
-        topFragment.hideContent()
+
+        if (fragmentStack.isNotEmpty()) {
+            topFragment.hideContent()
+        }
+
         fragmentStack.push(fragment)
         addNewFragment(fragment)
     }

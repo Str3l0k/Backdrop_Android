@@ -9,10 +9,9 @@ import de.si.backdroplibrary.children.CardBackdropFragment
 import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
 
 class TopCardBackdropFragment : CardBackdropFragment() {
-    override var toolbarItem: BackdropToolbarItem =
-        BackdropToolbarItem(title = "Mid card",
-                            moreActionEnabled = true,
-                            primaryAction = R.drawable.ic_add)
+    override var toolbarItem = BackdropToolbarItem(title = "Mid card",
+                                                   moreActionEnabled = true,
+                                                   primaryAction = R.drawable.ic_add)
 
     override fun onCreateContentView(inflater: LayoutInflater,
                                      container: ViewGroup?,
