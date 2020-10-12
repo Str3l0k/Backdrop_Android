@@ -1,7 +1,6 @@
 package de.si.backdroplibrary.activity
 
 import android.animation.ObjectAnimator
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.view.GestureDetector
@@ -71,27 +70,12 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
 
         setContentView(R.layout.layout_main)
 
+        initializeSystemUi()
         initializeViewModel()
         initializeComponents()
         initializeBaseCardFragment()
         initializeBaseToolbarItem()
         initializeGestureNavigation()
-
-
-        window.apply {
-            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-
-            } else {
-                // TODO inset manager
-                insetsController?.hide(0)
-                insetsController?.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
-                                                          WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
-                setDecorFitsSystemWindows(false)
-            }
-        }
     }
 
     override fun onRestart() {
@@ -144,6 +128,38 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     //-----------------------------------------
     // Helper
     //-----------------------------------------
+    private fun initializeSystemUi() {
+        window.apply {
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            setSystemsBarLightAppearance()
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                setDecorFitsSystemWindows(false)
+            }
+        }
+    }
+
+    internal fun setSystemsBarLightAppearance() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        } else {
+            window.insetsController?.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                                                             WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
+        }
+    }
+
+    internal fun setSystemsBarDarkAppearance() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        } else {
+            window.insetsController?.setSystemBarsAppearance(0,
+                                                             WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
+        }
+
+    }
+
     private fun initializeViewModel() {
         backdropViewModel.registerEventCallback(
                 backdropComponent = this,

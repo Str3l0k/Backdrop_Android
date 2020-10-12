@@ -1,9 +1,11 @@
 package de.si.backdroplibrary.activity
 
+import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.view.View
+import androidx.core.animation.doOnStart
 import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
@@ -118,24 +120,34 @@ private fun BackdropActivity.fadeBackgroundColor(color: Int): Boolean {
     val colorDrawable = layout_backdrop.background as? ColorDrawable ?: return true
 
     val luminance: Double = (0.299 * color.red + 0.587 * color.green + 0.114 * color.blue) / 255
-
-    println("Luminance: $luminance")
-
-    ObjectAnimator.ofArgb(layout_backdrop, "backgroundColor", colorDrawable.color, color).start()
-
-    if (luminance < 0.42) {
-        button_backdrop_toolbar.button_backdrop_toolbar.setColorFilter(Color.WHITE)
-        button_backdrop_toolbar_action.setColorFilter(Color.WHITE)
-        button_backdrop_toolbar_more.setColorFilter(Color.WHITE)
-        layout_backdrop_toolbar_titles.text_backdrop_toolbar_title.setTextColor(Color.WHITE)
-        layout_backdrop_toolbar_titles.text_backdrop_toolbar_subtitle.setTextColor(Color.WHITE)
-    } else {
-        button_backdrop_toolbar.button_backdrop_toolbar.setColorFilter(Color.BLACK)
-        button_backdrop_toolbar_action.setColorFilter(Color.BLACK)
-        button_backdrop_toolbar_more.setColorFilter(Color.BLACK)
-        layout_backdrop_toolbar_titles.text_backdrop_toolbar_title.setTextColor(Color.BLACK)
-        layout_backdrop_toolbar_titles.text_backdrop_toolbar_subtitle.setTextColor(Color.BLACK)
+    val newTextColor = when {
+        luminance < 0.45 -> Color.WHITE
+        else             -> Color.BLACK
     }
+
+    val backgroundColorAnimator = ObjectAnimator.ofArgb(layout_backdrop, "backgroundColor", colorDrawable.color, color)
+    val textColorAnimator = ObjectAnimator.ofArgb(layout_backdrop_toolbar_titles.text_backdrop_toolbar_title.currentTextColor,
+                                                  newTextColor)
+
+    textColorAnimator.addUpdateListener { animator ->
+        val colorValue: Int = animator.animatedValue as Int
+
+        button_backdrop_toolbar.button_backdrop_toolbar.setColorFilter(colorValue)
+        button_backdrop_toolbar_action.setColorFilter(colorValue)
+        button_backdrop_toolbar_more.setColorFilter(colorValue)
+        layout_backdrop_toolbar_titles.text_backdrop_toolbar_title.setTextColor(colorValue)
+        layout_backdrop_toolbar_titles.text_backdrop_toolbar_subtitle.setTextColor(colorValue)
+    }
+
+    AnimatorSet().apply {
+        playTogether(backgroundColorAnimator, textColorAnimator)
+        doOnStart {
+            when {
+                luminance < 0.45 -> setSystemsBarDarkAppearance()
+                else             -> setSystemsBarLightAppearance()
+            }
+        }
+    }.start()
 
     return true
 }
