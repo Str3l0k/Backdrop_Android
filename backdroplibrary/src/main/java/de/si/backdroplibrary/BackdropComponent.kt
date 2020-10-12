@@ -48,9 +48,9 @@ interface BackdropComponent {
     }
 
     fun revealFullscreenFragment(
-        parameters: FullscreenRevealBackdropFragment,
-        revealEpicenter: Point,
-        concealEpicenter: Point
+            parameters: FullscreenRevealBackdropFragment,
+            revealEpicenter: Point,
+            concealEpicenter: Point
     ) {
 
         parameters.revealEpiCenter = revealEpicenter
@@ -106,6 +106,10 @@ interface BackdropComponent {
 
     fun finishToolbarActionMode() {
         backdropViewModel.emit(Event.FINISH_ACTION_MODE)
+    }
+
+    fun changeBackgroundColor(color: Int) {
+        backdropViewModel.emit(Event.FADE_COLOR, color)
     }
 
     fun onPrimaryActionClicked(): Boolean {

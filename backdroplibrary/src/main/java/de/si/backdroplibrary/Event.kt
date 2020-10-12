@@ -19,6 +19,7 @@ internal enum class Event {
     MORE_ACTION_ACTIONMODE_TRIGGERED,
     ACTION_MODE_FINISHED,
     MENU_ACTION_TRIGGERED,
+    FADE_COLOR,
 
     // card stack
     ADD_TOP_CARD,

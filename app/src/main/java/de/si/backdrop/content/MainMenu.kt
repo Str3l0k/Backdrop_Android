@@ -9,6 +9,7 @@ import de.si.kotlinx.globalCenterPoint
 import kotlinx.android.synthetic.main.main_menu.view.*
 
 class MainMenu(view: View, private val backdropBackdropComponent: BackdropComponent) {
+
     companion object {
         internal const val resourceId = R.id.menu_main_layout
     }

@@ -9,8 +9,10 @@ import de.si.backdroplibrary.children.MainCardBackdropFragment
 import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
 import de.si.backdroplibrary.components.toolbar.BackdropToolbarMainButtonState
 import kotlinx.android.synthetic.main.base_card.*
+import kotlin.random.Random
 
 class BaseFragment : MainCardBackdropFragment() {
+
     override val menuButtonState: BackdropToolbarMainButtonState
         get() = BackdropToolbarMainButtonState.MENU
 
@@ -20,9 +22,9 @@ class BaseFragment : MainCardBackdropFragment() {
                                                                         moreActionEnabled = true)
 
     override fun onCreateContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.base_card, container, false)
     }
@@ -32,10 +34,15 @@ class BaseFragment : MainCardBackdropFragment() {
         button.setOnClickListener {
             changeToolbarItem(toolbarItem)
         }
+
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem -> showFragmentForNavigationItemId(menuItem.itemId) }
+        bottomNavigationView.setOnNavigationItemReselectedListener { }
+
+        showFragmentForNavigationItemId(bottomNavigationView.selectedItemId)
     }
 
     override fun onPrimaryActionClicked(): Boolean {
-        changeToolbarItem(BackdropToolbarItem(title = "Title 42",//${Random.nextInt(42)}",
+        changeToolbarItem(BackdropToolbarItem(title = "${Random.nextInt(until = 42)}",
                                               primaryAction = toolbarItem.primaryAction,
                                               moreActionEnabled = toolbarItem.moreActionEnabled.not()))
         return true
@@ -52,5 +59,18 @@ class BaseFragment : MainCardBackdropFragment() {
 
     override fun onFragmentWillBeRevealed() {
         println("BaseFragment.onFragmentWillBeRevealed")
+    }
+
+    private fun showFragmentForNavigationItemId(itemId: Int): Boolean {
+        return when (itemId) {
+            R.id.home,
+            R.id.details -> {
+                childFragmentManager.beginTransaction().apply {
+                    replace(R.id.testContainer, TestFragment())
+                }.commit()
+                true
+            }
+            else         -> false
+        }
     }
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import de.si.backdrop.R
 import de.si.backdroplibrary.children.BackdropFragment
+import kotlinx.android.synthetic.main.test_content.view.*
 import kotlin.random.Random
 
 class TestFragment : BackdropFragment() {
@@ -16,6 +17,10 @@ class TestFragment : BackdropFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        view.setBackgroundColor(Color.rgb(Random.nextInt(256), Random.nextInt(256), Random.nextInt(256)))
+
+        view.setBackgroundColor(Color.argb(100, Random.nextInt(256), Random.nextInt(256), Random.nextInt(256)))
+        view.button_backdrop_content_test.setOnClickListener {
+            changeBackgroundColor(Color.rgb(Random.nextInt(255), Random.nextInt(255), Random.nextInt(255)))
+        }
     }
 }

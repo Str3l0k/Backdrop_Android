@@ -1,10 +1,14 @@
 package de.si.backdroplibrary.activity
 
 import android.animation.ObjectAnimator
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
@@ -72,6 +76,22 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         initializeBaseCardFragment()
         initializeBaseToolbarItem()
         initializeGestureNavigation()
+
+
+        window.apply {
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+
+            } else {
+                // TODO inset manager
+                insetsController?.hide(0)
+                insetsController?.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
+                                                          WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
+                setDecorFitsSystemWindows(false)
+            }
+        }
     }
 
     override fun onRestart() {
