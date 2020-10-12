@@ -296,7 +296,7 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
             BackdropToolbarMainButtonState.MENU  -> true to R.drawable.ic_menu
             BackdropToolbarMainButtonState.BACK  -> true to R.drawable.ic_back
             BackdropToolbarMainButtonState.CLOSE -> true to R.drawable.ic_clear
-            BackdropToolbarMainButtonState.NONE  -> false to -1
+            BackdropToolbarMainButtonState.NONE  -> false to 0
         }
 
         buttonMenu.apply {

@@ -2,7 +2,11 @@ package de.si.backdroplibrary.children
 
 import android.os.Bundle
 import android.transition.Slide
-import android.view.*
+import android.view.GestureDetector
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
@@ -25,8 +29,8 @@ abstract class CardBackdropFragment : BackdropFragment() {
             }
         }
 
-    internal val gestureNavigationListener = BackdropGestureNavigationListener()
-    internal val gestureDetector: GestureDetector by lazy {
+    private val gestureNavigationListener = BackdropGestureNavigationListener()
+    private val gestureDetector: GestureDetector by lazy {
         GestureDetector(
                 requireContext(),
                 gestureNavigationListener
@@ -45,9 +49,9 @@ abstract class CardBackdropFragment : BackdropFragment() {
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View? {
         val inflatedLayout = inflateMainLayout(inflater, container)
         inflatedLayout?.view_cardstack_card?.setTopMargin(cardTopMargin)
@@ -68,9 +72,7 @@ abstract class CardBackdropFragment : BackdropFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.layout_cardstack_blocklayer.setOnTouchListener { _, motionEvent ->
-            gestureDetector.onTouchEvent(
-                    motionEvent
-            )
+            gestureDetector.onTouchEvent(motionEvent)
         }
         val contentView = view.layout_cardstack_fragment_content[0]
         onContentViewCreated(contentView, savedInstanceState)
@@ -128,9 +130,9 @@ abstract class CardBackdropFragment : BackdropFragment() {
     // region abstract implementation
     //-----------------------------------------
     abstract fun onCreateContentView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
+            inflater: LayoutInflater,
+            container: ViewGroup?,
+            savedInstanceState: Bundle?
     ): View?
 
     abstract fun onContentViewCreated(view: View?, savedInstanceState: Bundle?)
