@@ -29,7 +29,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         BackdropViewModel.registeredInstance(activity = this)
     }
 
-    override val backdropActivity: BackdropActivity = this
+    override val backdropActivity: BackdropActivity by lazy { this }
 
     //-----------------------------------------
     //  backdrop components
@@ -38,14 +38,14 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     internal lateinit var backdropContent: BackdropContent
     internal lateinit var backdropCardStack: BackdropCardStack
     internal lateinit var fullscreenDialogs: FullscreenDialogs
-    internal lateinit var gestureNavigationListener: BackdropGestureNavigationListener
-    internal lateinit var gestureDetector: GestureDetector
+    private lateinit var gestureNavigationListener: BackdropGestureNavigationListener
+    private lateinit var gestureDetector: GestureDetector
 
     //-----------------------------------------
     // properties
     //-----------------------------------------
     abstract val baseCardFragment: MainCardBackdropFragment
-    internal var menuLayoutRes: Int = 0
+    private var menuLayoutRes: Int = 0
 
     private val backdropOpen: Boolean
         get() = backdropCardStack.isTranslatedByY
@@ -125,7 +125,10 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     // Helper
     //-----------------------------------------
     private fun initializeViewModel() {
-        backdropViewModel.registerEventCallback(backdropComponent = this, callbackBackdrop = this::onEvent)
+        backdropViewModel.registerEventCallback(
+                backdropComponent = this,
+                callbackBackdrop = this::onEvent
+        )
     }
 
     private fun initializeComponents() {
