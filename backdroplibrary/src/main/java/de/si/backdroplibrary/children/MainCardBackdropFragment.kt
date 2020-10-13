@@ -4,4 +4,5 @@ import de.si.backdroplibrary.components.toolbar.BackdropToolbarMainButtonState
 
 abstract class MainCardBackdropFragment : CardBackdropFragment() {
     abstract val menuButtonState: BackdropToolbarMainButtonState
+    abstract val mainMenuRes: Int?
 }

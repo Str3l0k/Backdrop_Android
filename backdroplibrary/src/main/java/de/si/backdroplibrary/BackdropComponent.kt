@@ -3,6 +3,7 @@ package de.si.backdroplibrary
 import android.graphics.Point
 import android.view.View
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat
 import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.backdroplibrary.children.CardBackdropFragment
 import de.si.backdroplibrary.children.FullscreenBackdropFragment
@@ -29,22 +30,26 @@ interface BackdropComponent {
         backdropViewModel.gestureNavigationEnabled = false
     }
 
+    fun resetBackdropColor() {
+        backdropViewModel.emit(BackdropEvent.ChangeBackdropColor(ContextCompat.getColor(backdropActivity, R.color.colorPrimary)))
+    }
+
     //-----------------------------------------
     // Card stack
     //-----------------------------------------
     fun addCardFragment(cardFragment: CardBackdropFragment) {
-        backdropViewModel.emit(Event.ADD_TOP_CARD, cardFragment)
+        backdropViewModel.emit(BackdropEvent.AddTopCard(cardFragment))
     }
 
     fun removeTopCardFragment() {
-        backdropViewModel.emit(Event.REMOVE_TOP_CARD)
+        backdropViewModel.emit(BackdropEvent.RemoveTopCard)
     }
 
     //-----------------------------------------
     // Fullscreen fragments
     //-----------------------------------------
     fun showFullscreenFragment(fragment: FullscreenBackdropFragment) {
-        backdropViewModel.emit(Event.SHOW_FULLSCREEN_FRAGMENT, fragment)
+        backdropViewModel.emit(BackdropEvent.ShowFullscreenFragment(fragment))
     }
 
     fun revealFullscreenFragment(
@@ -55,26 +60,26 @@ interface BackdropComponent {
 
         parameters.revealEpiCenter = revealEpicenter
         parameters.concealEpiCenter = concealEpicenter
-        backdropViewModel.emit(Event.REVEAL_FULLSCREEN_FRAGMENT, parameters)
+        backdropViewModel.emit(BackdropEvent.RevealFullscreenFragment(parameters))
     }
 
     fun hideFullscreenFragment() {
-        backdropViewModel.emit(Event.HIDE_FULLSCREEN_FRAGMENT)
+        backdropViewModel.emit(BackdropEvent.HideFullscreenFragment)
     }
 
     //-----------------------------------------
     // Content
     //-----------------------------------------
     fun prefetchBackdropContent(@LayoutRes layoutResId: Int) {
-        backdropViewModel.emit(Event.PREFETCH_BACKDROP_CONTENT_VIEW, layoutResId)
+        backdropViewModel.emit(BackdropEvent.PrefetchBackdropContentView(layoutResId))
     }
 
     fun showBackdropContent(@LayoutRes layoutResId: Int) {
-        backdropViewModel.emit(Event.SHOW_BACKDROP_CONTENT, layoutResId)
+        backdropViewModel.emit(BackdropEvent.ShowBackdropContentView(layoutResId))
     }
 
     fun hideBackdropContent() {
-        backdropViewModel.emit(Event.HIDE_BACKDROP_CONTENT)
+        backdropViewModel.emit(BackdropEvent.HideBackdropContentView)
     }
 
     fun onBackdropContentVisible(view: View): Boolean {
@@ -97,19 +102,19 @@ interface BackdropComponent {
     }
 
     fun changeToolbarItem(toolbarItem: BackdropToolbarItem) {
-        backdropViewModel.emit(Event.CHANGE_NAVIGATION_ITEM, toolbarItem)
+        backdropViewModel.emit(BackdropEvent.ChangeToolbarItem(toolbarItem))
     }
 
     fun startToolbarActionMode(toolbarItem: BackdropToolbarItem) {
-        backdropViewModel.emit(Event.START_ACTION_MODE, toolbarItem)
+        backdropViewModel.emit(BackdropEvent.StartActionMode(toolbarItem))
     }
 
     fun finishToolbarActionMode() {
-        backdropViewModel.emit(Event.FINISH_ACTION_MODE)
+        backdropViewModel.emit(BackdropEvent.FinishActionMode)
     }
 
     fun changeBackgroundColor(color: Int) {
-        backdropViewModel.emit(Event.FADE_COLOR, color)
+        backdropViewModel.emit(BackdropEvent.ChangeBackdropColor(color))
     }
 
     fun onPrimaryActionClicked(): Boolean {

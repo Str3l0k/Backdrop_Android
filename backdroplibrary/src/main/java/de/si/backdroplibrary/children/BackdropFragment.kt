@@ -1,10 +1,9 @@
 package de.si.backdroplibrary.children
 
-import android.view.View
 import androidx.fragment.app.Fragment
 import de.si.backdroplibrary.BackdropComponent
+import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.BackdropViewModel
-import de.si.backdroplibrary.Event
 import de.si.backdroplibrary.activity.BackdropActivity
 
 abstract class BackdropFragment : Fragment(), BackdropComponent {
@@ -26,17 +25,17 @@ abstract class BackdropFragment : Fragment(), BackdropComponent {
         backdropViewModel.unregisterEventCallbacks(backdropComponent = this)
     }
 
-    private fun onEvent(event: Event, payload: Any?): Boolean {
+    private fun onEvent(event: BackdropEvent): Boolean {
         return when (event) {
-            Event.BACKDROP_CONTENT_VISIBLE            -> onBackdropContentVisible(payload as View)
-            Event.BACKDROP_CONTENT_INVISIBLE          -> onBackdropContentInvisible()
-            Event.PRIMARY_ACTION_TRIGGERED            -> onPrimaryActionClicked()
-            Event.MORE_ACTION_TRIGGERED               -> onMoreActionClicked()
-            Event.PRIMARY_ACTION_ACTIONMODE_TRIGGERED -> onPrimaryActionInActionModeClicked()
-            Event.MORE_ACTION_ACTIONMODE_TRIGGERED    -> onMoreActionInActionModeClicked()
-            Event.ACTION_MODE_FINISHED                -> onToolbarActionModeFinished()
-            Event.MENU_ACTION_TRIGGERED               -> onMenuActionClicked()
-            else                                      -> false
+            is BackdropEvent.BackdropContentNowVisible -> onBackdropContentVisible(event.view)
+            BackdropEvent.BackdropContentNowHidden -> onBackdropContentInvisible()
+            BackdropEvent.PrimaryActionTriggered -> onPrimaryActionClicked()
+            BackdropEvent.MoreActionTriggered -> onMoreActionClicked()
+            BackdropEvent.PrimaryActionInActionModeTriggered -> onPrimaryActionInActionModeClicked()
+            BackdropEvent.MoreActionInActionModeTriggered -> onMoreActionInActionModeClicked()
+            BackdropEvent.ActionModeFinished -> onToolbarActionModeFinished()
+            BackdropEvent.MenuActionTriggered -> onMenuActionClicked()
+            else                                             -> false
         }
     }
 }

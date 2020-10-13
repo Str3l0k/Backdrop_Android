@@ -7,7 +7,7 @@ import androidx.annotation.LayoutRes
 import androidx.core.view.doOnNextLayout
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.BackdropComponent
-import de.si.backdroplibrary.Event
+import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.fade
 import de.si.kotlinx.fadeOut
@@ -78,7 +78,7 @@ internal class BackdropContent(override val backdropActivity: BackdropActivity) 
 
         newContentView?.doOnNextLayout { newContentViewAfterLayout ->
             nextLayoutCallback(newContentViewAfterLayout)
-            backdropViewModel.emit(Event.BACKDROP_CONTENT_VISIBLE, newContentViewAfterLayout)
+            backdropViewModel.emit(BackdropEvent.BackdropContentNowVisible(newContentViewAfterLayout))
         }
 
         return newContentView

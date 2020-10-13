@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 
-internal typealias BackdropEventCallback = ((Event, Any?) -> Boolean)
+internal typealias BackdropEventCallback = ((BackdropEvent) -> Boolean)
 
 class BackdropViewModel : ViewModel() {
 
@@ -28,13 +28,13 @@ class BackdropViewModel : ViewModel() {
         callbackReceivers.remove(backdropComponent)
     }
 
-    internal fun emit(event: Event, payload: Any? = null) {
+    internal fun emit(event: BackdropEvent) {
         val callbackResult: Any? = callbackReceivers.values.reversed().firstOrNull { callback ->
-            callback.invoke(event, payload)
+            callback.invoke(event)
         }
 
         if (callbackResult == null) {
-            Log.d("Backdrop Event System", "Nobody consumed event = [$event], payload = [$payload]")
+            Log.d("Backdrop Event System", "Nobody consumed event = [$event]")
         }
     }
 

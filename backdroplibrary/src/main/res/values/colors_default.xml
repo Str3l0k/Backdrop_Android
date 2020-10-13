@@ -9,6 +9,10 @@
     <color name="colorAccentLight">#ffdd71</color>
     <color name="colorAccentDark">#c77c02</color>
 
+    <color name="colorSecondary">#ffab40</color>
+    <color name="colorSecondaryLight">#ffdd71</color>
+    <color name="colorSecondaryDark">#c77c02</color>
+
     <color name="primaryTextColor">#666</color>
     <color name="secondaryTextColor">#000000</color>
     <color name="textColorDark">#8A8A8A</color>

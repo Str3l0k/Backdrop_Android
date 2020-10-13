@@ -1,6 +1,5 @@
 package de.si.backdrop
 
-import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import de.si.backdrop.children.BaseFragment
@@ -15,26 +14,21 @@ class MainActivity : BackdropActivity() {
 
     override val baseCardFragment: MainCardBackdropFragment = BaseFragment()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setMenuLayout(R.layout.main_menu)
-    }
-
     override fun onBackdropContentVisible(view: View): Boolean {
         return when (view.id) {
-            R.id.menu_main_layout    -> {
+            R.id.menu_main_layout -> {
                 configureTestMenuView(view)
                 true
             }
             R.id.layout_test_content -> {
                 view.findViewById<Button>(R.id.button_backdrop_content_test)
-                    .setOnClickListener { button ->
-                        revealFullscreenFragment(
-                                FullscreenRevealBackdropFragment(),
-                                button.globalCenterPoint,
-                                button.globalCenterPoint
-                        )
-                    }
+                        .setOnClickListener { button ->
+                            revealFullscreenFragment(
+                                    FullscreenRevealBackdropFragment(),
+                                    button.globalCenterPoint,
+                                    button.globalCenterPoint
+                            )
+                        }
                 true
             }
             else                     -> false

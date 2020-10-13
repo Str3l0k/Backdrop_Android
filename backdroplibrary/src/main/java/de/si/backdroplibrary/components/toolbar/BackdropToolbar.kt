@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.core.animation.doOnEnd
 import androidx.core.view.isVisible
 import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.BackdropComponent
-import de.si.backdroplibrary.Event
+import de.si.backdroplibrary.BackdropEvent
 import de.si.backdroplibrary.R
 import de.si.backdroplibrary.activity.BackdropActivity
 import de.si.kotlinx.fade
@@ -62,13 +64,16 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     private fun configureMenuClickListener() {
         buttonMenu.setOnClickListener {
             when (buttonMenu.tag as? BackdropToolbarMainButtonState) {
-                BackdropToolbarMainButtonState.MENU  -> {
-                    backdropViewModel.emit(Event.MENU_ACTION_TRIGGERED)
+                BackdropToolbarMainButtonState.MENU -> {
+                    backdropViewModel.emit(BackdropEvent.MenuActionTriggered)
                     showCloseButton()
                 }
                 BackdropToolbarMainButtonState.BACK,
                 BackdropToolbarMainButtonState.CLOSE -> backdropActivity.onBackPressed()
-                else                                 -> Unit
+                BackdropToolbarMainButtonState.NO_LAYOUT_ERROR -> Toast.makeText(backdropActivity,
+                                                                                 "No menu layout provided.",
+                                                                                 Toast.LENGTH_SHORT).show()
+                else                                           -> Unit
             }
         }
     }
@@ -76,17 +81,17 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     private fun configureActionClickListeners() {
         buttonMoreAction.setOnClickListener {
             if (actionModeToolbarItem != null) {
-                backdropViewModel.emit(Event.MORE_ACTION_ACTIONMODE_TRIGGERED)
+                backdropViewModel.emit(BackdropEvent.MoreActionInActionModeTriggered)
             } else {
-                backdropViewModel.emit(Event.MORE_ACTION_TRIGGERED)
+                backdropViewModel.emit(BackdropEvent.MoreActionTriggered)
             }
         }
 
         buttonPrimaryAction.setOnClickListener {
             if (actionModeToolbarItem != null) {
-                backdropViewModel.emit(Event.PRIMARY_ACTION_ACTIONMODE_TRIGGERED)
+                backdropViewModel.emit(BackdropEvent.PrimaryActionInActionModeTriggered)
             } else {
-                backdropViewModel.emit(Event.PRIMARY_ACTION_TRIGGERED)
+                backdropViewModel.emit(BackdropEvent.PrimaryActionTriggered)
             }
         }
     }
@@ -95,8 +100,8 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     // API
     //-----------------------------------------
     internal fun configure(
-        toolbarItem: BackdropToolbarItem?,
-        mainButtonState: BackdropToolbarMainButtonState
+            toolbarItem: BackdropToolbarItem?,
+            mainButtonState: BackdropToolbarMainButtonState
     ) {
 
         val newToolbarItem = toolbarItem ?: currentToolbarItem
@@ -174,7 +179,7 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     }
 
     internal fun finishActionMode(mainButtonState: BackdropToolbarMainButtonState) {
-        if(actionModeToolbarItem == null) {
+        if (actionModeToolbarItem == null) {
             Log.w("Backdrop", "Trying to finish action mode without starting it.")
             return
         }
@@ -185,8 +190,16 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
                 mainButtonState = mainButtonState
         ) {
             actionModeToolbarItem = null
-            backdropViewModel.emit(Event.ACTION_MODE_FINISHED)
+            backdropViewModel.emit(BackdropEvent.ActionModeFinished)
         }
+    }
+
+    internal fun setTintColor(@ColorInt color: Int) {
+        buttonMenu.setColorFilter(color)
+        buttonPrimaryAction.setColorFilter(color)
+        buttonMoreAction.setColorFilter(color)
+        textTitle.setTextColor(color)
+        textSubTitle.setTextColor(color)
     }
 
     //-----------------------------------------
@@ -194,10 +207,10 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     //-----------------------------------------
 
     private fun calculateAndStartToolbarAnimations(
-        oldToolbarItem: BackdropToolbarItem,
-        newToolbarItem: BackdropToolbarItem,
-        mainButtonState: BackdropToolbarMainButtonState,
-        changeContentBlock: () -> Unit
+            oldToolbarItem: BackdropToolbarItem,
+            newToolbarItem: BackdropToolbarItem,
+            mainButtonState: BackdropToolbarMainButtonState,
+            changeContentBlock: () -> Unit
     ) {
         val itemDiff: BackdropToolbarItemDiff = newToolbarItem.calculateDiff(oldToolbarItem)
 
@@ -224,8 +237,8 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     }
 
     private fun calculateChangeReappearAnimations(
-        toolbarItemDiff: BackdropToolbarItemDiff,
-        mainButtonState: BackdropToolbarMainButtonState
+            toolbarItemDiff: BackdropToolbarItemDiff,
+            mainButtonState: BackdropToolbarMainButtonState
     ): List<Animator> {
 
         val toolbarAnimations: MutableList<ObjectAnimator> = mutableListOf()
@@ -250,8 +263,8 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     }
 
     private fun calculateChangeHideAnimations(
-        toolbarItemDiff: BackdropToolbarItemDiff,
-        mainButtonState: BackdropToolbarMainButtonState
+            toolbarItemDiff: BackdropToolbarItemDiff,
+            mainButtonState: BackdropToolbarMainButtonState
     ): List<Animator> {
 
         val toolbarAnimations: MutableList<ObjectAnimator> = mutableListOf()
@@ -276,8 +289,8 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
     }
 
     private fun updateContent(
-        newToolbarItem: BackdropToolbarItem,
-        mainButtonState: BackdropToolbarMainButtonState
+            newToolbarItem: BackdropToolbarItem,
+            mainButtonState: BackdropToolbarMainButtonState
     ) {
 
         textTitle.text = newToolbarItem.title
@@ -293,10 +306,11 @@ internal class BackdropToolbar(override val backdropActivity: BackdropActivity) 
         buttonPrimaryAction.setImageResource(newToolbarItem.primaryAction ?: 0)
 
         val (shouldBeVisible: Boolean, imageResId: Int) = when (mainButtonState) {
-            BackdropToolbarMainButtonState.MENU  -> true to R.drawable.ic_menu
-            BackdropToolbarMainButtonState.BACK  -> true to R.drawable.ic_back
-            BackdropToolbarMainButtonState.CLOSE -> true to R.drawable.ic_clear
-            BackdropToolbarMainButtonState.NONE  -> false to 0
+            BackdropToolbarMainButtonState.MENU            -> true to R.drawable.ic_menu
+            BackdropToolbarMainButtonState.BACK            -> true to R.drawable.ic_back
+            BackdropToolbarMainButtonState.CLOSE           -> true to R.drawable.ic_clear
+            BackdropToolbarMainButtonState.NO_LAYOUT_ERROR -> true to R.drawable.ic_warning
+            BackdropToolbarMainButtonState.NONE            -> false to 0
         }
 
         buttonMenu.apply {

@@ -4,5 +4,6 @@ enum class BackdropToolbarMainButtonState {
     MENU,
     BACK,
     CLOSE,
-    NONE;
+    NONE,
+    NO_LAYOUT_ERROR;
 }

@@ -8,8 +8,10 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.WindowInsetsController
 import android.view.WindowManager
-import androidx.annotation.LayoutRes
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.graphics.luminance
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_ANIMATION_DURATION
 import de.si.backdroplibrary.Backdrop.Companion.BACKDROP_CLOSED_TRANSLATION_Y
 import de.si.backdroplibrary.BackdropComponent
@@ -20,6 +22,7 @@ import de.si.backdroplibrary.components.BackdropCardStack
 import de.si.backdroplibrary.components.BackdropContent
 import de.si.backdroplibrary.components.FullscreenDialogs
 import de.si.backdroplibrary.components.toolbar.BackdropToolbar
+import de.si.backdroplibrary.components.toolbar.BackdropToolbarMainButtonState
 import de.si.backdroplibrary.gestures.BackdropGestureNavigationListener
 import kotlinx.android.synthetic.main.layout_main.*
 
@@ -48,7 +51,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     // properties
     //-----------------------------------------
     abstract val baseCardFragment: MainCardBackdropFragment
-    private var menuLayoutRes: Int = 0
+    private val menuLayoutRes: Int? by lazy { baseCardFragment.mainMenuRes }
 
     private val backdropOpen: Boolean
         get() = backdropCardStack.isTranslatedByY
@@ -76,6 +79,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         initializeBaseCardFragment()
         initializeBaseToolbarItem()
         initializeGestureNavigation()
+        initializeMainMenu()
     }
 
     override fun onRestart() {
@@ -103,7 +107,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     }
 
     override fun onMenuActionClicked(): Boolean {
-        showBackdropContent(menuLayoutRes)
+        baseCardFragment.mainMenuRes?.let(this::showBackdropContent)
         return true
     }
 
@@ -120,18 +124,14 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         backdropOpenCloseAnimator.start()
     }
 
-    fun setMenuLayout(@LayoutRes layoutResId: Int) {
-        menuLayoutRes = layoutResId
-        prefetchBackdropContent(layoutResId)
-    }
-
     //-----------------------------------------
     // Helper
     //-----------------------------------------
     private fun initializeSystemUi() {
         window.apply {
+
             addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            setSystemsBarLightAppearance()
+            configureStatusBarAppearance(ContextCompat.getColor(this@BackdropActivity, R.color.colorPrimary))
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 setDecorFitsSystemWindows(false)
@@ -139,7 +139,14 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         }
     }
 
-    internal fun setSystemsBarLightAppearance() {
+    internal fun configureStatusBarAppearance(@ColorInt color: Int) {
+        when {
+            color.luminance < 0.45 -> setSystemsBarDarkAppearance()
+            else                   -> setSystemsBarLightAppearance()
+        }
+    }
+
+    private fun setSystemsBarLightAppearance() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -149,7 +156,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
         }
     }
 
-    internal fun setSystemsBarDarkAppearance() {
+    private fun setSystemsBarDarkAppearance() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             @Suppress("DEPRECATION")
             window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -190,10 +197,20 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
             if (backdropViewModel.gestureNavigationEnabled) {
                 if (backdropCardStack.hasMoreThanOneEntry) {
                     removeTopCardFragment()
-                } else if (backdropToolbar.menuButtonVisible && backdropOpen.not() && menuLayoutRes > 0) {
-                    showBackdropContent(menuLayoutRes)
+                } else if (backdropToolbar.menuButtonVisible && backdropOpen.not() && menuLayoutRes != null) {
+                    menuLayoutRes?.let(this::showBackdropContent)
                 }
             }
+        }
+    }
+
+    internal fun initializeMainMenu() {
+        val menuRes: Int? = baseCardFragment.mainMenuRes
+
+        if (menuRes != null) {
+            prefetchBackdropContent(menuRes)
+        } else {
+            backdropToolbar.configure(baseCardFragment.toolbarItem, BackdropToolbarMainButtonState.NO_LAYOUT_ERROR)
         }
     }
 }

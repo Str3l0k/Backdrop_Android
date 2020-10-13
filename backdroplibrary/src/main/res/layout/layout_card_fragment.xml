@@ -1,39 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/layout_cardstack_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layout_cardstack_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-            android:id="@+id/view_cardstack_card"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="-16dp"
-            app:cardBackgroundColor="@color/card_background"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp">
+        android:id="@+id/view_cardstack_card"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="-16dp"
+        app:cardBackgroundColor="@color/card_background"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
 
         <LinearLayout
-                android:id="@+id/layout_cardstack_fragment_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:filterTouchesWhenObscured="true"
-                android:orientation="vertical"
-                android:paddingBottom="16dp">
+            android:id="@+id/layout_cardstack_fragment_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:filterTouchesWhenObscured="true"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
 
         </LinearLayout>
 
         <View
-                android:id="@+id/layout_cardstack_blocklayer"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:alpha="0"
-                android:background="#FF424242"
-                android:clickable="true"
-                android:focusable="true"
-                android:visibility="gone"/>
+            android:id="@+id/layout_cardstack_blocklayer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="#FF424242"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="gone" />
 
     </androidx.cardview.widget.CardView>
 

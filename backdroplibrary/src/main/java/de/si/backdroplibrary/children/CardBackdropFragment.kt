@@ -89,12 +89,9 @@ abstract class CardBackdropFragment : BackdropFragment() {
             }
         }
     }
-    //-----------------------------------------
-    // endregion
-    //-----------------------------------------
 
     //-----------------------------------------
-    // region backdrop control
+    // backdrop control
     //-----------------------------------------
     internal fun disable() {
         view?.layout_cardstack_blocklayer?.isVisible = true
@@ -122,12 +119,9 @@ abstract class CardBackdropFragment : BackdropFragment() {
         view?.layout_cardstack_fragment_content?.alpha = 1f
         view?.layout_cardstack_fragment_content?.isVisible = true
     }
-    //-----------------------------------------
-    // endregion
-    //-----------------------------------------
 
     //-----------------------------------------
-    // region abstract implementation
+    // abstract implementation
     //-----------------------------------------
     abstract fun onCreateContentView(
             inflater: LayoutInflater,
@@ -142,7 +136,4 @@ abstract class CardBackdropFragment : BackdropFragment() {
     abstract fun onFragmentWillBeRevealed()
 
     abstract val toolbarItem: BackdropToolbarItem?
-    //-----------------------------------------
-    // endregion
-    //-----------------------------------------
 }
