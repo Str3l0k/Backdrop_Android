@@ -1,6 +1,8 @@
 package de.si.backdrop
 
+import android.os.Bundle
 import android.view.View
+import android.view.WindowInsetsController
 import android.widget.Button
 import de.si.backdrop.children.BaseFragment
 import de.si.backdrop.children.FullscreenRevealBackdropFragment
@@ -13,6 +15,18 @@ class MainActivity : BackdropActivity() {
     private var mainMenu: MainMenu? = null
 
     override val baseCardFragment: MainCardBackdropFragment = BaseFragment()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            window.insetsController?.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS,
+                                                             WindowInsetsController.APPEARANCE_LIGHT_NAVIGATION_BARS)
+        } else {
+            @Suppress("DEPRECATION")
+            window.decorView.systemUiVisibility = window.decorView.systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
+        }
+    }
 
     override fun onBackdropContentVisible(view: View): Boolean {
         return when (view.id) {

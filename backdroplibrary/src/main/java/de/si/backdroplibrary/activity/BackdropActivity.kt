@@ -149,7 +149,7 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     private fun setSystemsBarLightAppearance() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         } else {
             window.insetsController?.setSystemBarsAppearance(WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS,
                                                              WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
@@ -159,12 +159,11 @@ abstract class BackdropActivity : AppCompatActivity(), BackdropComponent {
     private fun setSystemsBarDarkAppearance() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
             @Suppress("DEPRECATION")
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR
         } else {
             window.insetsController?.setSystemBarsAppearance(0,
                                                              WindowInsetsController.APPEARANCE_LIGHT_STATUS_BARS)
         }
-
     }
 
     private fun initializeViewModel() {
