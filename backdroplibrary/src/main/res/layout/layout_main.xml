@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/layout_backdrop_toolbar" />
 
-    <FrameLayout
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/layout_backdrop_cardstack"
         android:layout_width="0dp"
         android:layout_height="0dp"

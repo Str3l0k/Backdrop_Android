@@ -19,32 +19,32 @@ import kotlinx.android.synthetic.main.layout_toolbar.view.*
 internal fun BackdropActivity.onEvent(event: BackdropEvent): Boolean {
     return when (event) {
         // content events
-        is BackdropEvent.PrefetchBackdropContentView -> handlePrefetchBackdropContentEvent(event.layoutRes)
-        is BackdropEvent.ShowBackdropContentView -> handleShowBackdropContentEvent(event.layoutRes)
-        BackdropEvent.HideBackdropContentView -> handleHideBackdropContentEvent()
-        is BackdropEvent.BackdropContentNowVisible -> onBackdropContentVisible(event.view)
-        BackdropEvent.BackdropContentNowHidden -> onBackdropContentInvisible()
-        is BackdropEvent.ChangeBackdropColor -> fadeBackgroundColor(event.color)
+        is BackdropEvent.PrefetchBackdropContentView     -> handlePrefetchBackdropContentEvent(event.layoutRes)
+        is BackdropEvent.ShowBackdropContentView         -> handleShowBackdropContentEvent(event.layoutRes)
+        BackdropEvent.HideBackdropContentView            -> handleHideBackdropContentEvent()
+        is BackdropEvent.BackdropContentNowVisible       -> onBackdropContentVisible(event.view)
+        BackdropEvent.BackdropContentNowHidden           -> onBackdropContentInvisible()
+        is BackdropEvent.ChangeBackdropColor             -> fadeBackgroundColor(event.color)
 
         // toolbar events
-        BackdropEvent.PrimaryActionTriggered -> onPrimaryActionClicked()
-        BackdropEvent.MoreActionTriggered -> onMoreActionClicked()
-        is BackdropEvent.ChangeToolbarItem -> handleToolbarItemChangedEvent(event.toolbarItem)
-        is BackdropEvent.StartActionMode -> handleToolbarActionModeStart(event.actionModeToolbarItem)
-        BackdropEvent.FinishActionMode -> handleToolbarActionModeFinish()
+        BackdropEvent.PrimaryActionTriggered             -> onPrimaryActionClicked()
+        BackdropEvent.MoreActionTriggered                -> onMoreActionClicked()
+        is BackdropEvent.ChangeToolbarItem               -> handleToolbarItemChangedEvent(event.toolbarItem)
+        is BackdropEvent.StartActionMode                 -> handleToolbarActionModeStart(event.actionModeToolbarItem)
+        BackdropEvent.FinishActionMode                   -> handleToolbarActionModeFinish()
         BackdropEvent.PrimaryActionInActionModeTriggered -> onPrimaryActionInActionModeClicked()
-        BackdropEvent.MoreActionInActionModeTriggered -> onMoreActionInActionModeClicked()
-        BackdropEvent.ActionModeFinished -> onToolbarActionModeFinished()
-        BackdropEvent.MenuActionTriggered -> onMenuActionClicked()
+        BackdropEvent.MoreActionInActionModeTriggered    -> onMoreActionInActionModeClicked()
+        BackdropEvent.ActionModeFinished                 -> onToolbarActionModeFinished()
+        BackdropEvent.MenuActionTriggered                -> onMenuActionClicked()
 
         // card stack events
-        is BackdropEvent.AddTopCard -> handleAddTopCardEvent(event.fragment)
-        BackdropEvent.RemoveTopCard -> handleRemoveTopCardEvent()
+        is BackdropEvent.AddTopCard                      -> handleAddTopCardEvent(event.fragment)
+        BackdropEvent.RemoveTopCard                      -> handleRemoveTopCardEvent()
 
         // fullscreen
-        is BackdropEvent.ShowFullscreenFragment -> handleShowFullscreenFragmentEvent(event.fragment)
-        is BackdropEvent.RevealFullscreenFragment -> handleRevealFullscreenFragmentEvent(event.fragment)
-        BackdropEvent.HideFullscreenFragment -> handleHideFullscreenFragmentEvent()
+        is BackdropEvent.ShowFullscreenFragment          -> handleShowFullscreenFragmentEvent(event.fragment)
+        is BackdropEvent.RevealFullscreenFragment        -> handleRevealFullscreenFragmentEvent(event.fragment)
+        BackdropEvent.HideFullscreenFragment             -> handleHideFullscreenFragmentEvent()
     }
 }
 
@@ -125,8 +125,10 @@ private fun BackdropActivity.fadeBackgroundColor(color: Int): Boolean {
     }
 
     val backgroundColorAnimator = ObjectAnimator.ofArgb(layout_backdrop, "backgroundColor", colorDrawable.color, color)
-    val textColorAnimator = ObjectAnimator.ofArgb(layout_backdrop_toolbar_titles.text_backdrop_toolbar_title.currentTextColor,
-                                                  newTextColor)
+    val textColorAnimator = ObjectAnimator.ofArgb(
+        layout_backdrop_toolbar_titles.text_backdrop_toolbar_title.currentTextColor,
+        newTextColor
+    )
 
     textColorAnimator.addUpdateListener { animator ->
         val colorValue: Int = animator.animatedValue as Int

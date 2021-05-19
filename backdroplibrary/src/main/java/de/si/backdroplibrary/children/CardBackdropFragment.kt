@@ -1,7 +1,7 @@
 package de.si.backdroplibrary.children
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.transition.Slide
 import android.view.GestureDetector
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import androidx.core.view.get
 import androidx.core.view.isGone
 import androidx.core.view.isVisible
+import androidx.transition.Slide
 import de.si.backdroplibrary.Backdrop
 import de.si.backdroplibrary.R
 import de.si.backdroplibrary.components.toolbar.BackdropToolbarItem
@@ -32,15 +33,15 @@ abstract class CardBackdropFragment : BackdropFragment() {
     private val gestureNavigationListener = BackdropGestureNavigationListener()
     private val gestureDetector: GestureDetector by lazy {
         GestureDetector(
-                requireContext(),
-                gestureNavigationListener
+            requireContext(),
+            gestureNavigationListener
         )
     }
 
     // additional construction
     init {
-        enterTransition = Slide(Gravity.BOTTOM).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION)
-        exitTransition = Slide(Gravity.BOTTOM).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION)
+        enterTransition = Slide(Gravity.BOTTOM).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION * 5)
+        exitTransition = Slide(Gravity.BOTTOM).setDuration(Backdrop.BACKDROP_ANIMATION_DURATION * 5)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,26 +50,27 @@ abstract class CardBackdropFragment : BackdropFragment() {
     }
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         val inflatedLayout = inflateMainLayout(inflater, container)
         inflatedLayout?.view_cardstack_card?.setTopMargin(cardTopMargin)
         inflatedLayout?.layout_cardstack_fragment_content?.addView(
-                onCreateContentView(
-                        inflater,
-                        container,
-                        savedInstanceState
-                ),
-                ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                )
+            onCreateContentView(
+                inflater,
+                container,
+                savedInstanceState
+            ),
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
+            )
         )
         return inflatedLayout
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.layout_cardstack_blocklayer.setOnTouchListener { _, motionEvent ->
@@ -95,10 +97,10 @@ abstract class CardBackdropFragment : BackdropFragment() {
     //-----------------------------------------
     internal fun disable() {
         view?.layout_cardstack_blocklayer?.isVisible = true
-        val fadeInAnimator = view?.layout_cardstack_blocklayer?.fadeInAnimator
-        fadeInAnimator?.duration = Backdrop.BACKDROP_ANIMATION_DURATION
-        fadeInAnimator?.setFloatValues(0.42f)
-        fadeInAnimator?.start()
+        view?.layout_cardstack_blocklayer?.fadeInAnimator?.apply {
+            duration = Backdrop.BACKDROP_ANIMATION_DURATION
+            setFloatValues(0.42f)
+        }?.start()
     }
 
     internal fun enable() {
@@ -124,9 +126,9 @@ abstract class CardBackdropFragment : BackdropFragment() {
     // abstract implementation
     //-----------------------------------------
     abstract fun onCreateContentView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View?
 
     abstract fun onContentViewCreated(view: View?, savedInstanceState: Bundle?)
